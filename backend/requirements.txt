@@ -1,1 +1,6 @@
-
+Flask
+Flask-Cors
+PyJWT
+mysql-connector-python
+python-dotenv
+Werkzeug
