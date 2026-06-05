@@ -12,7 +12,7 @@ def create_app():
     from routes.notifications import notifications_bp
     from routes.offres import offres_bp
     from routes.demandes import demandes_bp
-    from routes.settings import settings_bp
+    from routes.parametres import settings_bp
     from routes.references import references_bp
 
     app.register_blueprint(auth_bp)

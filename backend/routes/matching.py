@@ -8,22 +8,26 @@ matching_bp = Blueprint('matching', __name__)
 def matching():
     if 'user_id' not in session:
         return redirect(url_for('auth.login'))
-
-    calculer_correspondances(session['user_id'])
-
-    conn = get_connection()
-    cursor = conn.cursor(dictionary=True)
-    cursor.execute("""
-        SELECT c.score_compatibilite, u.id, u.prenom, u.nom, u.biographie,
-               f.nom as filiere, n.nom as niveau
-        FROM correspondances c
-        JOIN utilisateurs u ON u.id = c.mentor_id
-        JOIN filieres_etudes f ON f.id = u.id_filiere
-        JOIN niveaux_etudes n ON n.id = u.id_niveau
-        WHERE c.mentee_id = %s
-        ORDER BY c.score_compatibilite DESC
-    """, (session['user_id'],))
-    mentors = cursor.fetchall()
-    conn.close()
-
-    return render_template('matching/index.html', mentors=mentors)
+    conn = None
+    try:
+        calculer_correspondances(session['user_id'])
+        conn = get_connection()
+        cursor = conn.cursor(dictionary=True)
+        cursor.execute("""
+            SELECT c.score_compatibilite, u.id, u.prenom, u.nom, u.biographie,
+                f.nom as filiere, n.nom as niveau
+            FROM correspondances c
+            JOIN utilisateurs u ON u.id = c.mentor_id
+            JOIN filieres_etudes f ON f.id = u.id_filiere
+            JOIN niveaux_etudes n ON n.id = u.id_niveau
+            WHERE c.mentee_id = %s
+            ORDER BY c.score_compatibilite DESC
+        """, (session['user_id'],))
+        mentors = cursor.fetchall()
+        conn.close()
+        return render_template('matching/index.html', mentors=mentors)
+    except Exception as e:
+        return f"Erreur lors du chargement des correspondances: {str(e)}", 500
+    finally:
+        if conn:
+            conn.close()

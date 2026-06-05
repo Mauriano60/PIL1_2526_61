@@ -7,45 +7,69 @@ demandes_bp = Blueprint('demandes', __name__)
 def demandes():
     if 'user_id' not in session:
         return redirect(url_for('auth.login'))
-
-    conn = get_connection()
-    cursor = conn.cursor(dictionary=True)
-    cursor.execute("""
-        SELECT d.*, m.nom as matiere, u.prenom, u.nom as nom_user
-        FROM demande_mentorat d
-        JOIN matieres m ON m.id = d.matiere_id
-        JOIN utilisateurs u ON u.id = d.utilisateur_id
-        ORDER BY d.cree_le DESC
-    """)
-    demandes = cursor.fetchall()
-    conn.close()
-
-    return render_template('mentorat/demandes.html', demandes=demandes)
+    conn = None
+    try:
+        conn = get_connection()
+        cursor = conn.cursor(dictionary=True)
+        cursor.execute("""
+            SELECT d.*, m.nom as matiere, u.prenom, u.nom as nom_user
+            FROM demande_mentorat d
+            JOIN matieres m ON m.id = d.matiere_id
+            JOIN utilisateurs u ON u.id = d.utilisateur_id
+            ORDER BY d.cree_le DESC
+        """)
+        demandes = cursor.fetchall()
+        conn.close()
+        return render_template('mentorat/demandes.html', demandes=demandes)
+    except Exception as e:
+        return f"Erreur lors du chargement des demandes: {str(e)}", 500
+    finally:
+        if conn:
+            conn.close()
 
 @demandes_bp.route('/demandes/creer', methods=['GET', 'POST'])
 def creer_demande():
     if 'user_id' not in session:
         return redirect(url_for('auth.login'))
+    error = None
+    matieres = []
+    conn = None
+    try:
+        conn = get_connection()
+        cursor = conn.cursor(dictionary=True)
+        cursor.execute("SELECT * FROM matieres")
+        matieres = cursor.fetchall()
+        conn.close()
+    except Exception as e:
+        error = f"Erreur lors du chargement des matières: {str(e)}"
+    finally:
+        if conn:
+            conn.close()
 
     if request.method == 'POST':
         matiere_id = request.form['matiere_id']
         format_ = request.form['format']
         description = request.form['description']
+        if not matiere_id or not format_:
+            error = "Matière et format sont requis"
+        elif len(description) > 1000:
+            error = "Description trop longue (max 1000 caractères)"
+        else:
+            conn = None
+            try:
+                conn = get_connection()
+                cursor = conn.cursor()
+                cursor.execute("""
+                    INSERT INTO demande_mentorat (utilisateur_id, matiere_id, format, description)
+                """, (session['user_id'], matiere_id, format_, description))
+                conn.commit()
+                conn.close()
+                return redirect(url_for('demandes.demandes'))
+            except Exception as e:
+                error = f"Erreur lors de la création de la demande: {str(e)}"
+            finally:
+                if conn:
+                    conn.close()
 
-        conn = get_connection()
-        cursor = conn.cursor()
-        cursor.execute("""
-            INSERT INTO demande_mentorat (utilisateur_id, matiere_id, format, description)
-            VALUES (%s, %s, %s, %s)
-        """, (session['user_id'], matiere_id, format_, description))
-        conn.commit()
-        conn.close()
-        return redirect(url_for('demandes.demandes'))
-
-    conn = get_connection()
-    cursor = conn.cursor(dictionary=True)
-    cursor.execute("SELECT * FROM matieres")
-    matieres = cursor.fetchall()
-    conn.close()
-
-    return render_template('mentorat/creer-demande.html', matieres=matieres)
+    return render_template('mentorat/creer-demande.html', matieres=matieres, error=error)
+            
