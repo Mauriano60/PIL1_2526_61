@@ -35,6 +35,8 @@ def run_all_tests():
 def run_with_coverage():
     """Run tests with coverage report."""
     print("📊 Running tests with coverage report...")
+    current_env = os.environ.copy()
+    current_env["PYTHONPATH"] = str(Path(__file__).parent)
     return subprocess.run(
         [
             sys.executable,
@@ -54,6 +56,8 @@ def run_with_coverage():
 def run_validators_tests():
     """Run only validator tests."""
     print("✓ Running validator tests...")
+    current_env = os.environ.copy()
+    current_env["PYTHONPATH"] = str(Path(__file__).parent)
     return subprocess.run(
         [sys.executable, "-m", "pytest", "tests/test_validators.py", "-v"],
         cwd=Path(__file__).parent,
@@ -64,6 +68,8 @@ def run_validators_tests():
 def run_auth_tests():
     """Run only authentication tests."""
     print("🔐 Running authentication tests...")
+    current_env = os.environ.copy()
+    current_env["PYTHONPATH"] = str(Path(__file__).parent)
     return subprocess.run(
         [sys.executable, "-m", "pytest", "tests/test_auth_routes.py", "-v"],
         cwd=Path(__file__).parent,
@@ -74,6 +80,8 @@ def run_auth_tests():
 def run_responses_tests():
     """Run only response utility tests."""
     print("📨 Running response utility tests...")
+    current_env = os.environ.copy()
+    current_env["PYTHONPATH"] = str(Path(__file__).parent)
     return subprocess.run(
         [sys.executable, "-m", "pytest", "tests/test_responses.py", "-v"],
         cwd=Path(__file__).parent,
@@ -84,6 +92,8 @@ def run_responses_tests():
 def run_specific_test(test_name):
     """Run a specific test."""
     print(f"Running specific test: {test_name}...")
+    current_env = os.environ.copy()
+    current_env["PYTHONPATH"] = str(Path(__file__).parent)
     return subprocess.run(
         [sys.executable, "-m", "pytest", f"tests/{test_name}", "-v"],
         cwd=Path(__file__).parent,
