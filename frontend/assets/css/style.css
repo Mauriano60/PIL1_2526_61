@@ -37,7 +37,7 @@ body {
   display: flex;             /* Flexbox pour icône + texte côte à côte */
   align-items: center;       /* Centre verticalement */
   gap: 8px;                  /* Espace entre l'icône et "IFRI" */
-  font-size: 30px;           /* Taille du texte IFRI */
+  font-size: 20px;           /* Taille du texte IFRI */
   font-weight: 700;          /* Gras */
   color: #1a56db !important; /* Bleu Bootstrap surchargé */
   text-decoration: none;     /* Pas de soulignement */
