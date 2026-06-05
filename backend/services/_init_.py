@@ -1,2 +1,2 @@
-#Services métier.
+#Services package
 

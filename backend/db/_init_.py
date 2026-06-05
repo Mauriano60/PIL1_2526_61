@@ -1,2 +1,2 @@
-#Package base de données.
+from .database import get_connection
 

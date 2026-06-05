@@ -6,16 +6,16 @@ DROP TABLE IF EXISTS participants_conversation;
 DROP TABLE IF EXISTS conversations;
 DROP TABLE IF EXISTS competences_utilisateur;
 DROP TABLE IF EXISTS difficultes_utilisateur;
-DROP TABLE IF EXISTS review;
 DROP TABLE IF EXISTS correspondances;
 DROP TABLE IF EXISTS offre_mentorat;
 DROP TABLE IF EXISTS demande_mentorat;
 DROP TABLE IF EXISTS notifications;
 DROP TABLE IF EXISTS disponibilites;
+DROP TABLE IF EXISTS parametres;
 DROP TABLE IF EXISTS utilisateurs;
-DROP TABLE IF EXISTS matieres;
 DROP TABLE IF EXISTS filieres_etudes;
 DROP TABLE IF EXISTS niveaux_etudes;
+DROP TABLE IF EXISTS matieres;
 
 CREATE TABLE matieres (
     id INT AUTO_INCREMENT PRIMARY KEY,
@@ -48,10 +48,22 @@ CREATE TABLE utilisateurs (
     biographie TEXT,
     email_verifie TINYINT(1) DEFAULT 0,
     cree_le TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    est_actif TINYINT(1) DEFAULT 1,
     id_filiere INT NOT NULL,
     id_niveau INT NOT NULL,
     FOREIGN KEY (id_filiere) REFERENCES filieres_etudes(id) ON DELETE CASCADE,
     FOREIGN KEY (id_niveau) REFERENCES niveaux_etudes(id) ON DELETE CASCADE
+) ENGINE=InnoDB;
+
+CREATE TABLE parametres (
+    id_parametres INT AUTO_INCREMENT PRIMARY KEY,
+    utilisateur_id INT NOT NULL UNIQUE,
+    visibilite_profil VARCHAR(20) DEFAULT 'public',
+    email_notification TINYINT(1) DEFAULT 1,
+    push_notification TINYINT(1) DEFAULT 1,
+    new_match_alerts TINYINT(1) DEFAULT 1,
+    weekly_summary TINYINT(1) DEFAULT 1,
+    FOREIGN KEY (utilisateur_id) REFERENCES utilisateurs(id) ON DELETE CASCADE
 ) ENGINE=InnoDB;
 
 CREATE TABLE competences_utilisateur (
@@ -141,18 +153,7 @@ CREATE TABLE notifications (
     FOREIGN KEY (utilisateur_id) REFERENCES utilisateurs(id) ON DELETE CASCADE
 ) ENGINE=InnoDB;
 
- CREATE TABLE review (
-    id INT AUTO_INCREMENT PRIMARY KEY,
-    match_id INT NOT NULL,
-    reviewer_id INT NOT NULL,
-    reviewed_user_id INT NOT NULL,
-    rating SMALLINT CHECK (rating BETWEEN 1 AND 5),
-    comment TEXT,
-    cree_le TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    FOREIGN KEY (match_id) REFERENCES correspondances(id) ON DELETE CASCADE,
-    FOREIGN KEY (reviewer_id) REFERENCES utilisateurs(id) ON DELETE CASCADE,
-    FOREIGN KEY (reviewed_user_id) REFERENCES utilisateurs(id) ON DELETE CASCADE
-) ENGINE=InnoDB;
+
 
 INSERT INTO matieres (nom) VALUES
 ('Algorithmique'), ('Base de donnees'), ('Programmation web'), ('Reseaux'),
@@ -164,10 +165,10 @@ INSERT INTO filieres_etudes (nom) VALUES
 INSERT INTO niveaux_etudes (nom) VALUES
 ('Licence 1'), ('Licence 2'), ('Licence 3'), ('Master 1'), ('Master 2');
 
-INSERT INTO utilisateurs (email, telephone, mot_de_passe, prenom, nom, id_filiere, id_niveau, biographie, email_verifie)
+INSERT INTO utilisateurs (email, telephone, mot_de_passe, prenom, nom, id_filiere, id_niveau, biographie, email_verifie, est_actif)
 VALUES
-('mentor@ifri.test', '97000001', '$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2uheWG/igi.', 'Aminata', 'Mensah', 1, 3, 'Je peux aider en web, bases de donnees et methodologie de projet.', 1),
-('mentee@ifri.test', '97000002', '$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2uheWG/igi.', 'Koffi', 'Dossou', 2, 1, 'Je cherche un accompagnement regulier pour progresser en programmation.', 1);
+('mentor@ifri.test', '97000001', '$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2uheWG/igi.', 'Aminata', 'Mensah', 1, 3, 'Je peux aider en web, bases de donnees et methodologie de projet.', 1, 1),
+('mentee@ifri.test', '97000002', '$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2uheWG/igi.', 'Koffi', 'Dossou', 2, 1, 'Je cherche un accompagnement regulier pour progresser en programmation.', 1, 1);
 
 INSERT INTO competences_utilisateur VALUES (1, 2), (1, 3), (1, 5), (2, 7);
 INSERT INTO difficultes_utilisateur VALUES (2, 2), (2, 3), (1, 6);
@@ -186,4 +187,4 @@ INSERT INTO conversations () VALUES ();
 INSERT INTO participants_conversation (conversation_id, utilisateur_id) VALUES (1, 1), (1, 2);
 INSERT INTO messages (conversation_id, expediteur_id, contenu) VALUES (1, 1, 'Bonjour Koffi, ravi de te rencontrer! Je suis Aminata, ton mentor pour la programmation web. N hesite pas a me poser toutes tes questions.'), (1, 2, 'Bonjour Aminata, merci de m accompagner! J ai deja quelques questions sur les bases de donnees, notamment les jointures. Pourrais tu m expliquer comment elles fonctionnent?');
 INSERT INTO notifications (utilisateur_id, type) VALUES (1, 'nouvelle_conversation'), (2, 'nouvelle_conversation');
-INSERT INTO review (match_id, reviewer_id, reviewed_user_id, rating, comment) VALUES (1, 2, 1, 5, 'Aminata est une mentor exceptionnelle! Elle a su expliquer les concepts de manière claire et m a donné des exercices pratiques qui m ont beaucoup aidé. Je recommande vivement!');
+INSERT INTO parametres (utilisateur_id, visibilite_profil, email_notification, push_notification, new_match_alerts, weekly_summary) VALUES (1, 'public', 1, 1, 1, 1), (2, 'public', 1, 1, 1, 1);

@@ -1,12 +1,17 @@
+from functools import wraps
+from flask import session
+from utils.responses import error_response
 
-#Fonctions liées à l'authentification JWT.
+def login_required(f):
+    @wraps(f)
+    def decorated(*args, **kwargs):
 
+        if "user_id" not in session:
+            return error_response(
+                "Authentification requise",
+                401
+            )
 
-def generate_token(user_id):
-    pass
+        return f(*args, **kwargs)
 
-def verify_token(token):
-    pass
-
-def token_required():
-    pass
+    return decorated

@@ -1,2 +1,2 @@
-#Fonctions utilitaires.
+#utils package
 
