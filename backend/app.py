@@ -14,6 +14,7 @@ def create_app():
     from routes.demandes import demandes_bp
     from routes.parametres import settings_bp
     from routes.references import references_bp
+    from routes.email import email_bp
 
     app.register_blueprint(auth_bp)
     app.register_blueprint(users_bp)
