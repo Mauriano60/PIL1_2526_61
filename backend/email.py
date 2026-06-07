@@ -1,13 +1,13 @@
-from functools import wraps
+from flask import Blueprint, flash, redirect, render_template, request, url_for
 import secrets
 from datetime import datetime, timedelta
 import smtplib
 from email.message import EmailMessage
-
-from flask import flash, redirect, render_template, request, url_for
 from werkzeug.security import generate_password_hash
 
-# Configuration SMTP
+email_bp = Blueprint('email_bp', __name__)
+
+# SMTP CONFIG
 SMTP_SERVER = "smtp.gmail.com"
 SMTP_PORT = 587
 SMTP_USER = "votre_email@gmail.com"
@@ -15,7 +15,6 @@ SMTP_PASSWORD = "mot_de_passe_application"
 
 
 def send_reset_email(to_email: str, reset_link: str):
-    """Envoie un email avec le lien de réinitialisation."""
     msg = EmailMessage()
     msg["Subject"] = "Réinitialisation de votre mot de passe"
     msg["From"] = SMTP_USER
@@ -23,22 +22,17 @@ def send_reset_email(to_email: str, reset_link: str):
 
     msg.set_content(
         f"Bonjour,\n\n"
-        f"Vous avez demandé la réinitialisation de votre mot de passe.\n"
-        f"Cliquez sur le lien ci-dessous pour définir un nouveau mot de passe :\n\n"
-        f"{reset_link}\n\n"
-        f"Ce lien est valable pendant 1 heure.\n"
+        f"Cliquez ici pour réinitialiser :\n{reset_link}\n\n"
+        f"Lien valide 1 heure."
     )
 
-    try:
-        with smtplib.SMTP(SMTP_SERVER, SMTP_PORT) as server:
-            server.starttls()
-            server.login(SMTP_USER, SMTP_PASSWORD)
-            server.send_message(msg)
-    except Exception as e:
-        print(f"Erreur d'envoi : {e}")
+    with smtplib.SMTP(SMTP_SERVER, SMTP_PORT) as server:
+        server.starttls()
+        server.login(SMTP_USER, SMTP_PASSWORD)
+        server.send_message(msg)
 
 
-@app.route("/forgot-password", methods=["GET", "POST"])
+@email_bp.route("/forgot-password", methods=["GET", "POST"])
 def forgot_password():
     if request.method == "POST":
         email = request.form.get("email", "").strip()
@@ -57,33 +51,19 @@ def forgot_password():
                 (token, expires, user["id"])
             )
 
-            reset_link = url_for(
-                "reset_password",
-                token=token,
-                _external=True
-            )
-
+            reset_link = url_for("email_bp.reset_password", token=token, _external=True)
             send_reset_email(user["email"], reset_link)
 
-        flash(
-            "Si cette adresse existe, un lien de réinitialisation a été envoyé.",
-            "info"
-        )
+        flash("Si cette adresse existe, un email a été envoyé.", "info")
         return redirect(url_for("login"))
 
     return render_template("forgot_password.html")
 
 
-@app.route("/reset-password/<token>", methods=["GET", "POST"])
+@email_bp.route("/reset-password/<token>", methods=["GET", "POST"])
 def reset_password(token):
-
     user = fetch_one(
-        """
-        SELECT id
-        FROM utilisateurs
-        WHERE reset_token=%s
-        AND reset_expires > NOW()
-        """,
+        "SELECT id FROM utilisateurs WHERE reset_token=%s AND reset_expires > NOW()",
         (token,)
     )
 
@@ -92,46 +72,19 @@ def reset_password(token):
         return redirect(url_for("forgot_password"))
 
     if request.method == "POST":
-
         password = request.form.get("mot_de_passe", "")
         confirm = request.form.get("confirm_mot_de_passe", "")
 
-        if len(password) < 6:
-            flash(
-                "Le mot de passe doit contenir au moins 6 caractères.",
-                "error"
-            )
-            return redirect(
-                url_for("reset_password", token=token)
-            )
-
         if password != confirm:
-            flash(
-                "Les mots de passe ne correspondent pas.",
-                "error"
-            )
-            return redirect(
-                url_for("reset_password", token=token)
-            )
+            flash("Mots de passe différents.", "error")
+            return redirect(url_for("email_bp.reset_password", token=token))
 
         execute(
-            """
-            UPDATE utilisateurs
-            SET mot_de_passe=%s,
-                reset_token=NULL,
-                reset_expires=NULL
-            WHERE id=%s
-            """,
+            "UPDATE utilisateurs SET mot_de_passe=%s, reset_token=NULL, reset_expires=NULL WHERE id=%s",
             (generate_password_hash(password), user["id"])
         )
 
-        flash(
-            "Mot de passe réinitialisé avec succès.",
-            "success"
-        )
+        flash("Mot de passe mis à jour.", "success")
         return redirect(url_for("login"))
 
-    return render_template(
-        "reset_password.html",
-        token=token
-    )
+    return render_template("reset_password.html", token=token)
