@@ -1,5 +1,5 @@
 /* =========================================================
-   IFRI MentorLink — script.js
+   IFRI_MentorLink — script.js
    Gestion des interactions de la page de connexion
    ========================================================= */
 
