@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" /><meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Paramètres — IFRI MentorLink</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700;1,9..40,400&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="../css/variables.css" />
+  <link rel="stylesheet" href="../css/reset.css" />
+  <link rel="stylesheet" href="../css/layout.css" />
+  <link rel="stylesheet" href="../css/composants.css" />
+  <link rel="stylesheet" href="../css/utilitaires.css" />
+  <link rel="stylesheet" href="../css/parametres.css" />
+</head>
+<body>
+  <div class="app-layout">
+    <aside class="sidebar" data-composant="sidebar"></aside>
+    <main class="main-content">
+      <header class="topbar">
+        <h1 class="topbar-titre">Paramètres</h1>
+        <div class="topbar-droite">
+          <div class="avatar avatar--sm avatar--bleu">U</div>
+        </div>
+      </header>
+      <div class="contenu-page">
+        <div class="parametres-layout">
+
+          <!-- Navigation latérale des sections -->
+          <nav class="parametres-nav">
+            <button class="param-nav-item actif" onclick="changerSection('compte', this)">Compte</button>
+            <button class="param-nav-item" onclick="changerSection('notifications', this)">Notifications</button>
+            <button class="param-nav-item" onclick="changerSection('confidentialite', this)">Confidentialité</button>
+            <button class="param-nav-item" onclick="changerSection('securite', this)">Sécurité</button>
+            <hr style="border-color: var(--bordure); margin: var(--s3) 0;" />
+            <button class="param-nav-item param-nav-item--danger" onclick="confirmerSuppression()">Supprimer le compte</button>
+          </nav>
+
+          <!-- Sections de paramètres -->
+          <div class="parametres-contenu">
+
+            <!-- Compte -->
+            <div id="sectionCompte" class="param-section">
+              <div class="param-section-titre mb-5">Informations du compte</div>
+              <div class="carte carte--static mb-4">
+                <div class="section-titre mb-4" style="font-size:0.9375rem;">Identité</div>
+                <div class="grille grille--2 gap-4 mb-4">
+                  <div class="champ-groupe">
+                    <label class="champ-label" for="pPrenom">Prénom</label>
+                    <input type="text" id="pPrenom" class="champ-input" value="Utilisateur" />
+                  </div>
+                  <div class="champ-groupe">
+                    <label class="champ-label" for="pNom">Nom</label>
+                    <input type="text" id="pNom" class="champ-input" placeholder="—" />
+                  </div>
+                </div>
+                <div class="champ-groupe mb-4">
+                  <label class="champ-label" for="pEmail">Adresse e-mail</label>
+                  <input type="email" id="pEmail" class="champ-input" value="utilisateur@ifri.uac.bj" />
+                </div>
+                <div class="grille grille--2 gap-4 mb-5">
+                  <div class="champ-groupe">
+                    <label class="champ-label" for="pFiliere">Filière</label>
+                    <select id="pFiliere" class="champ-select">
+                      <option value="gl" selected>Génie Logiciel</option>
+                      <option value="si">Sécurité Informatique</option>
+                      <option value="im">Internet et Multimédia</option>
+                      <option value="ia">Intelligence Artificielle</option>
+                      <option value="se">Systèmes Embarqués</option>
+                      <option value="sr">Systèmes et Réseaux</option>
+                    </select>
+                  </div>
+                  <div class="champ-groupe">
+                    <label class="champ-label" for="pNiveau">Niveau</label>
+                    <select id="pNiveau" class="champ-select">
+                      <option value="L1" selected>L1</option>
+                      <option value="L2">L2</option>
+                      <option value="L3">L3</option>
+                      <option value="M1">M1</option>
+                      <option value="M2">M2</option>
+                    </select>
+                  </div>
+                </div>
+                <button class="btn btn--primaire" onclick="sauvegarderCompte()">Enregistrer les modifications</button>
+              </div>
+            </div>
+
+            <!-- Notifications -->
+            <div id="sectionNotifications" class="param-section cache">
+              <div class="param-section-titre mb-5">Préférences de notifications</div>
+              <div class="carte carte--static" id="togglesNotifs"><!-- Générés par JS --></div>
+            </div>
+
+            <!-- Confidentialité -->
+            <div id="sectionConfidentialite" class="param-section cache">
+              <div class="param-section-titre mb-5">Confidentialité</div>
+              <div class="carte carte--static" id="togglesConf"><!-- Générés par JS --></div>
+            </div>
+
+            <!-- Sécurité -->
+            <div id="sectionSecurite" class="param-section cache">
+              <div class="param-section-titre mb-5">Sécurité du compte</div>
+              <div class="carte carte--static mb-4">
+                <div class="section-titre mb-4" style="font-size:0.9375rem;">Changer de mot de passe</div>
+                <div class="champ-groupe mb-3">
+                  <label class="champ-label" for="mdpActuel">Mot de passe actuel</label>
+                  <input type="password" id="mdpActuel" class="champ-input" placeholder="••••••••" />
+                </div>
+                <div class="champ-groupe mb-3">
+                  <label class="champ-label" for="mdpNouveau">Nouveau mot de passe</label>
+                  <input type="password" id="mdpNouveau" class="champ-input" placeholder="••••••••" />
+                  <span class="champ-hint">Au moins 8 caractères, une majuscule et un chiffre.</span>
+                </div>
+                <div class="champ-groupe mb-5">
+                  <label class="champ-label" for="mdpConfirm">Confirmer le nouveau mot de passe</label>
+                  <input type="password" id="mdpConfirm" class="champ-input" placeholder="••••••••" />
+                </div>
+                <button class="btn btn--primaire" onclick="changerMotDePasse()">Changer le mot de passe</button>
+              </div>
+            </div>
+
+          </div>
+        </div>
+      </div>
+    </main>
+  </div>
+
+  <script src="../js/app.js"></script>
+  <script src="../js/sidebar.js"></script>
+  <script src="../js/parametres.js"></script>
+</body>
+</html>

@@ -1,0 +1,242 @@
+<!DOCTYPE html>
+<html lang="fr">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Offres — IFRI MentorLink</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700;1,9..40,400&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet" />
+
+  <link rel="stylesheet" href="../css/variables.css" />
+  <link rel="stylesheet" href="../css/reset.css" />
+  <link rel="stylesheet" href="../css/layout.css" />
+  <link rel="stylesheet" href="../css/composants.css" />
+  <link rel="stylesheet" href="../css/utilitaires.css" />
+  <link rel="stylesheet" href="../css/offres.css" />
+</head>
+
+<body>
+
+  <div class="app-layout">
+
+    <!--  SIDEBAR  -->
+    <aside class="sidebar" data-composant="sidebar"></aside>
+
+    <!--  CONTENU PRINCIPAL  -->
+    <main class="main-content">
+
+      <!-- Topbar -->
+      <header class="topbar">
+        <h1 class="topbar-titre">Offres de mentorat</h1>
+        <div class="topbar-droite">
+          <div class="topbar-recherche">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="M21 21l-4.35-4.35"/></svg>
+            <input type="text" id="rechercheGlobale" class="topbar-recherche-input" placeholder="Rechercher un étudiant…" />
+          </div>
+          <div class="notif-conteneur">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--texte-discret)" stroke-width="2"><path d="M18 8A6 6 0 006 8c0 7-3 9-3 9h18s-3-2-3-9M13.73 21a2 2 0 01-3.46 0"/></svg>
+            <span class="notif-point"></span>
+          </div>
+          <div class="avatar avatar--sm avatar--bleu">U</div>
+        </div>
+      </header>
+
+      <!-- Zone de contenu -->
+      <div class="contenu-page">
+
+        <!--  Panneau de filtres  -->
+        <div class="filtre-panneau mb-5">
+
+          <!-- Barre de recherche d'offres -->
+          <div class="champ-recherche mb-4">
+            <svg class="champ-recherche-icone" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="M21 21l-4.35-4.35"/></svg>
+            <input
+              type="text"
+              id="rechercheOffre"
+              class="champ-input"
+              placeholder="Rechercher une offre, une matière, un mentor…"
+              oninput="filtrerOffres()"
+            />
+          </div>
+
+          <!-- Ligne de filtres déroulants -->
+          <div class="filtre-ligne mb-4">
+
+            <select id="filtreMatiere" class="champ-select filtre-select" onchange="filtrerOffres()">
+              <option value="">Toutes les matières</option>
+              <option value="python">Python</option>
+              <option value="javascript">JavaScript</option>
+              <option value="sql">SQL</option>
+              <option value="dev-web">Développement Web</option>
+              <option value="algorithmique">Algorithmique</option>
+              <option value="bdd">Base de données</option>
+              <option value="reseaux">Réseaux</option>
+              <option value="ia">Intelligence Artificielle</option>
+            </select>
+
+            <select id="filtreFiliere" class="champ-select filtre-select" onchange="filtrerOffres()">
+              <option value="">Toutes les filières</option>
+              <option value="gl">Génie Logiciel</option>
+              <option value="si">Sécurité Informatique</option>
+              <option value="im">Internet et Multimédia</option>
+              <option value="ia">Intelligence Artificielle</option>
+              <option value="se">Systèmes Embarqués et IoT</option>
+              <option value="sr">Systèmes et Réseaux</option>
+            </select>
+
+            <select id="filtreNiveau" class="champ-select filtre-select" onchange="filtrerOffres()">
+              <option value="">Tous les niveaux</option>
+              <option value="L1">L1</option>
+              <option value="L2">L2</option>
+              <option value="L3">L3</option>
+              <option value="M1">M1</option>
+              <option value="M2">M2</option>
+            </select>
+
+            <select id="filtreJour" class="champ-select filtre-select" onchange="filtrerOffres()">
+              <option value="">Tous les jours</option>
+              <option value="lundi">Lundi</option>
+              <option value="mardi">Mardi</option>
+              <option value="mercredi">Mercredi</option>
+              <option value="jeudi">Jeudi</option>
+              <option value="vendredi">Vendredi</option>
+              <option value="samedi">Samedi</option>
+              <option value="dimanche">Dimanche</option>
+            </select>
+
+            <input type="time" id="heureDebut" class="champ-input champ-heure" onchange="filtrerOffres()" />
+            <input type="time" id="heureFin"   class="champ-input champ-heure" onchange="filtrerOffres()" />
+
+            <!-- Bouton réinitialiser les filtres -->
+            <button class="btn btn--ghost btn--sm" onclick="reinitialiserFiltres()">
+              Réinitialiser
+            </button>
+          </div>
+
+          <!-- Bouton publier -->
+          <button
+            class="btn btn--primaire btn--pleine-largeur filtre-btn-publier"
+            data-ouvrir-modal="modalPublier"
+          >
+            Publier une offre
+          </button>
+
+        </div>
+
+        <!--  En-tête des résultats  -->
+        <div class="flex items-centre justify-entre mb-4">
+          <div>
+            <h2 class="section-titre" id="titreOffres">6 offres disponibles</h2>
+            <p class="section-sous-titre">Correspondant à votre profil IFRI</p>
+          </div>
+          <!-- Sélecteur de tri -->
+          <select id="triOffres" class="champ-select" style="width:auto;" onchange="filtrerOffres()">
+            <option value="match">Meilleur match</option>
+            <option value="recent">Plus récent</option>
+            <option value="nom">Nom A→Z</option>
+          </select>
+        </div>
+
+        <!--  Grille des cartes d'offres  -->
+        <div class="grille-auto" id="grilleOffres">
+          <!-- Cartes générées par offres.js -->
+        </div>
+
+        <!-- Message aucun résultat -->
+        <div id="aucunResultat" class="etat-vide cache">
+          <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="var(--bordure-forte)" stroke-width="1.5" style="margin-bottom:16px"><circle cx="11" cy="11" r="8"/><path d="M21 21l-4.35-4.35"/></svg>
+          <div class="etat-vide-titre">Aucune offre trouvée</div>
+          <div class="etat-vide-description">
+            Aucune offre ne correspond à vos critères de recherche. Essayez d'élargir vos filtres.
+          </div>
+          <button class="btn btn--secondaire" onclick="reinitialiserFiltres()">
+            Réinitialiser les filtres
+          </button>
+        </div>
+
+      </div>
+      <!-- Fin contenu-page -->
+
+    </main>
+
+  </div>
+
+  <!-- MODAL : Publier une offre -->
+  <div class="modal-overlay" id="modalPublier">
+    <div class="modal-boite">
+
+      <div class="modal-entete">
+        <h2 class="modal-titre">Publier une offre de mentorat</h2>
+        <button class="modal-fermer" data-fermer-modal="modalPublier" aria-label="Fermer">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 6L6 18M6 6l12 12"/></svg>
+        </button>
+      </div>
+
+      <div class="modal-corps">
+
+        <!-- Matière -->
+        <div class="champ-groupe">
+          <label class="champ-label" for="modalMatiere">Matière</label>
+          <select id="modalMatiere" class="champ-select">
+            <option value="" disabled selected>Sélectionnez une matière…</option>
+            <option value="python">Python</option>
+            <option value="javascript">JavaScript</option>
+            <option value="sql">SQL</option>
+            <option value="dev-web">Développement Web</option>
+            <option value="algorithmique">Algorithmique</option>
+            <option value="bdd">Base de données</option>
+            <option value="reseaux">Réseaux</option>
+            <option value="ia">Intelligence Artificielle</option>
+          </select>
+        </div>
+
+        <!-- Description -->
+        <div class="champ-groupe">
+          <label class="champ-label" for="modalDescription">Description</label>
+          <textarea
+            id="modalDescription"
+            class="champ-textarea"
+            rows="4"
+            placeholder="Décrivez votre offre de mentorat : ce que vous pouvez apporter, votre approche, votre expérience sur le sujet…"
+          ></textarea>
+        </div>
+
+        <!-- Disponibilité -->
+        <div class="champ-groupe">
+          <label class="champ-label">Disponibilité</label>
+          <div class="filtre-ligne">
+            <select id="modalJour" class="champ-select" style="flex:1">
+              <option value="" disabled selected>Jour</option>
+              <option value="lundi">Lundi</option>
+              <option value="mardi">Mardi</option>
+              <option value="mercredi">Mercredi</option>
+              <option value="jeudi">Jeudi</option>
+              <option value="vendredi">Vendredi</option>
+              <option value="samedi">Samedi</option>
+              <option value="dimanche">Dimanche</option>
+            </select>
+            <input type="time" id="modalHeureDebut" class="champ-input champ-heure" />
+            <input type="time" id="modalHeureFin"   class="champ-input champ-heure" />
+          </div>
+        </div>
+
+      </div>
+
+      <div class="modal-pied">
+        <button class="btn btn--secondaire" data-fermer-modal="modalPublier">Annuler</button>
+        <button class="btn btn--primaire" onclick="publierOffre()">Publier l'offre</button>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- Scripts -->
+  <script src="../js/app.js"></script>
+  <script src="../js/sidebar.js"></script>
+  <script src="../js/offres.js"></script>
+
+</body>
+</html>

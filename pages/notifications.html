@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" /><meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Notifications — IFRI MentorLink</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700;1,9..40,400&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="../css/variables.css" />
+  <link rel="stylesheet" href="../css/reset.css" />
+  <link rel="stylesheet" href="../css/layout.css" />
+  <link rel="stylesheet" href="../css/composants.css" />
+  <link rel="stylesheet" href="../css/utilitaires.css" />
+  <link rel="stylesheet" href="../css/notifications.css" />
+</head>
+<body>
+  <div class="app-layout">
+    <aside class="sidebar" data-composant="sidebar"></aside>
+    <main class="main-content">
+      <header class="topbar">
+        <h1 class="topbar-titre">Notifications</h1>
+        <div class="topbar-droite">
+          <button class="btn btn--ghost btn--sm" onclick="toutMarquerLu()">Tout marquer comme lu</button>
+          <div class="avatar avatar--sm avatar--bleu">U</div>
+        </div>
+      </header>
+      <div class="contenu-page">
+        <div class="notif-entete mb-5">
+          <div class="onglets">
+            <button class="onglet actif" onclick="filtrerNotifs('toutes', this)">Toutes</button>
+            <button class="onglet" onclick="filtrerNotifs('non-lues', this)">Non lues</button>
+            <button class="onglet" onclick="filtrerNotifs('matching', this)">Matching</button>
+            <button class="onglet" onclick="filtrerNotifs('messages', this)">Messages</button>
+            <button class="onglet" onclick="filtrerNotifs('demandes', this)">Demandes</button>
+          </div>
+        </div>
+        <div id="listeNotifications"><!-- Générée par JS --></div>
+      </div>
+    </main>
+  </div>
+  <script src="../js/app.js"></script>
+  <script src="../js/sidebar.js"></script>
+  <script src="../js/notifications.js"></script>
+</body>
+</html>

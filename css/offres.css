@@ -1,0 +1,161 @@
+/* PANNEAU DE FILTRES */
+
+.filtre-panneau {
+  background-color: var(--fond-carte);
+  border-radius: var(--rayon-lg);
+  border: 1px solid var(--bordure);
+  padding: var(--s5) var(--s6);
+}
+
+/* Ligne de filtres déroulants + champs d'heure */
+.filtre-ligne {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--s2);
+  align-items: center;
+}
+
+/* Select de filtre en largeur auto */
+.filtre-select {
+  width: auto;
+  min-width: 150px;
+  flex-shrink: 0;
+}
+
+/* Bouton publier pleine largeur avec style distinct */
+.filtre-btn-publier {
+  height: 44px;
+  font-size: 0.9375rem;
+  border-radius: var(--rayon-md);
+  letter-spacing: -0.01em;
+}
+
+/* CARTES D'OFFRES */
+
+/* Carte individuelle */
+.offre-carte {
+  background-color: var(--fond-carte);
+  border-radius: var(--rayon-lg);
+  border: 1px solid var(--bordure);
+  padding: var(--s5);
+  display: flex;
+  flex-direction: column;
+  transition: box-shadow var(--transition-rapide),
+              transform var(--transition-rapide),
+              border-color var(--transition-rapide);
+  cursor: default;
+}
+
+.offre-carte:hover {
+  box-shadow: var(--ombre-lg);
+  transform: translateY(-2px);
+  border-color: var(--bordure-forte);
+}
+
+/* En-tête de la carte */
+.offre-carte-entete {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: var(--s3);
+  margin-bottom: var(--s3);
+}
+
+/* Groupe avatar + infos mentor */
+.offre-carte-mentor {
+  display: flex;
+  align-items: center;
+  gap: var(--s3);
+  flex: 1;
+  min-width: 0;
+}
+
+.offre-carte-nom {
+  font-size: 0.9375rem;
+  font-weight: 700;
+  color: var(--texte-titre);
+  letter-spacing: -0.02em;
+  margin-bottom: 3px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.offre-carte-badges-meta {
+  display: flex;
+  gap: var(--s1);
+  flex-wrap: wrap;
+}
+
+/* Badge matière */
+.offre-carte-matiere {
+  margin-bottom: var(--s3);
+}
+
+/* Description */
+.offre-carte-description {
+  font-size: 0.875rem;
+  color: var(--texte-corps);
+  line-height: 1.6;
+  flex: 1; /* Pousse les boutons en bas */
+  margin-bottom: var(--s4);
+}
+
+/* Section disponibilités */
+.offre-carte-dispos {
+  margin-bottom: var(--s4);
+}
+
+.offre-carte-dispos-titre {
+  font-size: 0.75rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--texte-tres-discret);
+  margin-bottom: var(--s2);
+}
+
+/* Ligne de créneau */
+.offre-carte-creneau {
+  font-size: 0.8125rem;
+  color: var(--texte-discret);
+  font-family: var(--police-mono);
+  padding: 2px 0;
+}
+
+/* Séparateur avant les boutons */
+.offre-carte-separateur {
+  border: none;
+  border-top: 1px solid var(--bordure);
+  margin: 0 0 var(--s4) 0;
+}
+
+/* Ligne des boutons d'action */
+.offre-carte-actions {
+  display: flex;
+  gap: var(--s2);
+  margin-top: auto;
+}
+
+.offre-carte-actions .btn {
+  flex: 1;
+  font-size: 0.8125rem;
+}
+
+/* RESPONSIVE */
+
+@media (max-width: 768px) {
+  .filtre-panneau {
+    padding: var(--s4);
+  }
+
+  .filtre-ligne {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .filtre-select {
+    width: 100%;
+    min-width: unset;
+  }
+}

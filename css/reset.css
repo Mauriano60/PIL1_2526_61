@@ -1,0 +1,135 @@
+/* Reset universel*/
+*, *::before, *::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+/* Base HTML*/
+html {
+  font-size: 16px;
+  -webkit-text-size-adjust: 100%;
+  scroll-behavior: smooth;
+}
+
+/* Base body*/
+body {
+  font-family: var(--police-principale);
+  font-size: 0.9375rem;       /* 15px — légèrement compact, très pro */
+  line-height: 1.6;
+  color: var(--texte-corps);
+  background-color: var(--fond-app);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-rendering: optimizeLegibility;
+}
+
+/* Typographie */
+h1, h2, h3, h4, h5, h6 {
+  font-family: var(--police-principale);
+  font-weight: 700;
+  line-height: 1.25;
+  color: var(--texte-titre);
+  letter-spacing: -0.02em;
+}
+
+h1 { font-size: 1.75rem; }
+h2 { font-size: 1.375rem; }
+h3 { font-size: 1.125rem; }
+h4 { font-size: 1rem; }
+h5 { font-size: 0.9375rem; }
+h6 { font-size: 0.875rem; }
+
+p {
+  margin-bottom: var(--s4);
+  color: var(--texte-corps);
+}
+
+p:last-child { margin-bottom: 0; }
+
+a {
+  color: var(--bleu-primaire);
+  text-decoration: none;
+  transition: color var(--transition-rapide);
+}
+
+a:hover { color: var(--bleu-hover); }
+
+strong { font-weight: 600; }
+em { font-style: italic; }
+
+small {
+  font-size: 0.8125rem;
+  color: var(--texte-discret);
+}
+
+/* Éléments de formulaire */
+input, select, textarea, button {
+  font-family: inherit;
+  font-size: inherit;
+}
+
+button {
+  cursor: pointer;
+  border: none;
+  background: none;
+}
+
+input, select, textarea {
+  outline: none;
+  border: none;
+}
+
+/* Listes */
+ul, ol { list-style: none; }
+
+/* Images */
+img, svg {
+  display: block;
+  max-width: 100%;
+}
+
+/*Tableaux*/
+table {
+  border-collapse: collapse;
+  width: 100%;
+}
+
+/*Séparateur*/
+hr {
+  border: none;
+  border-top: 1px solid var(--bordure);
+  margin: var(--s6) 0;
+}
+
+/* Scrollbar personnalisée (webkit) */
+::-webkit-scrollbar {
+  width: 5px;
+  height: 5px;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--bordure-forte);
+  border-radius: var(--rayon-full);
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--texte-tres-discret);
+}
+
+/* Sélection de texte */
+::selection {
+  background-color: var(--bleu-pale);
+  color: var(--bleu-primaire);
+}
+
+/* Focus visible accessible */
+:focus-visible {
+  outline: 2px solid var(--bleu-primaire);
+  outline-offset: 2px;
+  border-radius: var(--rayon-xs);
+}

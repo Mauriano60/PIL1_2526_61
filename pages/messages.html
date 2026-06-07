@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="fr">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Messages — IFRI MentorLink</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700;1,9..40,400&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet" />
+
+  <link rel="stylesheet" href="../css/variables.css" />
+  <link rel="stylesheet" href="../css/reset.css" />
+  <link rel="stylesheet" href="../css/layout.css" />
+  <link rel="stylesheet" href="../css/composants.css" />
+  <link rel="stylesheet" href="../css/utilitaires.css" />
+  <link rel="stylesheet" href="../css/messages.css" />
+</head>
+
+<body>
+
+  <div class="app-layout">
+    <aside class="sidebar" data-composant="sidebar"></aside>
+
+    <main class="main-content">
+
+      <header class="topbar">
+        <h1 class="topbar-titre">Messages</h1>
+        <div class="topbar-droite">
+          <div class="notif-conteneur">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--texte-discret)" stroke-width="2"><path d="M18 8A6 6 0 006 8c0 7-3 9-3 9h18s-3-2-3-9M13.73 21a2 2 0 01-3.46 0"/></svg>
+            <span class="notif-point"></span>
+          </div>
+          <div class="avatar avatar--sm avatar--bleu">U</div>
+        </div>
+      </header>
+
+      <!-- Layout messagerie : 2 colonnes fixes -->
+      <div class="messagerie-layout">
+
+        <!--  Colonne gauche : liste des conversations  -->
+        <aside class="messagerie-sidebar">
+
+          <div class="messagerie-sidebar-entete">
+            <div class="champ-recherche">
+              <svg class="champ-recherche-icone" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="M21 21l-4.35-4.35"/></svg>
+              <input type="text" class="champ-input" id="rechercheConversation" placeholder="Rechercher…" oninput="filtrerConversations()" />
+            </div>
+          </div>
+
+          <div class="conversations-liste" id="listeConversations">
+            <!-- Générée par messages.js -->
+          </div>
+
+        </aside>
+
+        <!--  Colonne droite : fenêtre de chat  -->
+        <section class="messagerie-chat">
+
+          <!-- En-tête du chat avec l'interlocuteur actif -->
+          <div class="chat-entete" id="chatEntete">
+            <!-- Rempli par messages.js -->
+          </div>
+
+          <!-- Zone des messages -->
+          <div class="chat-messages" id="chatMessages">
+            <!-- Remplie par messages.js -->
+          </div>
+
+          <!-- Zone de saisie -->
+          <div class="chat-saisie">
+            <input
+              type="text"
+              id="champMessage"
+              class="champ-input chat-input"
+              placeholder="Écrire un message…"
+              onkeydown="envoyerSiEntree(event)"
+            />
+            <button class="btn btn--primaire chat-btn-envoyer" onclick="envoyerMessage()">
+              Envoyer
+            </button>
+          </div>
+
+        </section>
+
+      </div>
+
+    </main>
+  </div>
+
+  <script src="../js/app.js"></script>
+  <script src="../js/sidebar.js"></script>
+  <script src="../js/messages.js"></script>
+
+</body>
+</html>

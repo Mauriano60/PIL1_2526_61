@@ -1,0 +1,184 @@
+/*Bandeau en-tête*/
+.matching-bandeau {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--s6);
+  background: linear-gradient(135deg, #0f172a 0%, #1e3a8a 100%);
+  border-radius: var(--rayon-xl);
+  padding: var(--s6) var(--s8);
+}
+
+.matching-bandeau-titre {
+  font-size: 1.125rem;
+  font-weight: 700;
+  color: #ffffff;
+  margin-bottom: var(--s2);
+  letter-spacing: -0.02em;
+}
+
+.matching-bandeau-desc {
+  font-size: 0.875rem;
+  color: rgba(255,255,255,0.65);
+  max-width: 520px;
+  margin-bottom: 0;
+  line-height: 1.6;
+}
+
+/* Score global affiché à droite du bandeau */
+.matching-score-global {
+  font-size: 3rem;
+  font-weight: 800;
+  color: #ffffff;
+  letter-spacing: -0.06em;
+  line-height: 1;
+  text-align: center;
+  margin-bottom: var(--s1);
+}
+
+/* Cartes de critères de scoring */
+.scoring-carte {
+  background-color: var(--fond-carte);
+  border: 1px solid var(--bordure);
+  border-radius: var(--rayon-lg);
+  padding: var(--s5);
+}
+
+.scoring-carte-titre {
+  font-size: 0.875rem;
+  font-weight: 700;
+  color: var(--texte-titre);
+  margin-bottom: var(--s1);
+}
+
+.scoring-carte-desc {
+  font-size: 0.8125rem;
+  color: var(--texte-discret);
+  line-height: 1.5;
+  margin-bottom: var(--s3);
+}
+
+.scoring-poids {
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: var(--bleu-primaire);
+  font-family: var(--police-mono);
+  background-color: var(--bleu-pale);
+  display: inline-block;
+  padding: 2px 8px;
+  border-radius: var(--rayon-full);
+}
+
+/*Carte de match*/
+.match-carte {
+  background-color: var(--fond-carte);
+  border: 1px solid var(--bordure);
+  border-radius: var(--rayon-lg);
+  padding: var(--s5);
+  display: flex;
+  align-items: center;
+  gap: var(--s4);
+  margin-bottom: var(--s3);
+  transition: box-shadow var(--transition-rapide), transform var(--transition-rapide);
+}
+
+.match-carte:hover {
+  box-shadow: var(--ombre-md);
+  transform: translateY(-1px);
+}
+
+/* Score de match : grand cercle coloré */
+.match-score-cercle {
+  width: 64px;
+  height: 64px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1rem;
+  font-weight: 800;
+  color: #ffffff;
+  flex-shrink: 0;
+  letter-spacing: -0.03em;
+}
+
+.match-score-cercle--excellent { background: linear-gradient(135deg, #06b6d4, #10b981); }
+.match-score-cercle--bon       { background: linear-gradient(135deg, #2563eb, #7c3aed); }
+.match-score-cercle--moyen     { background: linear-gradient(135deg, #f59e0b, #ef4444); }
+
+.match-info {
+  flex: 1;
+  min-width: 0;
+}
+
+.match-nom {
+  font-size: 1rem;
+  font-weight: 700;
+  color: var(--texte-titre);
+  letter-spacing: -0.02em;
+  margin-bottom: var(--s1);
+}
+
+.match-badges {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--s1);
+  margin-bottom: var(--s3);
+}
+
+/* Détail des critères de scoring */
+.match-detail-scoring {
+  display: flex;
+  gap: var(--s4);
+  flex-wrap: wrap;
+}
+
+.match-critere {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.match-critere-label {
+  font-size: 0.6875rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--texte-tres-discret);
+}
+
+.match-critere-valeur {
+  font-size: 0.875rem;
+  font-weight: 700;
+  color: var(--texte-corps);
+  font-family: var(--police-mono);
+}
+
+.match-actions {
+  display: flex;
+  flex-direction: column;
+  gap: var(--s2);
+  flex-shrink: 0;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .matching-bandeau {
+    flex-direction: column;
+    align-items: flex-start;
+    padding: var(--s5);
+  }
+
+  .match-carte {
+    flex-wrap: wrap;
+  }
+
+  .match-actions {
+    flex-direction: row;
+    width: 100%;
+  }
+
+  .match-actions .btn {
+    flex: 1;
+  }
+}

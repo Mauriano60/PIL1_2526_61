@@ -1,0 +1,14 @@
+/* 1. Variables et design tokens */
+@import url('./variables.css');
+
+/* 2. Reset et base */
+@import url('./reset.css');
+
+/* 3. Layout global (sidebar, topbar, structure de page) */
+@import url('./layout.css');
+
+/* 4. Composants réutilisables (boutons, badges, cartes…) */
+@import url('./composants.css');
+
+/* 5. Classes utilitaires */
+@import url('./utilitaires.css');

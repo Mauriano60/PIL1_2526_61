@@ -1,0 +1,393 @@
+/* LAYOUT GÉNÉRAL DE LA PAGE
+   Page sans sidebar : plein écran divisé en 2 colonnes */
+
+/* Réinitialise le layout app pour cette page hors-app */
+body.page-connexion {
+  background-color: var(--fond-app);
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: var(--s6);
+}
+
+/* Conteneur principal centré */
+.connexion-conteneur {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  min-height: 100vh;
+  width: 100%;
+  max-width: 1200px;
+  margin: 0 auto;
+  background-color: var(--fond-carte);
+  border-radius: var(--rayon-xl);
+  overflow: hidden;
+  box-shadow: var(--ombre-xl);
+}
+
+/* PANNEAU GAUCHE — Visuel de marque */
+
+.connexion-panneau-gauche {
+  background: linear-gradient(145deg, #0f172a 0%, #1e3a8a 50%, #2563eb 100%);
+  padding: var(--s12) var(--s10);
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  position: relative;
+  overflow: hidden;
+}
+
+/* Cercles décoratifs en arrière-plan */
+.connexion-panneau-gauche::before {
+  content: '';
+  position: absolute;
+  top: -80px;
+  right: -80px;
+  width: 320px;
+  height: 320px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.04);
+  pointer-events: none;
+}
+
+.connexion-panneau-gauche::after {
+  content: '';
+  position: absolute;
+  bottom: -60px;
+  left: -60px;
+  width: 240px;
+  height: 240px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.03);
+  pointer-events: none;
+}
+
+/* Logo en haut du panneau */
+.connexion-logo {
+  display: flex;
+  align-items: center;
+  gap: var(--s3);
+  position: relative;
+  z-index: 1;
+}
+
+.connexion-logo-marque {
+  width: 40px;
+  height: 40px;
+  background: rgba(255, 255, 255, 0.15);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  border-radius: var(--rayon-md);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  backdrop-filter: blur(4px);
+}
+
+.connexion-logo-lettre {
+  color: #ffffff;
+  font-size: 1.125rem;
+  font-weight: 800;
+  letter-spacing: -0.04em;
+}
+
+.connexion-logo-texte {
+  display: flex;
+  flex-direction: column;
+}
+
+.connexion-logo-nom {
+  color: #ffffff;
+  font-size: 1rem;
+  font-weight: 700;
+  letter-spacing: -0.03em;
+  line-height: 1.2;
+}
+
+.connexion-logo-sous-titre {
+  color: rgba(255, 255, 255, 0.55);
+  font-size: 0.6875rem;
+  font-weight: 500;
+  letter-spacing: 0.02em;
+}
+
+/* Bloc de pitch central */
+.connexion-pitch {
+  position: relative;
+  z-index: 1;
+}
+
+.connexion-pitch-titre {
+  font-size: 2rem;
+  font-weight: 800;
+  color: #ffffff;
+  letter-spacing: -0.05em;
+  line-height: 1.2;
+  margin-bottom: var(--s4);
+}
+
+.connexion-pitch-titre span {
+  color: rgba(255, 255, 255, 0.5);
+}
+
+.connexion-pitch-description {
+  font-size: 0.9375rem;
+  color: rgba(255, 255, 255, 0.65);
+  line-height: 1.65;
+  max-width: 340px;
+  margin-bottom: var(--s8);
+}
+
+/* Statistiques de la plateforme */
+.connexion-stats {
+  display: flex;
+  gap: var(--s6);
+}
+
+.connexion-stat {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.connexion-stat-chiffre {
+  font-size: 1.75rem;
+  font-weight: 800;
+  color: #ffffff;
+  letter-spacing: -0.05em;
+  line-height: 1;
+}
+
+.connexion-stat-label {
+  font-size: 0.75rem;
+  color: rgba(255, 255, 255, 0.5);
+  font-weight: 500;
+  letter-spacing: 0.01em;
+}
+
+/* Pied du panneau — mention IFRI */
+.connexion-pied-panneau {
+  position: relative;
+  z-index: 1;
+  font-size: 0.8125rem;
+  color: rgba(255, 255, 255, 0.35);
+}
+
+/* PANNEAU DROIT — Formulaire */
+
+.connexion-panneau-droit {
+  background-color: var(--fond-carte);
+  padding: var(--s12) var(--s10);
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+/* En-tête du formulaire */
+.connexion-form-entete {
+  margin-bottom: var(--s8);
+}
+
+.connexion-form-titre {
+  font-size: 1.625rem;
+  font-weight: 800;
+  color: var(--texte-titre);
+  letter-spacing: -0.04em;
+  margin-bottom: var(--s2);
+}
+
+.connexion-form-sous-titre {
+  font-size: 0.9375rem;
+  color: var(--texte-discret);
+}
+
+/* Onglets Connexion / Inscription */
+.connexion-onglets {
+  display: flex;
+  background-color: var(--fond-app);
+  border-radius: var(--rayon-md);
+  padding: 4px;
+  margin-bottom: var(--s6);
+  gap: 4px;
+}
+
+.connexion-onglet {
+  flex: 1;
+  padding: var(--s2) var(--s4);
+  border-radius: var(--rayon-sm);
+  border: none;
+  background: transparent;
+  font-family: var(--police-principale);
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: var(--texte-discret);
+  cursor: pointer;
+  transition: background-color var(--transition-rapide),
+              color var(--transition-rapide),
+              box-shadow var(--transition-rapide);
+}
+
+.connexion-onglet.actif {
+  background-color: var(--fond-carte);
+  color: var(--texte-titre);
+  box-shadow: var(--ombre-xs);
+}
+
+.connexion-onglet:hover:not(.actif) {
+  color: var(--texte-corps);
+}
+
+/* Formulaire générique */
+.connexion-form {
+  display: flex;
+  flex-direction: column;
+  gap: var(--s4);
+}
+
+/* Groupe ligne : deux champs côte à côte */
+.connexion-form-ligne {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: var(--s3);
+}
+
+/* Bouton de soumission pleine largeur */
+.connexion-btn-submit {
+  width: 100%;
+  height: 44px;
+  font-size: 0.9375rem;
+  border-radius: var(--rayon-md);
+  margin-top: var(--s2);
+  letter-spacing: -0.01em;
+}
+
+/* Message d'erreur sous un champ */
+.connexion-erreur {
+  font-size: 0.8125rem;
+  color: var(--danger);
+  margin-top: -var(--s2);
+  display: none;
+}
+
+.connexion-erreur.visible {
+  display: block;
+}
+
+/* Lien "Mot de passe oublié" */
+.connexion-lien-mdp {
+  font-size: 0.8125rem;
+  color: var(--bleu-primaire);
+  text-decoration: none;
+  font-weight: 500;
+  align-self: flex-end;
+  margin-top: -var(--s2);
+  transition: color var(--transition-rapide);
+}
+
+.connexion-lien-mdp:hover {
+  color: var(--bleu-hover);
+}
+
+/* Séparateur "ou" */
+.connexion-separateur {
+  display: flex;
+  align-items: center;
+  gap: var(--s3);
+  margin: var(--s2) 0;
+  color: var(--texte-tres-discret);
+  font-size: 0.8125rem;
+}
+
+.connexion-separateur::before,
+.connexion-separateur::after {
+  content: '';
+  flex: 1;
+  height: 1px;
+  background-color: var(--bordure);
+}
+
+/* Toast de feedback */
+.connexion-toast {
+  padding: var(--s3) var(--s4);
+  border-radius: var(--rayon-sm);
+  font-size: 0.875rem;
+  font-weight: 500;
+  display: none;
+  margin-top: var(--s2);
+  animation: glisserHaut 0.25s ease;
+}
+
+.connexion-toast.visible {
+  display: block;
+}
+
+.connexion-toast--succes {
+  background-color: var(--succes-pale);
+  color: #065f46;
+  border: 1px solid #a7f3d0;
+}
+
+.connexion-toast--erreur {
+  background-color: var(--danger-pale);
+  color: #991b1b;
+  border: 1px solid #fca5a5;
+}
+
+@keyframes glisserHaut {
+  from { opacity: 0; transform: translateY(6px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+/* Panneau caché (animation d'onglet) */
+.connexion-panel {
+  display: flex;
+  flex-direction: column;
+  gap: var(--s4);
+}
+
+.connexion-panel.cache {
+  display: none;
+}
+
+/* RESPONSIVE */
+
+@media (max-width: 900px) {
+  .connexion-conteneur {
+    grid-template-columns: 1fr;
+    max-width: 480px;
+    min-height: auto;
+    border-radius: var(--rayon-lg);
+  }
+
+  .connexion-panneau-gauche {
+    padding: var(--s8) var(--s6);
+    min-height: 220px;
+  }
+
+  .connexion-pitch-titre {
+    font-size: 1.5rem;
+  }
+
+  .connexion-stats {
+    gap: var(--s4);
+  }
+
+  .connexion-panneau-droit {
+    padding: var(--s8) var(--s6);
+  }
+}
+
+@media (max-width: 480px) {
+  body.page-connexion {
+    padding: 0;
+    align-items: stretch;
+  }
+
+  .connexion-conteneur {
+    border-radius: 0;
+    max-width: 100%;
+  }
+
+  .connexion-form-ligne {
+    grid-template-columns: 1fr;
+  }
+}

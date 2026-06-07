@@ -1,0 +1,392 @@
+<!DOCTYPE html>
+<html lang="fr">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Connexion — IFRI MentorLink</title>
+
+  <!-- Google Fonts : DM Sans + DM Mono -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700;1,9..40,400&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet" />
+
+  <!-- CSS modulaire (sans layout.css — page hors-app) -->
+  <link rel="stylesheet" href="../css/variables.css" />
+  <link rel="stylesheet" href="../css/reset.css" />
+  <link rel="stylesheet" href="../css/composants.css" />
+  <link rel="stylesheet" href="../css/utilitaires.css" />
+  <link rel="stylesheet" href="../css/connexion.css" />
+</head>
+
+<body class="page-connexion">
+
+  <!-- Conteneur principal en deux colonnes -->
+  <div class="connexion-conteneur">
+
+    <!--  PANNEAU GAUCHE — Marque  -->
+    <div class="connexion-panneau-gauche">
+
+      <!-- Logo -->
+      <div class="connexion-logo">
+        <div class="connexion-logo-marque">
+          <span class="connexion-logo-lettre">M</span>
+        </div>
+        <div class="connexion-logo-texte">
+          <span class="connexion-logo-nom">MentorLink</span>
+          <span class="connexion-logo-sous-titre">IFRI — UAC</span>
+        </div>
+      </div>
+
+      <!-- Pitch central -->
+      <div class="connexion-pitch">
+        <h1 class="connexion-pitch-titre">
+          Le mentorat<br />
+          <span>autrement.</span>
+        </h1>
+        <p class="connexion-pitch-description">
+          Connectez-vous avec des étudiants de l'IFRI qui partagent vos
+          objectifs. Trouvez un mentor, progressez ensemble, construisez
+          votre réseau académique.
+        </p>
+        <div class="connexion-stats">
+          <div class="connexion-stat">
+            <span class="connexion-stat-chiffre">240+</span>
+            <span class="connexion-stat-label">Étudiants</span>
+          </div>
+          <div class="connexion-stat">
+            <span class="connexion-stat-chiffre">6</span>
+            <span class="connexion-stat-label">Filières</span>
+          </div>
+          <div class="connexion-stat">
+            <span class="connexion-stat-chiffre">94%</span>
+            <span class="connexion-stat-label">Satisfaction</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Pied -->
+      <div class="connexion-pied-panneau">
+        Institut de Formation et de Recherche en Informatique &middot; Université d'Abomey-Calavi
+      </div>
+
+    </div>
+
+    <!--  PANNEAU DROIT — Formulaire -->
+    <div class="connexion-panneau-droit">
+
+      <!-- En-tête -->
+      <div class="connexion-form-entete">
+        <h2 class="connexion-form-titre" id="formTitre">Bienvenue</h2>
+        <p class="connexion-form-sous-titre" id="formSousTitre">
+          Connectez-vous pour accéder à votre espace.
+        </p>
+      </div>
+
+      <!-- Onglets Connexion / Inscription -->
+      <div class="connexion-onglets" role="tablist">
+        <button
+          class="connexion-onglet actif"
+          role="tab"
+          aria-selected="true"
+          onclick="basculerOnglet('connexion', this)"
+        >
+          Connexion
+        </button>
+        <button
+          class="connexion-onglet"
+          role="tab"
+          aria-selected="false"
+          onclick="basculerOnglet('inscription', this)"
+        >
+          Inscription
+        </button>
+      </div>
+
+      <!-- Formulaire de connexion  -->
+      <div id="panelConnexion" class="connexion-panel">
+
+        <div class="champ-groupe">
+          <label class="champ-label" for="emailConnexion">Adresse e-mail</label>
+          <input
+            type="email"
+            id="emailConnexion"
+            class="champ-input"
+            placeholder="prenom.nom@ifri.uac.bj"
+            autocomplete="email"
+          />
+        </div>
+
+        <div class="champ-groupe">
+          <label class="champ-label" for="mdpConnexion">Mot de passe</label>
+          <input
+            type="password"
+            id="mdpConnexion"
+            class="champ-input"
+            placeholder="••••••••"
+            autocomplete="current-password"
+            onkeydown="soumettreSiEntree(event, 'seConnecter')"
+          />
+          <a href="#" class="connexion-lien-mdp">Mot de passe oublié ?</a>
+        </div>
+
+        <!-- Feedback -->
+        <div id="toastConnexion" class="connexion-toast" role="alert"></div>
+
+        <button class="btn btn--primaire connexion-btn-submit" onclick="seConnecter()">
+          Se connecter
+        </button>
+
+      </div>
+
+      <!-- Formulaire d'inscription -->
+      <div id="panelInscription" class="connexion-panel cache">
+
+        <div class="connexion-form-ligne">
+          <div class="champ-groupe">
+            <label class="champ-label" for="prenomInscription">Prénom</label>
+            <input
+              type="text"
+              id="prenomInscription"
+              class="champ-input"
+              placeholder="Ex : Kofi"
+              autocomplete="given-name"
+            />
+          </div>
+          <div class="champ-groupe">
+            <label class="champ-label" for="nomInscription">Nom</label>
+            <input
+              type="text"
+              id="nomInscription"
+              class="champ-input"
+              placeholder="Ex : Mensah"
+              autocomplete="family-name"
+            />
+          </div>
+        </div>
+
+        <div class="champ-groupe">
+          <label class="champ-label" for="emailInscription">Adresse e-mail</label>
+          <input
+            type="email"
+            id="emailInscription"
+            class="champ-input"
+            placeholder="prenom.nom@ifri.uac.bj"
+            autocomplete="email"
+          />
+        </div>
+
+        <div class="connexion-form-ligne">
+          <div class="champ-groupe">
+            <label class="champ-label" for="filiereInscription">Filière</label>
+            <select id="filiereInscription" class="champ-select">
+              <option value="">-- Filière --</option>
+              <option value="gl">Génie Logiciel</option>
+              <option value="si">Sécurité Informatique</option>
+              <option value="im">Internet et Multimédia</option>
+              <option value="ia">Intelligence Artificielle</option>
+              <option value="se">Systèmes Embarqués &amp; IoT</option>
+              <option value="sr">Systèmes et Réseaux</option>
+            </select>
+          </div>
+          <div class="champ-groupe">
+            <label class="champ-label" for="niveauInscription">Niveau</label>
+            <select id="niveauInscription" class="champ-select">
+              <option value="">-- Niveau --</option>
+              <option value="L1">L1</option>
+              <option value="L2">L2</option>
+              <option value="L3">L3</option>
+              <option value="M1">M1</option>
+              <option value="M2">M2</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="champ-groupe">
+          <label class="champ-label" for="mdpInscription">Mot de passe</label>
+          <input
+            type="password"
+            id="mdpInscription"
+            class="champ-input"
+            placeholder="Au moins 8 caractères"
+            autocomplete="new-password"
+          />
+          <span class="champ-hint">8 caractères minimum, une majuscule, un chiffre.</span>
+        </div>
+
+        <div class="champ-groupe">
+          <label class="champ-label" for="mdpConfirmInscription">Confirmer le mot de passe</label>
+          <input
+            type="password"
+            id="mdpConfirmInscription"
+            class="champ-input"
+            placeholder="••••••••"
+            autocomplete="new-password"
+            onkeydown="soumettreSiEntree(event, 'sInscrire')"
+          />
+        </div>
+
+        <!-- Feedback -->
+        <div id="toastInscription" class="connexion-toast" role="alert"></div>
+
+        <button class="btn btn--primaire connexion-btn-submit" onclick="sInscrire()">
+          Créer mon compte
+        </button>
+
+      </div>
+
+    </div>
+    <!-- Fin panneau droit -->
+
+  </div>
+  <!-- Fin conteneur -->
+
+  <!-- Scripts (pas de sidebar sur cette page) -->
+  <script src="../js/app.js"></script>
+  <script>
+    /* ============================================================
+       Logique inline de la page Connexion
+       (pas de fichier connexion.js séparé : logique légère)
+       ============================================================ */
+
+    'use strict';
+
+    /**
+     * Bascule entre les onglets Connexion et Inscription.
+     * @param {string} onglet  - 'connexion' | 'inscription'
+     * @param {HTMLElement} el - Bouton cliqué
+     */
+    function basculerOnglet(onglet, el) {
+      /* Mise à jour des onglets */
+      document.querySelectorAll('.connexion-onglet').forEach(function (b) {
+        b.classList.remove('actif');
+        b.setAttribute('aria-selected', 'false');
+      });
+      el.classList.add('actif');
+      el.setAttribute('aria-selected', 'true');
+
+      /* Affichage du bon panneau */
+      document.getElementById('panelConnexion').classList.toggle('cache', onglet !== 'connexion');
+      document.getElementById('panelInscription').classList.toggle('cache', onglet !== 'inscription');
+
+      /* Mise à jour du titre */
+      const titre      = document.getElementById('formTitre');
+      const sousTitre  = document.getElementById('formSousTitre');
+
+      if (onglet === 'connexion') {
+        titre.textContent     = 'Bienvenue';
+        sousTitre.textContent = 'Connectez-vous pour accéder à votre espace.';
+      } else {
+        titre.textContent     = 'Créer un compte';
+        sousTitre.textContent = 'Rejoignez la communauté IFRI MentorLink.';
+      }
+    }
+
+    /**
+     * Affiche un message toast dans un conteneur donné.
+     * @param {string} idToast  - ID de l'élément toast
+     * @param {string} message  - Texte à afficher
+     * @param {string} type     - 'succes' | 'erreur'
+     */
+    function afficherToastConnexion(idToast, message, type) {
+      const toast = document.getElementById(idToast);
+      if (!toast) return;
+      toast.textContent = message;
+      toast.className = `connexion-toast connexion-toast--${type} visible`;
+
+      /* Masque automatiquement après 4 s */
+      setTimeout(function () {
+        toast.classList.remove('visible');
+      }, 4000);
+    }
+
+    /**
+     * Valide un mot de passe : min 8 chars, 1 majuscule, 1 chiffre.
+     * @param {string} mdp
+     * @returns {boolean}
+     */
+    function validerMotDePasse(mdp) {
+      return mdp.length >= 8 && /[A-Z]/.test(mdp) && /[0-9]/.test(mdp);
+    }
+
+    /**
+     * Soumet le formulaire si la touche Entrée est pressée.
+     * @param {KeyboardEvent} e
+     * @param {string} nomFonction - Fonction à appeler
+     */
+    function soumettreSiEntree(e, nomFonction) {
+      if (e.key === 'Enter') {
+        window[nomFonction]();
+      }
+    }
+
+    /**
+     * Gère la soumission du formulaire de connexion.
+     * TODO : remplacer par un appel POST /api/auth/connexion/
+     */
+    function seConnecter() {
+      const email = document.getElementById('emailConnexion').value.trim();
+      const mdp   = document.getElementById('mdpConnexion').value;
+
+      if (!email || !mdp) {
+        afficherToastConnexion('toastConnexion', 'Veuillez remplir tous les champs.', 'erreur');
+        return;
+      }
+
+      /* Simulation réussie — à remplacer par l'API Django */
+      afficherToastConnexion('toastConnexion', 'Connexion en cours…', 'succes');
+
+      setTimeout(function () {
+        window.location.href = 'dashboard.html';
+      }, 800);
+    }
+
+    /**
+     * Gère la soumission du formulaire d'inscription.
+     * TODO : remplacer par un appel POST /api/auth/inscription/
+     */
+    function sInscrire() {
+      const prenom   = document.getElementById('prenomInscription').value.trim();
+      const nom      = document.getElementById('nomInscription').value.trim();
+      const email    = document.getElementById('emailInscription').value.trim();
+      const filiere  = document.getElementById('filiereInscription').value;
+      const niveau   = document.getElementById('niveauInscription').value;
+      const mdp      = document.getElementById('mdpInscription').value;
+      const mdpConf  = document.getElementById('mdpConfirmInscription').value;
+
+      if (!prenom || !nom || !email || !filiere || !niveau || !mdp || !mdpConf) {
+        afficherToastConnexion('toastInscription', 'Veuillez remplir tous les champs.', 'erreur');
+        return;
+      }
+
+      if (!validerMotDePasse(mdp)) {
+        afficherToastConnexion(
+          'toastInscription',
+          'Le mot de passe doit contenir au moins 8 caractères, une majuscule et un chiffre.',
+          'erreur'
+        );
+        return;
+      }
+
+      if (mdp !== mdpConf) {
+        afficherToastConnexion('toastInscription', 'Les mots de passe ne correspondent pas.', 'erreur');
+        return;
+      }
+
+      /* Simulation réussie — à remplacer par l'API Django */
+      afficherToastConnexion('toastInscription', 'Compte créé avec succès ! Redirection…', 'succes');
+
+      setTimeout(function () {
+        window.location.href = 'dashboard.html';
+      }, 1200);
+    }
+
+    /* Exposition globale (accessibilité onclick inline) */
+    window.basculerOnglet    = basculerOnglet;
+    window.seConnecter       = seConnecter;
+    window.sInscrire         = sInscrire;
+    window.soumettreSiEntree = soumettreSiEntree;
+  </script>
+
+</body>
+</html>

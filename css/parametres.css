@@ -1,0 +1,244 @@
+/* LAYOUT DE LA PAGE PARAMÈTRES navigation latérale gauche + zone de contenu droite */
+
+.parametres-layout {
+  display: grid;
+  grid-template-columns: 220px 1fr;
+  gap: var(--s6);
+  align-items: start;
+}
+
+/* NAVIGATION LATÉRALE DES SECTIONS */
+
+.parametres-nav {
+  background-color: var(--fond-carte);
+  border: 1px solid var(--bordure);
+  border-radius: var(--rayon-lg);
+  padding: var(--s3);
+  position: sticky;
+  top: calc(var(--hauteur-topbar) + var(--s5));
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+/* Bouton de section */
+.param-nav-item {
+  display: flex;
+  align-items: center;
+  width: 100%;
+  padding: var(--s2) var(--s3);
+  border-radius: var(--rayon-sm);
+  border: none;
+  background: transparent;
+  font-family: var(--police-principale);
+  font-size: 0.875rem;
+  font-weight: 500;
+  color: var(--texte-discret);
+  cursor: pointer;
+  text-align: left;
+  transition: background-color var(--transition-rapide),
+              color var(--transition-rapide);
+}
+
+.param-nav-item:hover {
+  background-color: var(--fond-app);
+  color: var(--texte-corps);
+}
+
+/* État actif */
+.param-nav-item.actif {
+  background-color: var(--bleu-pale);
+  color: var(--bleu-primaire);
+  font-weight: 600;
+}
+
+/* Variante danger — suppression du compte */
+.param-nav-item--danger {
+  color: var(--danger);
+}
+
+.param-nav-item--danger:hover {
+  background-color: var(--danger-pale);
+  color: var(--danger);
+}
+
+/* ZONE DE CONTENU (droite) */
+
+.parametres-contenu {
+  min-width: 0;
+}
+
+/* Titre de section */
+.param-section-titre {
+  font-size: 1.125rem;
+  font-weight: 700;
+  color: var(--texte-titre);
+  letter-spacing: -0.03em;
+}
+
+/* Section masquée */
+.param-section.cache {
+  display: none;
+}
+
+/* LIGNES DE TOGGLE (préférences on/off) */
+
+.toggle-ligne {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--s4);
+  padding: var(--s4) var(--s5);
+  border-bottom: 1px solid var(--bordure);
+}
+
+.toggle-ligne:last-child {
+  border-bottom: none;
+}
+
+/* Groupe texte du toggle */
+.toggle-info {
+  flex: 1;
+  min-width: 0;
+}
+
+.toggle-label {
+  font-size: 0.9375rem;
+  font-weight: 600;
+  color: var(--texte-corps);
+  margin-bottom: 2px;
+}
+
+.toggle-description {
+  font-size: 0.8125rem;
+  color: var(--texte-discret);
+  line-height: 1.5;
+}
+
+/* Composant toggle switch (checkbox) */
+.toggle-switch {
+  position: relative;
+  display: inline-block;
+  width: 44px;
+  height: 24px;
+  flex-shrink: 0;
+}
+
+.toggle-switch input {
+  opacity: 0;
+  width: 0;
+  height: 0;
+  position: absolute;
+}
+
+/* Fond du toggle */
+.toggle-curseur {
+  position: absolute;
+  inset: 0;
+  background-color: var(--bordure-forte);
+  border-radius: var(--rayon-full);
+  cursor: pointer;
+  transition: background-color var(--transition-normale);
+}
+
+/* Cercle blanc du toggle */
+.toggle-curseur::before {
+  content: '';
+  position: absolute;
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  background-color: #ffffff;
+  left: 3px;
+  top: 3px;
+  transition: transform var(--transition-normale);
+  box-shadow: var(--ombre-xs);
+}
+
+/* État activé */
+.toggle-switch input:checked + .toggle-curseur {
+  background-color: var(--bleu-primaire);
+}
+
+.toggle-switch input:checked + .toggle-curseur::before {
+  transform: translateX(20px);
+}
+
+/* Focus accessible */
+.toggle-switch input:focus-visible + .toggle-curseur {
+  outline: 2px solid var(--bleu-primaire);
+  outline-offset: 2px;
+}
+
+/* INDICATEUR DE FORCE DU MOT DE PASSE*/
+
+.force-mdp {
+  margin-top: var(--s2);
+}
+
+.force-mdp-barres {
+  display: flex;
+  gap: var(--s1);
+  margin-bottom: var(--s1);
+}
+
+/* Barre individuelle */
+.force-mdp-barre {
+  height: 4px;
+  flex: 1;
+  border-radius: var(--rayon-full);
+  background-color: var(--bordure);
+  transition: background-color var(--transition-normale);
+}
+
+.force-mdp-barre.active--faible  { background-color: var(--danger); }
+.force-mdp-barre.active--moyen   { background-color: var(--alerte); }
+.force-mdp-barre.active--fort    { background-color: var(--succes); }
+
+.force-mdp-texte {
+  font-size: 0.75rem;
+  color: var(--texte-tres-discret);
+  font-family: var(--police-mono);
+}
+
+.force-mdp-texte.faible  { color: var(--danger); }
+.force-mdp-texte.moyen   { color: var(--alerte); }
+.force-mdp-texte.fort    { color: var(--succes); }
+
+/* MODAL DE CONFIRMATION DE SUPPRESSION */
+
+.modal-danger .modal-titre {
+  color: var(--danger);
+}
+
+.modal-avertissement {
+  background-color: var(--danger-pale);
+  border: 1px solid #fca5a5;
+  border-radius: var(--rayon-sm);
+  padding: var(--s3) var(--s4);
+  font-size: 0.875rem;
+  color: #991b1b;
+  margin-bottom: var(--s4);
+  line-height: 1.55;
+}
+
+/* RESPONSIVE */
+
+@media (max-width: 900px) {
+  .parametres-layout {
+    grid-template-columns: 1fr;
+  }
+
+  .parametres-nav {
+    position: static;
+    flex-direction: row;
+    flex-wrap: wrap;
+    gap: var(--s1);
+  }
+
+  .param-nav-item {
+    width: auto;
+    padding: var(--s1) var(--s3);
+    font-size: 0.8125rem;
+  }
+}

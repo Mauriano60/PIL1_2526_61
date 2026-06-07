@@ -1,0 +1,242 @@
+<!DOCTYPE html>
+<html lang="fr">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Profil — IFRI MentorLink</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700;1,9..40,400&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet" />
+
+  <link rel="stylesheet" href="../css/variables.css" />
+  <link rel="stylesheet" href="../css/reset.css" />
+  <link rel="stylesheet" href="../css/layout.css" />
+  <link rel="stylesheet" href="../css/composants.css" />
+  <link rel="stylesheet" href="../css/utilitaires.css" />
+  <link rel="stylesheet" href="../css/profil.css" />
+</head>
+
+<body>
+
+  <div class="app-layout">
+    <aside class="sidebar" data-composant="sidebar"></aside>
+
+    <main class="main-content">
+
+      <header class="topbar">
+        <h1 class="topbar-titre">Mon profil</h1>
+        <div class="topbar-droite">
+          <div class="topbar-recherche">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="M21 21l-4.35-4.35"/></svg>
+            <input type="text" id="rechercheGlobale" class="topbar-recherche-input" placeholder="Rechercher un étudiant…" />
+          </div>
+          <div class="notif-conteneur">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--texte-discret)" stroke-width="2"><path d="M18 8A6 6 0 006 8c0 7-3 9-3 9h18s-3-2-3-9M13.73 21a2 2 0 01-3.46 0"/></svg>
+            <span class="notif-point"></span>
+          </div>
+          <div class="avatar avatar--sm avatar--bleu">U</div>
+        </div>
+      </header>
+
+      <div class="contenu-page">
+
+        <!--  En-tête profil  -->
+        <div class="profil-entete mb-6">
+          <div class="profil-entete-gauche">
+            <div class="profil-avatar-wrapper">
+              <div class="avatar avatar--xl avatar--bleu" id="avatarPrincipal">U</div>
+              <button class="profil-avatar-modifier btn btn--secondaire btn--sm" onclick="modifierAvatar()">
+                Modifier
+              </button>
+            </div>
+            <div>
+              <h2 class="profil-nom" id="profilNom">Utilisateur</h2>
+              <div class="profil-meta" id="profilMeta">
+                <span class="badge badge--meta">Génie Logiciel</span>
+                <span class="badge badge--meta">L1</span>
+                <span class="badge badge--succes">Étudiant</span>
+              </div>
+              <p class="profil-bio mt-3" id="profilBio">
+                Étudiant en L1 Génie Logiciel à l'IFRI. Passionné par le développement logiciel et l'algorithmique.
+              </p>
+            </div>
+          </div>
+          <div class="profil-entete-droite">
+            <button class="btn btn--primaire" data-ouvrir-modal="modalEditerProfil">
+              Modifier le profil
+            </button>
+          </div>
+        </div>
+
+        <!--  Grille principale  -->
+        <div class="profil-grille">
+
+          <!-- Colonne gauche -->
+          <div class="profil-colonne-gauche">
+
+            <!-- Informations personnelles -->
+            <div class="carte carte--static mb-4">
+              <div class="section-entete mb-4">
+                <div class="section-titre">Informations personnelles</div>
+              </div>
+              <div id="infoPersonnelles">
+                <!-- Généré par profil.js -->
+              </div>
+            </div>
+
+            <!-- Compétences -->
+            <div class="carte carte--static mb-4">
+              <div class="section-entete mb-4">
+                <div class="section-titre">Compétences & matières</div>
+                <button class="btn btn--ghost btn--sm" data-ouvrir-modal="modalCompetences">Modifier</button>
+              </div>
+              <div class="profil-competences" id="listeCompetences">
+                <!-- Générée par profil.js -->
+              </div>
+            </div>
+
+            <!-- Disponibilités -->
+            <div class="carte carte--static">
+              <div class="section-entete mb-4">
+                <div class="section-titre">Disponibilités</div>
+                <button class="btn btn--ghost btn--sm" data-ouvrir-modal="modalDispo">Modifier</button>
+              </div>
+              <div id="listeDispo">
+                <!-- Générée par profil.js -->
+              </div>
+            </div>
+
+          </div>
+
+          <!-- Colonne droite -->
+          <div class="profil-colonne-droite">
+
+            <!-- Statistiques -->
+            <div class="carte carte--static mb-4">
+              <div class="section-entete mb-4">
+                <div class="section-titre">Statistiques</div>
+              </div>
+              <div class="grille grille--2 gap-3" id="statsProfilGrille">
+                <!-- Générées par profil.js -->
+              </div>
+            </div>
+
+            <!-- Mes offres publiées -->
+            <div class="carte carte--static mb-4">
+              <div class="section-entete mb-4">
+                <div class="section-titre">Mes offres publiées</div>
+                <a href="offres.html" class="btn btn--ghost btn--sm">Voir tout</a>
+              </div>
+              <div id="mesOffres">
+                <!-- Générées par profil.js -->
+              </div>
+            </div>
+
+            <!-- Score de complétion -->
+            <div class="carte carte--static">
+              <div class="section-entete mb-4">
+                <div class="section-titre">Complétion du profil</div>
+              </div>
+              <div id="completionProfil">
+                <!-- Générée par profil.js -->
+              </div>
+            </div>
+
+          </div>
+
+        </div>
+
+      </div>
+
+    </main>
+  </div>
+
+  <!-- Modal édition profil -->
+  <div class="modal-overlay" id="modalEditerProfil">
+    <div class="modal-boite">
+      <div class="modal-entete">
+        <h2 class="modal-titre">Modifier le profil</h2>
+        <button class="modal-fermer" data-fermer-modal="modalEditerProfil" aria-label="Fermer">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 6L6 18M6 6l12 12"/></svg>
+        </button>
+      </div>
+      <div class="modal-corps">
+        <div class="grille grille--2 gap-4">
+          <div class="champ-groupe">
+            <label class="champ-label" for="editPrenom">Prénom</label>
+            <input type="text" id="editPrenom" class="champ-input" placeholder="Votre prénom" />
+          </div>
+          <div class="champ-groupe">
+            <label class="champ-label" for="editNom">Nom</label>
+            <input type="text" id="editNom" class="champ-input" placeholder="Votre nom" />
+          </div>
+        </div>
+        <div class="champ-groupe">
+          <label class="champ-label" for="editEmail">Adresse e-mail</label>
+          <input type="email" id="editEmail" class="champ-input" placeholder="vous@ifri.uac.bj" />
+        </div>
+        <div class="grille grille--2 gap-4">
+          <div class="champ-groupe">
+            <label class="champ-label" for="editFiliere">Filière</label>
+            <select id="editFiliere" class="champ-select">
+              <option value="gl">Génie Logiciel</option>
+              <option value="si">Sécurité Informatique</option>
+              <option value="im">Internet et Multimédia</option>
+              <option value="ia">Intelligence Artificielle</option>
+              <option value="se">Systèmes Embarqués</option>
+              <option value="sr">Systèmes et Réseaux</option>
+            </select>
+          </div>
+          <div class="champ-groupe">
+            <label class="champ-label" for="editNiveau">Niveau</label>
+            <select id="editNiveau" class="champ-select">
+              <option value="L1">L1</option>
+              <option value="L2">L2</option>
+              <option value="L3">L3</option>
+              <option value="M1">M1</option>
+              <option value="M2">M2</option>
+            </select>
+          </div>
+        </div>
+        <div class="champ-groupe">
+          <label class="champ-label" for="editBio">Biographie</label>
+          <textarea id="editBio" class="champ-textarea" rows="3" placeholder="Parlez de vous, vos motivations, vos objectifs…"></textarea>
+        </div>
+      </div>
+      <div class="modal-pied">
+        <button class="btn btn--secondaire" data-fermer-modal="modalEditerProfil">Annuler</button>
+        <button class="btn btn--primaire" onclick="sauvegarderProfil()">Enregistrer</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal compétences -->
+  <div class="modal-overlay" id="modalCompetences">
+    <div class="modal-boite">
+      <div class="modal-entete">
+        <h2 class="modal-titre">Gérer mes compétences</h2>
+        <button class="modal-fermer" data-fermer-modal="modalCompetences" aria-label="Fermer">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 6L6 18M6 6l12 12"/></svg>
+        </button>
+      </div>
+      <div class="modal-corps">
+        <p class="texte-discret taille-sm mb-4">Sélectionnez les matières dans lesquelles vous pouvez aider ou être aidé.</p>
+        <div class="competences-grille" id="competencesChoix">
+          <!-- Générée par profil.js -->
+        </div>
+      </div>
+      <div class="modal-pied">
+        <button class="btn btn--secondaire" data-fermer-modal="modalCompetences">Annuler</button>
+        <button class="btn btn--primaire" onclick="sauvegarderCompetences()">Enregistrer</button>
+      </div>
+    </div>
+  </div>
+
+  <script src="../js/app.js"></script>
+  <script src="../js/sidebar.js"></script>
+  <script src="../js/profil.js"></script>
+
+</body>
+</html>

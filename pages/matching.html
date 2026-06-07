@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="fr">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Matching — IFRI MentorLink</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700;1,9..40,400&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet" />
+
+  <link rel="stylesheet" href="../css/variables.css" />
+  <link rel="stylesheet" href="../css/reset.css" />
+  <link rel="stylesheet" href="../css/layout.css" />
+  <link rel="stylesheet" href="../css/composants.css" />
+  <link rel="stylesheet" href="../css/utilitaires.css" />
+  <link rel="stylesheet" href="../css/matching.css" />
+</head>
+
+<body>
+
+  <div class="app-layout">
+    <aside class="sidebar" data-composant="sidebar"></aside>
+
+    <main class="main-content">
+
+      <header class="topbar">
+        <h1 class="topbar-titre">Matching</h1>
+        <div class="topbar-droite">
+          <div class="topbar-recherche">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="M21 21l-4.35-4.35"/></svg>
+            <input type="text" id="rechercheGlobale" class="topbar-recherche-input" placeholder="Rechercher un étudiant…" />
+          </div>
+          <div class="notif-conteneur">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--texte-discret)" stroke-width="2"><path d="M18 8A6 6 0 006 8c0 7-3 9-3 9h18s-3-2-3-9M13.73 21a2 2 0 01-3.46 0"/></svg>
+            <span class="notif-point"></span>
+          </div>
+          <div class="avatar avatar--sm avatar--bleu">U</div>
+        </div>
+      </header>
+
+      <div class="contenu-page">
+
+        <!-- Bandeau explicatif de l'algo -->
+        <div class="matching-bandeau mb-6">
+          <div class="matching-bandeau-texte">
+            <h2 class="matching-bandeau-titre">Vos correspondances personnalisées</h2>
+            <p class="matching-bandeau-desc">
+              L'algorithme de matching évalue la compatibilité sur 3 critères : affinité des matières, 
+              compatibilité des horaires et proximité de filière et de niveau.
+            </p>
+          </div>
+          <div class="matching-bandeau-score">
+            <div class="matching-score-global" id="scoreGlobal">—</div>
+            <div class="texte-discret taille-sm">Score moyen</div>
+          </div>
+        </div>
+
+        <!-- Critères de scoring -->
+        <div class="grille grille--3 mb-6" id="grilleScoring">
+          <!-- Générée par matching.js -->
+        </div>
+
+        <!-- Liste des matches -->
+        <div class="section-entete mb-4">
+          <div>
+            <div class="section-titre" id="titreMatches">12 correspondances trouvées</div>
+            <div class="section-sous-titre">Classées par score de compatibilité décroissant</div>
+          </div>
+          <select class="champ-select" style="width:auto" id="triMatches" onchange="rendreMatches()">
+            <option value="score">Meilleur score</option>
+            <option value="filiere">Par filière</option>
+            <option value="niveau">Par niveau</option>
+          </select>
+        </div>
+
+        <div id="listeMatches">
+          <!-- Générée par matching.js -->
+        </div>
+
+      </div>
+    </main>
+  </div>
+
+  <script src="../js/app.js"></script>
+  <script src="../js/sidebar.js"></script>
+  <script src="../js/matching.js"></script>
+
+</body>
+</html>

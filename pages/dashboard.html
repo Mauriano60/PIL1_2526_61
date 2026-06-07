@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="fr">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Dashboard — IFRI MentorLink</title>
+
+  <!-- Google Fonts : DM Sans + DM Mono -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700;1,9..40,400&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet" />
+
+  <!-- CSS modulaire -->
+  <link rel="stylesheet" href="../css/variables.css" />
+  <link rel="stylesheet" href="../css/reset.css" />
+  <link rel="stylesheet" href="../css/layout.css" />
+  <link rel="stylesheet" href="../css/composants.css" />
+  <link rel="stylesheet" href="../css/utilitaires.css" />
+  <link rel="stylesheet" href="../css/dashboard.css" />
+</head>
+
+<body>
+
+  <div class="app-layout">
+
+    <!-- SIDEBAR (injectée par sidebar.js) -->
+    <aside class="sidebar" data-composant="sidebar"></aside>
+
+    <!--  CONTENU PRINCIPAL  -->
+    <main class="main-content">
+
+      <!-- Topbar -->
+      <header class="topbar">
+        <h1 class="topbar-titre">Dashboard</h1>
+        <div class="topbar-droite">
+          <div class="topbar-recherche">
+            <svg class="topbar-recherche-icone" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="M21 21l-4.35-4.35"/></svg>
+            <input type="text" id="rechercheGlobale" class="topbar-recherche-input" placeholder="Rechercher un étudiant…" />
+          </div>
+          <div class="notif-conteneur">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--texte-discret)" stroke-width="2"><path d="M18 8A6 6 0 006 8c0 7-3 9-3 9h18s-3-2-3-9M13.73 21a2 2 0 01-3.46 0"/></svg>
+            <span class="notif-point"></span>
+          </div>
+          <div class="avatar avatar--sm avatar--bleu">U</div>
+        </div>
+      </header>
+
+      <!-- Zone de contenu -->
+      <div class="contenu-page">
+
+        <!--  En-tête de bienvenue  -->
+        <div class="dashboard-bienvenue mb-6">
+          <div>
+            <h2 class="dashboard-bienvenue-titre">Bonjour, Utilisateur</h2>
+            <p class="dashboard-bienvenue-sous-titre">
+              Voici un résumé de votre activité de mentorat aujourd'hui.
+            </p>
+          </div>
+          <a href="offres.html" class="btn btn--primaire">Parcourir les offres</a>
+        </div>
+
+        <!--  Cartes statistiques  -->
+        <div class="grille grille--4 mb-6" id="grilleStats">
+          <!-- Générées par dashboard.js -->
+        </div>
+
+        <!--  Ligne principale : Activité récente + Mentors compatibles  -->
+        <div class="dashboard-ligne-principale mb-6">
+
+          <!-- Activité récente -->
+          <div class="carte carte--static">
+            <div class="section-entete">
+              <div>
+                <div class="section-titre">Activité récente</div>
+                <div class="section-sous-titre">Vos dernières interactions</div>
+              </div>
+            </div>
+            <div id="listeActivite">
+              <!-- Générée par dashboard.js -->
+            </div>
+          </div>
+
+          <!-- Matches suggérés -->
+          <div class="carte carte--static">
+            <div class="section-entete">
+              <div>
+                <div class="section-titre">Mentors suggérés</div>
+                <div class="section-sous-titre">Basés sur votre profil</div>
+              </div>
+              <a href="matching.html" class="btn btn--ghost btn--sm">Voir tout</a>
+            </div>
+            <div id="listeMentors">
+              <!-- Générée par dashboard.js -->
+            </div>
+          </div>
+
+        </div>
+
+        <!--  Mes disponibilités + Progression  -->
+        <div class="grille grille--2">
+
+          <!-- Mes disponibilités -->
+          <div class="carte carte--static">
+            <div class="section-entete mb-4">
+              <div class="section-titre">Mes disponibilités</div>
+              <a href="profil.html" class="btn btn--ghost btn--sm">Modifier</a>
+            </div>
+            <div id="grilleDispo">
+              <!-- Générée par dashboard.js -->
+            </div>
+          </div>
+
+          <!-- Progression du profil -->
+          <div class="carte carte--static">
+            <div class="section-entete mb-4">
+              <div class="section-titre">Complétion du profil</div>
+            </div>
+            <div id="progressionProfil">
+              <!-- Générée par dashboard.js -->
+            </div>
+          </div>
+
+        </div>
+
+      </div>
+      <!-- Fin contenu-page -->
+
+    </main>
+
+  </div>
+
+  <!-- Scripts -->
+  <script src="../js/app.js"></script>
+  <script src="../js/sidebar.js"></script>
+  <script src="../js/dashboard.js"></script>
+
+</body>
+</html>

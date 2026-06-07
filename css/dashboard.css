@@ -1,0 +1,233 @@
+/*Bloc de bienvenue */
+.dashboard-bienvenue {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background: linear-gradient(135deg, #1e3a8a 0%, #2563eb 60%, #3b82f6 100%);
+  border-radius: var(--rayon-xl);
+  padding: var(--s6) var(--s8);
+  gap: var(--s4);
+}
+
+.dashboard-bienvenue-titre {
+  font-size: 1.375rem;
+  font-weight: 700;
+  color: #ffffff;
+  letter-spacing: -0.03em;
+  margin-bottom: var(--s1);
+}
+
+.dashboard-bienvenue-sous-titre {
+  font-size: 0.875rem;
+  color: rgba(255,255,255,0.75);
+  margin-bottom: 0;
+}
+
+/* Bouton blanc sur fond bleu */
+.dashboard-bienvenue .btn--primaire {
+  background-color: rgba(255,255,255,0.15);
+  border-color: rgba(255,255,255,0.3);
+  color: #ffffff;
+  flex-shrink: 0;
+  backdrop-filter: blur(4px);
+}
+
+.dashboard-bienvenue .btn--primaire:hover {
+  background-color: rgba(255,255,255,0.25);
+  box-shadow: none;
+}
+
+/*Ligne principale (2 colonnes) */
+.dashboard-ligne-principale {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: var(--s4);
+}
+
+/* Item d'activité récente */
+.activite-item {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--s3);
+  padding: var(--s3) 0;
+  border-bottom: 1px solid var(--bordure);
+}
+
+.activite-item:last-child {
+  border-bottom: none;
+}
+
+/* Point coloré de type d'activité */
+.activite-point {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  margin-top: 6px;
+  flex-shrink: 0;
+}
+
+.activite-info {
+  flex: 1;
+  min-width: 0;
+}
+
+.activite-texte {
+  font-size: 0.875rem;
+  color: var(--texte-corps);
+  font-weight: 500;
+  margin-bottom: 2px;
+}
+
+.activite-heure {
+  font-size: 0.75rem;
+  color: var(--texte-tres-discret);
+  font-family: var(--police-mono);
+}
+
+/* Item de mentor suggéré */
+.mentor-item {
+  display: flex;
+  align-items: center;
+  gap: var(--s3);
+  padding: var(--s3) 0;
+  border-bottom: 1px solid var(--bordure);
+  cursor: pointer;
+  transition: background-color var(--transition-rapide);
+  border-radius: var(--rayon-xs);
+}
+
+.mentor-item:last-child {
+  border-bottom: none;
+}
+
+.mentor-item-info {
+  flex: 1;
+  min-width: 0;
+}
+
+.mentor-item-nom {
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: var(--texte-titre);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.mentor-item-meta {
+  font-size: 0.75rem;
+  color: var(--texte-discret);
+}
+
+/*Grille de disponibilités */
+.dispo-grille {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  gap: var(--s2);
+}
+
+.dispo-jour {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--s1);
+}
+
+.dispo-jour-label {
+  font-size: 0.625rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--texte-tres-discret);
+}
+
+.dispo-jour-case {
+  width: 100%;
+  aspect-ratio: 1;
+  border-radius: var(--rayon-xs);
+  border: 1.5px solid var(--bordure);
+  background-color: #ffffff;
+  transition: all var(--transition-rapide);
+  cursor: pointer;
+}
+
+.dispo-jour-case.actif {
+  background-color: var(--bleu-primaire);
+  border-color: var(--bleu-primaire);
+}
+
+/* Progression du profil */
+.progression-item {
+  margin-bottom: var(--s4);
+}
+
+.progression-item:last-child {
+  margin-bottom: 0;
+}
+
+.progression-entete {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: var(--s2);
+}
+
+.progression-label {
+  font-size: 0.8125rem;
+  font-weight: 500;
+  color: var(--texte-corps);
+}
+
+.progression-pourcent {
+  font-size: 0.75rem;
+  font-weight: 700;
+  color: var(--texte-discret);
+  font-family: var(--police-mono);
+}
+
+/* Score global de complétion */
+.score-complet {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: var(--s5) 0 var(--s6) 0;
+  text-align: center;
+}
+
+.score-chiffre {
+  font-size: 3.5rem;
+  font-weight: 800;
+  color: var(--bleu-primaire);
+  letter-spacing: -0.06em;
+  line-height: 1;
+  margin-bottom: var(--s2);
+}
+
+.score-label {
+  font-size: 0.875rem;
+  color: var(--texte-discret);
+}
+
+/* ---- Responsive ---- */
+@media (max-width: 1024px) {
+  .dashboard-ligne-principale {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 768px) {
+  .dashboard-bienvenue {
+    flex-direction: column;
+    align-items: flex-start;
+    padding: var(--s5);
+  }
+
+  .dashboard-bienvenue .btn--primaire {
+    align-self: flex-start;
+  }
+
+  .dispo-grille {
+    grid-template-columns: repeat(4, 1fr);
+  }
+}

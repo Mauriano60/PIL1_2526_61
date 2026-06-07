@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="fr">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Demandes — IFRI MentorLink</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700;1,9..40,400&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet" />
+
+  <link rel="stylesheet" href="../css/variables.css" />
+  <link rel="stylesheet" href="../css/reset.css" />
+  <link rel="stylesheet" href="../css/layout.css" />
+  <link rel="stylesheet" href="../css/composants.css" />
+  <link rel="stylesheet" href="../css/utilitaires.css" />
+  <link rel="stylesheet" href="../css/demandes.css" />
+</head>
+
+<body>
+
+  <div class="app-layout">
+    <aside class="sidebar" data-composant="sidebar"></aside>
+
+    <main class="main-content">
+
+      <header class="topbar">
+        <h1 class="topbar-titre">Demandes</h1>
+        <div class="topbar-droite">
+          <div class="topbar-recherche">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="M21 21l-4.35-4.35"/></svg>
+            <input type="text" id="rechercheGlobale" class="topbar-recherche-input" placeholder="Rechercher un étudiant…" />
+          </div>
+          <div class="notif-conteneur">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--texte-discret)" stroke-width="2"><path d="M18 8A6 6 0 006 8c0 7-3 9-3 9h18s-3-2-3-9M13.73 21a2 2 0 01-3.46 0"/></svg>
+            <span class="notif-point"></span>
+          </div>
+          <div class="avatar avatar--sm avatar--bleu">U</div>
+        </div>
+      </header>
+
+      <div class="contenu-page">
+
+        <!--  Onglets  -->
+        <div class="onglets mb-5">
+          <button class="onglet actif" onclick="changerOnglet('recues', this)">
+            Reçues <span class="onglet-compteur" id="compteurRecues">2</span>
+          </button>
+          <button class="onglet" onclick="changerOnglet('envoyees', this)">
+            Envoyées <span class="onglet-compteur" id="compteurEnvoyees">3</span>
+          </button>
+          <button class="onglet" onclick="changerOnglet('terminees', this)">
+            Terminées
+          </button>
+        </div>
+
+        <!--  Panneau Reçues  -->
+        <div id="panneauRecues">
+          <div class="section-entete mb-4">
+            <div>
+              <div class="section-titre">Demandes reçues</div>
+              <div class="section-sous-titre">Des étudiants souhaitent que vous les accompagniez</div>
+            </div>
+          </div>
+          <div id="listeRecues"><!-- Générée par demandes.js --></div>
+        </div>
+
+        <!--  Panneau Envoyées  -->
+        <div id="panneauEnvoyees" class="cache">
+          <div class="section-entete mb-4">
+            <div>
+              <div class="section-titre">Demandes envoyées</div>
+              <div class="section-sous-titre">Vos demandes de mentorat en cours</div>
+            </div>
+          </div>
+          <div id="listeEnvoyees"><!-- Générée par demandes.js --></div>
+        </div>
+
+        <!--  Panneau Terminées  -->
+        <div id="panneauTerminees" class="cache">
+          <div class="section-entete mb-4">
+            <div>
+              <div class="section-titre">Sessions terminées</div>
+              <div class="section-sous-titre">Historique de vos sessions de mentorat</div>
+            </div>
+          </div>
+          <div id="listeTerminees"><!-- Générée par demandes.js --></div>
+        </div>
+
+      </div>
+    </main>
+  </div>
+
+  <script src="../js/app.js"></script>
+  <script src="../js/sidebar.js"></script>
+  <script src="../js/demandes.js"></script>
+
+</body>
+</html>

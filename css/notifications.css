@@ -1,0 +1,72 @@
+/* Item de notification */
+.notif-item {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--s4);
+  padding: var(--s4) var(--s5);
+  background-color: var(--fond-carte);
+  border: 1px solid var(--bordure);
+  border-radius: var(--rayon-lg);
+  margin-bottom: var(--s2);
+  cursor: pointer;
+  transition: box-shadow var(--transition-rapide), border-color var(--transition-rapide);
+  position: relative;
+}
+
+.notif-item:hover {
+  box-shadow: var(--ombre-sm);
+  border-color: var(--bordure-forte);
+}
+
+/* Bande colorée à gauche pour les non-lues */
+.notif-item.non-lue {
+  border-left: 3px solid var(--bleu-primaire);
+  background-color: #fafcff;
+}
+
+/* Point coloré selon le type */
+.notif-type-point {
+  width: 40px;
+  height: 40px;
+  border-radius: var(--rayon-md);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  font-size: 1rem;
+}
+
+.notif-type-point--matching  { background-color: #d1fae5; color: #065f46; }
+.notif-type-point--message   { background-color: #dbeafe; color: #1e40af; }
+.notif-type-point--demande   { background-color: #fef3c7; color: #92400e; }
+.notif-type-point--systeme   { background-color: var(--fond-app); color: var(--texte-discret); }
+
+.notif-corps { flex: 1; min-width: 0; }
+
+.notif-texte {
+  font-size: 0.875rem;
+  color: var(--texte-corps);
+  line-height: 1.55;
+  margin-bottom: 4px;
+}
+
+.notif-texte strong {
+  color: var(--texte-titre);
+  font-weight: 600;
+}
+
+.notif-heure {
+  font-size: 0.75rem;
+  color: var(--texte-tres-discret);
+  font-family: var(--police-mono);
+}
+
+/* Point "non-lu" à droite */
+.notif-dot-non-lu {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background-color: var(--bleu-primaire);
+  flex-shrink: 0;
+  margin-top: 6px;
+}

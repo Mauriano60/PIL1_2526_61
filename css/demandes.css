@@ -1,0 +1,98 @@
+/* Compteur dans l'onglet */
+.onglet-compteur {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 20px;
+  height: 18px;
+  padding: 0 6px;
+  border-radius: var(--rayon-full);
+  background-color: var(--bleu-primaire);
+  color: #fff;
+  font-size: 0.6875rem;
+  font-weight: 700;
+  margin-left: var(--s1);
+  vertical-align: middle;
+}
+
+/* Carte de demande */
+.demande-carte {
+  background-color: var(--fond-carte);
+  border: 1px solid var(--bordure);
+  border-radius: var(--rayon-lg);
+  padding: var(--s5);
+  display: flex;
+  align-items: flex-start;
+  gap: var(--s4);
+  margin-bottom: var(--s3);
+  transition: box-shadow var(--transition-rapide);
+}
+
+.demande-carte:hover {
+  box-shadow: var(--ombre-sm);
+}
+
+/* Indicateur de statut à gauche */
+.demande-indicateur {
+  width: 4px;
+  border-radius: var(--rayon-full);
+  align-self: stretch;
+  flex-shrink: 0;
+  min-height: 60px;
+}
+
+.demande-indicateur--attente  { background-color: var(--alerte); }
+.demande-indicateur--accepte  { background-color: var(--succes); }
+.demande-indicateur--refuse   { background-color: var(--danger); }
+.demande-indicateur--termine  { background-color: var(--texte-tres-discret); }
+
+.demande-corps {
+  flex: 1;
+  min-width: 0;
+}
+
+.demande-entete {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--s3);
+  margin-bottom: var(--s2);
+  flex-wrap: wrap;
+}
+
+.demande-nom {
+  font-size: 0.9375rem;
+  font-weight: 700;
+  color: var(--texte-titre);
+}
+
+.demande-meta {
+  font-size: 0.8125rem;
+  color: var(--texte-discret);
+  margin-bottom: var(--s2);
+}
+
+.demande-message {
+  font-size: 0.875rem;
+  color: var(--texte-corps);
+  line-height: 1.6;
+  background-color: var(--fond-app);
+  border-radius: var(--rayon-sm);
+  padding: var(--s3) var(--s4);
+  margin-bottom: var(--s4);
+  border-left: 3px solid var(--bordure-forte);
+  font-style: italic;
+}
+
+.demande-actions {
+  display: flex;
+  gap: var(--s2);
+  flex-wrap: wrap;
+}
+
+.demande-date {
+  font-size: 0.75rem;
+  color: var(--texte-tres-discret);
+  font-family: var(--police-mono);
+  flex-shrink: 0;
+}

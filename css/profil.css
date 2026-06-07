@@ -1,0 +1,237 @@
+/* En-tête du profil */
+.profil-entete {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: var(--s6);
+  background-color: var(--fond-carte);
+  border: 1px solid var(--bordure);
+  border-radius: var(--rayon-xl);
+  padding: var(--s8);
+}
+
+.profil-entete-gauche {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--s6);
+  flex: 1;
+}
+
+.profil-avatar-wrapper {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--s3);
+  flex-shrink: 0;
+}
+
+.profil-nom {
+  font-size: 1.5rem;
+  font-weight: 800;
+  letter-spacing: -0.04em;
+  color: var(--texte-titre);
+  margin-bottom: var(--s2);
+}
+
+.profil-meta {
+  display: flex;
+  gap: var(--s2);
+  flex-wrap: wrap;
+}
+
+.profil-bio {
+  font-size: 0.875rem;
+  color: var(--texte-discret);
+  line-height: 1.6;
+  max-width: 480px;
+  margin-bottom: 0;
+}
+
+/* Grille principale */
+.profil-grille {
+  display: grid;
+  grid-template-columns: 1fr 1.4fr;
+  gap: var(--s4);
+  align-items: start;
+}
+
+.profil-colonne-gauche,
+.profil-colonne-droite {
+  display: flex;
+  flex-direction: column;
+}
+
+/* Compétences*/
+.profil-competences {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--s2);
+}
+
+/* Tag de compétence */
+.competence-tag {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--s1);
+  padding: var(--s1) var(--s3);
+  background-color: var(--fond-app);
+  border: 1px solid var(--bordure);
+  border-radius: var(--rayon-full);
+  font-size: 0.8125rem;
+  font-weight: 500;
+  color: var(--texte-corps);
+}
+
+/* Disponibilités du profil */
+.dispo-semaine {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  gap: var(--s2);
+  margin-bottom: var(--s4);
+}
+
+.dispo-case {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--s1);
+}
+
+.dispo-case-label {
+  font-size: 0.625rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--texte-tres-discret);
+}
+
+.dispo-case-bloc {
+  width: 100%;
+  aspect-ratio: 1;
+  border-radius: var(--rayon-xs);
+  border: 1.5px solid var(--bordure);
+  background-color: #fff;
+  cursor: pointer;
+  transition: all var(--transition-rapide);
+}
+
+.dispo-case-bloc.actif {
+  background-color: var(--bleu-primaire);
+  border-color: var(--bleu-primaire);
+}
+
+.dispo-case-bloc:hover:not(.actif) {
+  border-color: var(--bleu-primaire);
+  background-color: var(--bleu-pale);
+}
+
+/* Stats mini*/
+.stat-mini {
+  background-color: var(--fond-app);
+  border-radius: var(--rayon-md);
+  padding: var(--s4);
+  text-align: center;
+}
+
+.stat-mini-valeur {
+  font-size: 1.75rem;
+  font-weight: 800;
+  color: var(--bleu-primaire);
+  letter-spacing: -0.04em;
+  line-height: 1;
+  margin-bottom: var(--s1);
+}
+
+.stat-mini-label {
+  font-size: 0.75rem;
+  color: var(--texte-discret);
+  font-weight: 500;
+}
+
+/* Offres publiées mini */
+.offre-mini {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: var(--s3) 0;
+  border-bottom: 1px solid var(--bordure);
+  gap: var(--s3);
+}
+
+.offre-mini:last-child { border-bottom: none; }
+
+.offre-mini-gauche {
+  display: flex;
+  align-items: center;
+  gap: var(--s3);
+  flex: 1;
+  min-width: 0;
+}
+
+.offre-mini-titre {
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: var(--texte-titre);
+}
+
+.offre-mini-meta {
+  font-size: 0.75rem;
+  color: var(--texte-discret);
+}
+
+/* Grille compétences dans la modal  */
+.competences-grille {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: var(--s2);
+}
+
+.competence-choix {
+  display: flex;
+  align-items: center;
+  gap: var(--s2);
+  padding: var(--s3);
+  border: 1.5px solid var(--bordure);
+  border-radius: var(--rayon-sm);
+  cursor: pointer;
+  transition: all var(--transition-rapide);
+  user-select: none;
+}
+
+.competence-choix.selectionne {
+  border-color: var(--bleu-primaire);
+  background-color: var(--bleu-pale);
+}
+
+.competence-choix-label {
+  font-size: 0.875rem;
+  font-weight: 500;
+  color: var(--texte-corps);
+}
+
+@media (max-width: 1024px) {
+  .profil-grille {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 768px) {
+  .profil-entete {
+    flex-direction: column;
+    padding: var(--s5);
+  }
+
+  .profil-entete-gauche {
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+  }
+
+  .profil-meta {
+    justify-content: center;
+  }
+
+  .dispo-semaine {
+    grid-template-columns: repeat(4, 1fr);
+  }
+}
