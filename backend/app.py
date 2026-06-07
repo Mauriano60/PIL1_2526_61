@@ -7,11 +7,12 @@ def create_app():
     
     # Charger toute la config depuis settings.py (qui lit le .env)
     app.config.from_object(Config)
+    
     app.config['SERVER_NAME'] = '127.0.0.1:5000'
     app.config['APPLICATION_ROOT'] = '/'
     app.config['PREFERRED_URL_SCHEME'] = 'http'
     
-    # Initialiser le service mail
+    
     mail.init_app(app)
 
     from routes.auth import auth_bp
@@ -23,6 +24,7 @@ def create_app():
     from routes.demandes import demandes_bp
     from routes.parametres import settings_bp
     from routes.references import references_bp
+    from routes.email import email_bp
 
     app.register_blueprint(auth_bp)
     app.register_blueprint(users_bp)
@@ -33,11 +35,11 @@ def create_app():
     app.register_blueprint(demandes_bp)
     app.register_blueprint(settings_bp)
     app.register_blueprint(references_bp)
-
+    app.register_blueprint(email_bp)
 
     return app
 
 app = create_app()
 
 if __name__ == "__main__":
-    app.run()
+    app.run(host="127.0.0.1", port=5000, debug=True)

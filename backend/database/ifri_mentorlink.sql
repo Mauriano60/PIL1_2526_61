@@ -51,6 +51,11 @@ CREATE TABLE utilisateurs (
     est_actif TINYINT(1) DEFAULT 1,
     id_filiere INT NOT NULL,
     id_niveau INT NOT NULL,
+    --  Champs pour la récupération de mot de passe oublié
+    -- reset_token : token généré et envoyé par email à l'utilisateur 
+    -- reset_token : date/heure d'expiration du token
+    reset_token VARCHAR(255) DEFAULT NULL,
+    reset_token DATETIME DEFAULT NULL,
     FOREIGN KEY (id_filiere) REFERENCES filieres_etudes(id) ON DELETE CASCADE,
     FOREIGN KEY (id_niveau) REFERENCES niveaux_etudes(id) ON DELETE CASCADE
 ) ENGINE=InnoDB;
