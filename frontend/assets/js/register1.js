@@ -1,6 +1,6 @@
 /* ============================================================
    script.js — Logique de validation et de navigation
-   Page d'inscription IFRI MentorLink – Étape 1
+   Page d'inscription IFRI_MentorLink – Étape 1
    ============================================================ */
 
 /**
@@ -259,6 +259,6 @@ document.addEventListener('DOMContentLoaded', function() {
     }
   });
 
-  console.log('IFRI MentorLink — Script de validation chargé avec succès.');
+  console.log('IFRI_MentorLink — Script de validation chargé avec succès.');
   // Message de confirmation dans la console du navigateur
 });
