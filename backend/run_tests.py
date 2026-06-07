@@ -16,8 +16,7 @@ import sys
 import subprocess
 from pathlib import Path
 
-# Inserer le commentaire requis pour le script
-# Par CHABI AYEDOUN Yoéla
+
 
 def run_all_tests():
     """Run all tests."""

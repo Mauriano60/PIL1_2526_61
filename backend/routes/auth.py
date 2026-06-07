@@ -1,5 +1,7 @@
+# CHABI AYEDOUN Yoéla
 from flask import Blueprint, render_template, request, redirect, url_for, session
-from db.database import get_connection
+# CORRECTION : On importe les fonctions réelles de ton database.py
+from db.database import fetch_one, fetch_all, execute
 from utils.validators import valider_inscription
 from services.mail_service import envoyer_email_confirmation, verify_token
 import bcrypt
@@ -16,12 +18,11 @@ def login():
     if request.method == 'POST':
         email = request.form['email']
         password = request.form['password']
-        conn = None
+        
         try:
-            conn = get_connection()
-            cursor = conn.cursor(dictionary=True)
-            cursor.execute("SELECT * FROM utilisateurs WHERE email = %s AND est_actif = 1", (email,))
-            user = cursor.fetchone()
+            # Utilisation de fetch_one (gère automatiquement la connexion et la fermeture)
+            user = fetch_one("SELECT * FROM utilisateurs WHERE email = %s AND est_actif = 1", (email,))
+            
             if user and bcrypt.checkpw(password.encode('utf-8'), user['mot_de_passe'].encode('utf-8')):
                 # Vérifier si l'email a été confirmé
                 if not user['email_verifie']:
@@ -35,36 +36,27 @@ def login():
                 error = "Email ou mot de passe incorrect"
         except Exception as e:
             error = f"Erreur lors de la connexion: {str(e)}"
-        finally:
-            if conn:
-                conn.close()
+            
     return render_template('auth/login.html', error=error)
 
 @auth_bp.route('/register', methods=['GET', 'POST'])
 def register():
     error = None
-    filieres = []
-    niveaux = []
-    conn = None
+    
+    # Chargement dynamique des filières et niveaux avec fetch_all
     try:
-        conn = get_connection()
-        cursor = conn.cursor(dictionary=True)
-        cursor.execute("SELECT * FROM filieres_etudes")
-        filieres = cursor.fetchall()
-        cursor.execute("SELECT * FROM niveaux_etudes")
-        niveaux = cursor.fetchall()
+        filieres = fetch_all("SELECT * FROM filieres_etudes")
+        niveaux = fetch_all("SELECT * FROM niveaux_etudes")
     except Exception as e:
+        filieres = []
+        niveaux = []
         error = f"Erreur lors du chargement des filières et niveaux: {str(e)}"
-    finally:
-        if conn:
-            conn.close()
 
     if request.method == 'POST':
         erreurs = valider_inscription(request.form)
         if erreurs:
             error = " | ".join(erreurs)
         else:
-            conn = None
             try:
                 prenom = request.form['prenom']
                 nom = request.form['nom']
@@ -73,26 +65,24 @@ def register():
                 password = request.form['password']
                 id_filiere = request.form['id_filiere']
                 id_niveau = request.form['id_niveau']
+                
                 hashed = bcrypt.hashpw(password.encode('utf-8'), bcrypt.gensalt())
-                conn = get_connection()
-                cursor = conn.cursor()
-                cursor.execute("""
+                
+                # Insertion de l'utilisateur avec execute (renvoie directement le lastrowid)
+                user_id = execute("""
                     INSERT INTO utilisateurs (email, telephone, mot_de_passe, prenom, nom, id_filiere, id_niveau)
                     VALUES (%s, %s, %s, %s, %s, %s, %s)
                 """, (email, telephone, hashed.decode('utf-8'), prenom, nom, id_filiere, id_niveau))
-                user_id = cursor.lastrowid
-                cursor.execute("INSERT INTO parametres (utilisateur_id) VALUES (%s)", (user_id,))
-                conn.commit()
+                
+                # Insertion des paramètres initiaux
+                execute("INSERT INTO parametres (utilisateur_id) VALUES (%s)", (user_id,))
 
                 # Envoyer l'email de confirmation
                 envoyer_email_confirmation(email, prenom)
 
                 return redirect(url_for('auth.email_envoye'))
-            except Exception as e:
+            except Exception:
                 error = "Email ou téléphone déjà utilisé"
-            finally:
-                if conn:
-                    conn.close()
 
     return render_template('auth/register.html', error=error, filieres=filieres, niveaux=niveaux)
 
@@ -106,23 +96,16 @@ def confirmer_email(token):
     email = verify_token(token)
     if not email:
         return "Lien invalide ou expiré. Veuillez vous réinscrire.", 400
-    # CHABI AYEDOUN Yoéla
-
-    conn = None
+    
     try:
-        conn = get_connection()
-        cursor = conn.cursor()
-        cursor.execute("""
+        # Mise à jour du statut de l'étudiant
+        execute("""
             UPDATE utilisateurs SET email_verifie = 1
             WHERE email = %s
         """, (email,))
-        conn.commit()
         return redirect(url_for('auth.login'))
     except Exception as e:
         return f"Erreur : {str(e)}", 500
-    finally:
-        if conn:
-            conn.close()
 
 @auth_bp.route('/logout')
 def logout():
