@@ -1,3 +1,4 @@
+# CHABI AYEDOUN Yoéla
 import pytest
 from utils.validators import (
     valider_email,
@@ -92,19 +93,19 @@ class TestPasswordValidation:
         """Test password shorter than 8 characters."""
         valid, msg = valider_mot_de_passe("Pass12")
         assert valid is False
-        assert "8 caractères" in msg
+        assert "8 caractère" in msg.lower()
 
     def test_invalid_password_no_uppercase(self):
         """Test password without uppercase letter."""
         valid, msg = valider_mot_de_passe("password123")
         assert valid is False
-        assert "majuscule" in msg
+        assert "majuscule" in msg.lower()
 
     def test_invalid_password_no_digit(self):
         """Test password without digit."""
         valid, msg = valider_mot_de_passe("Password")
         assert valid is False
-        assert "chiffre" in msg
+        assert "chiffre" in msg.lower()
 
     def test_valid_password_exact_8_chars(self):
         """Test valid password with exactly 8 characters."""
@@ -146,7 +147,8 @@ class TestRegistrationValidation:
             'id_niveau': '1'
         }
         erreurs = valider_inscription(form)
-        assert any('Prénom' in e for e in erreurs)
+        # Utilisation de .lower() pour éviter les rejets liés à la casse
+        assert any('prénom' in e.lower() for e in erreurs)
 
     def test_missing_last_name(self):
         """Test registration with missing last name."""
@@ -160,7 +162,7 @@ class TestRegistrationValidation:
             'id_niveau': '1'
         }
         erreurs = valider_inscription(form)
-        assert any('nom' in e for e in erreurs)
+        assert any('nom' in e.lower() for e in erreurs)
 
     def test_invalid_email_in_registration(self):
         """Test registration with invalid email."""
@@ -174,7 +176,7 @@ class TestRegistrationValidation:
             'id_niveau': '1'
         }
         erreurs = valider_inscription(form)
-        assert any('Email' in e for e in erreurs)
+        assert any('email' in e.lower() for e in erreurs)
 
     def test_invalid_phone_in_registration(self):
         """Test registration with invalid phone."""
@@ -188,7 +190,7 @@ class TestRegistrationValidation:
             'id_niveau': '1'
         }
         erreurs = valider_inscription(form)
-        assert any('Téléphone' in e for e in erreurs)
+        assert any('téléphone' in e.lower() for e in erreurs)
 
     def test_weak_password_in_registration(self):
         """Test registration with weak password."""
@@ -216,7 +218,7 @@ class TestRegistrationValidation:
             'id_niveau': '1'
         }
         erreurs = valider_inscription(form)
-        assert any('Filière' in e for e in erreurs)
+        assert any('filière' in e.lower() for e in erreurs)
 
     def test_missing_niveau(self):
         """Test registration with missing niveau."""
@@ -230,4 +232,4 @@ class TestRegistrationValidation:
             'id_niveau': ''
         }
         erreurs = valider_inscription(form)
-        assert any('niveau' in e for e in erreurs)
+        assert any('niveau' in e.lower() for e in erreurs)

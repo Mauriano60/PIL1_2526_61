@@ -84,6 +84,47 @@ def securite():
             
     return render_template('settings/securite.html', error=error, success=success)
 
+# CHABI AYEDOUN Yoéla
+
+@settings_bp.route('/settings/preferences', methods=['GET', 'POST'])
+def preferences():
+    if 'user_id' not in session:
+        return redirect(url_for('auth.login'))
+        
+    error = None
+    success = None
+    
+    try:
+        if request.method == 'POST':
+            # Puisque ce sont des switches (checkboxes HTML stylisées) :
+            # Si le switch est activé, il est présent dans request.form -> on met 1
+            # S'il est désactivé, il est absent de request.form -> on met 0
+            email_notif = 1 if 'email_notification' in request.form else 0
+            push_notif  = 1 if 'push_notification' in request.form else 0
+            match_notif = 1 if 'new_match_alerts' in request.form else 0
+            weekly_notif = 1 if 'weekly_summary' in request.form else 0
+            
+            # Requête SQL stricte avec les vrais noms de ta base de données
+            execute("""
+                UPDATE parametres 
+                SET email_notification = %s, 
+                    push_notification = %s, 
+                    new_match_alerts = %s, 
+                    weekly_summary = %s
+                WHERE utilisateur_id = %s
+            """, (email_notif, push_notif, match_notif, weekly_notif, session['user_id']))
+            
+            success = "Préférences de notification mises à jour"
+            
+        # Récupération des paramètres pour l'état initial des boutons dans le HTML
+        params = fetch_one("SELECT * FROM parametres WHERE utilisateur_id = %s", (session['user_id'],))
+        
+    except Exception as e:
+        params = None
+        error = f"Erreur lors de la mise à jour des préférences: {str(e)}"
+        
+    return render_template('settings/preferences.html', params=params, error=error, success=success)
+
 
 @settings_bp.route('/settings/confidentialite', methods=['GET', 'POST'])
 def confidentialite():

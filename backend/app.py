@@ -1,6 +1,22 @@
-from flask import Flask
+from flask import Flask,session
 from config.settings import Config
 from services.mail_service import mail
+from flask_socketio import SocketIO, join_room
+
+app = Flask(__name__)
+app.config['SECRET_KEY'] = 'ton_secret_ifri'
+socketio = SocketIO(app, cors_allowed_origins="*")
+
+@socketio.on('connect')
+def handle_connect():
+    # Si l'étudiant est connecté, on le place dans sa room privée
+    if 'user_id' in session:
+        utilisateur_id = session['user_id']
+        join_room(f"user_{utilisateur_id}")
+        print(f"L'utilisateur {utilisateur_id} a rejoint son canal de notification en temps réel.")
+
+if __name__ == '__main__':
+    socketio.run(app, debug=True)
 
 def create_app():
     app = Flask(__name__)

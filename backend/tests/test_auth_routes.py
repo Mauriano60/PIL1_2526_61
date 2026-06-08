@@ -1,3 +1,4 @@
+# CHABI AYEDOUN Yoéla
 import pytest
 from unittest.mock import patch, MagicMock
 from flask import session
@@ -18,21 +19,16 @@ class TestAuthRoutes:
         assert response.status_code == 200
         assert b'login' in response.data.lower()
 
-    @patch('routes.auth.get_connection')
-    def test_login_successful(self, mock_get_connection, client):
+    # CORRECTION : On patche les fonctions globales db.database importées ou utilisées dans auth
+    @patch('routes.auth.fetch_one')
+    def test_login_successful(self, mock_fetch_one, client):
         """Test successful login."""
-        # Mock database connection and user
-        mock_conn = MagicMock()
-        mock_cursor = MagicMock()
-        mock_get_connection.return_value = mock_conn
-        mock_conn.cursor.return_value = mock_cursor
-        
-        # Mock password hash
         import bcrypt
         password = "TestPassword123"
         hashed = bcrypt.hashpw(password.encode('utf-8'), bcrypt.gensalt())
         
-        mock_cursor.fetchone.return_value = {
+        # On simule directement le retour de fetch_one de manière propre
+        mock_fetch_one.return_value = {
             'id': 1,
             'email': 'test@example.com',
             'mot_de_passe': hashed.decode('utf-8'),
@@ -46,21 +42,14 @@ class TestAuthRoutes:
             'password': password
         }, follow_redirects=True)
         
-        # Check that user was redirected (login was successful)
         assert response.status_code == 200
 
     @patch('routes.auth.bcrypt.checkpw')
-    @patch('routes.auth.get_connection')
-    def test_login_with_invalid_credentials(self, mock_get_connection, mock_checkpw, client):
+    @patch('routes.auth.fetch_one')
+    def test_login_with_invalid_credentials(self, mock_fetch_one, mock_checkpw, client):
         """Test login with invalid credentials."""
-        # Mock database connection
-        mock_conn = MagicMock()
-        mock_cursor = MagicMock()
-        mock_get_connection.return_value = mock_conn
-        mock_conn.cursor.return_value = mock_cursor
-        
-        # User not found
-        mock_cursor.fetchone.return_value = None
+        # fetch_one renvoie None si l'utilisateur n'est pas trouvé en BDD
+        mock_fetch_one.return_value = None
         
         response = client.post('/login', data={
             'email': 'notfound@example.com',
@@ -68,25 +57,16 @@ class TestAuthRoutes:
         })
         
         assert response.status_code == 200
-        # The response may contain the login form again or error message
         assert len(response.data) > 0
 
     @patch('routes.auth.bcrypt.checkpw')
-    @patch('routes.auth.get_connection')
-    def test_login_with_wrong_password(self, mock_get_connection, mock_checkpw, client):
+    @patch('routes.auth.fetch_one')
+    def test_login_with_wrong_password(self, mock_fetch_one, mock_checkpw, client):
         """Test login with wrong password."""
         import bcrypt
-        
-        # Mock database connection
-        mock_conn = MagicMock()
-        mock_cursor = MagicMock()
-        mock_get_connection.return_value = mock_conn
-        mock_conn.cursor.return_value = mock_cursor
-        
-        # Create valid hash for wrong password
         hashed = bcrypt.hashpw("CorrectPassword123".encode('utf-8'), bcrypt.gensalt())
         
-        mock_cursor.fetchone.return_value = {
+        mock_fetch_one.return_value = {
             'id': 1,
             'email': 'test@example.com',
             'mot_de_passe': hashed.decode('utf-8'),
@@ -95,7 +75,7 @@ class TestAuthRoutes:
             'est_actif': 1
         }
         
-        # Mock checkpw to return False (wrong password)
+        # Le mot de passe ne correspond pas -> checkpw doit renvoyer False
         mock_checkpw.return_value = False
         
         response = client.post('/login', data={
@@ -104,43 +84,38 @@ class TestAuthRoutes:
         })
         
         assert response.status_code == 200
-        # Login should fail and return login page
         assert len(response.data) > 0
 
-    def test_register_page_loads(self, client):
+    @patch('routes.auth.fetch_all')
+    def test_register_page_loads(self, mock_fetch_all, client):
         """Test that register page loads successfully."""
-        with patch('routes.auth.get_connection') as mock_get_connection:
-            mock_conn = MagicMock()
-            mock_cursor = MagicMock()
-            mock_get_connection.return_value = mock_conn
-            mock_conn.cursor.return_value = mock_cursor
-            
-            mock_cursor.fetchall.side_effect = [
-                [{'id': 1, 'nom': 'Informatique'}],  # filieres
-                [{'id': 1, 'nom': 'L1'}]  # niveaux
-            ]
-            
-            response = client.get('/register')
-            assert response.status_code == 200
-            assert b'register' in response.data.lower()
-
-    @patch('routes.auth.get_connection')
-    def test_register_successful(self, mock_get_connection, client):
-        """Test successful registration."""
-        mock_conn = MagicMock()
-        mock_cursor = MagicMock()
-        mock_get_connection.return_value = mock_conn
-        mock_conn.cursor.return_value = mock_cursor
-        
-        # For initial page load
-        mock_cursor.fetchall.side_effect = [
-            [{'id': 1, 'nom': 'Informatique'}],
-            [{'id': 1, 'nom': 'L1'}],
-            # After form submission - return value for fetchall won't be called
+        # On simule les appels successifs de fetch_all pour charger les filières et les niveaux
+        mock_fetch_all.side_effect = [
+            [{'id': 1, 'nom': 'Informatique'}],  # Pour les filières
+            [{'id': 1, 'nom': 'L1'}]              # Pour les niveaux d'études
         ]
         
-        mock_cursor.lastrowid = 1
-        
+        response = client.get('/register')
+        assert response.status_code == 200
+        assert b'register' in response.data.lower()
+
+    @patch('routes.auth.execute')
+    @patch('routes.auth.fetch_all')
+    @patch('routes.auth.fetch_one') # Ajoute fetch_one si ton code vérifie si l'email existe déjà
+    def test_register_successful(self, mock_fetch_one, mock_fetch_all, mock_execute, client):
+        """Test successful registration."""
+        # 1. Aucun utilisateur existant avec cet email
+        mock_fetch_one.return_value = None 
+    
+        # 2. Chargement des filières et niveaux pour le formulaire
+        mock_fetch_all.side_effect = [
+            [{'id': 1, 'nom': 'Informatique'}],
+            [{'id': 1, 'nom': 'L1'}]
+        ]
+    
+        # 3. L'exécution de l'INSERT renvoie l'ID généré
+        mock_execute.return_value = 1
+    
         response = client.post('/register', data={
             'prenom': 'Jean',
             'nom': 'Dupont',
@@ -150,33 +125,21 @@ class TestAuthRoutes:
             'id_filiere': '1',
             'id_niveau': '1'
         }, follow_redirects=True)
-        
-        # Should redirect to login
+    
+        # Vérifie que la page finale se charge bien (200) ou qu'on est redirigé vers le login
         assert response.status_code == 200
 
-    @patch('routes.auth.get_connection')
-    def test_register_duplicate_email(self, mock_get_connection, client):
+    @patch('routes.auth.execute')
+    @patch('routes.auth.fetch_all')
+    def test_register_duplicate_email(self, mock_fetch_all, mock_execute, client):
         """Test registration with duplicate email."""
-        # For GET request (page load) and POST request, we need separate connections
-        mock_conn_get = MagicMock()
-        mock_cursor_get = MagicMock()
-        
-        mock_conn_post = MagicMock()
-        mock_cursor_post = MagicMock()
-        
-        # Setup GET mocks
-        mock_conn_get.cursor.return_value = mock_cursor_get
-        mock_cursor_get.fetchall.side_effect = [
+        mock_fetch_all.side_effect = [
             [{'id': 1, 'nom': 'Informatique'}],
-            [{'id': 1, 'nom': 'L1'}],
+            [{'id': 1, 'nom': 'L1'}]
         ]
         
-        # Setup POST mocks
-        mock_conn_post.cursor.return_value = mock_cursor_post
-        mock_cursor_post.execute.side_effect = Exception("Email already used")
-        
-        # Return different connections for each call
-        mock_get_connection.side_effect = [mock_conn_get, mock_conn_post]
+        # On simule la levée d'exception de la contrainte UNIQUE d'email de MySQL
+        mock_execute.side_effect = Exception("Email already used")
         
         response = client.post('/register', data={
             'prenom': 'Jean',
@@ -188,22 +151,18 @@ class TestAuthRoutes:
             'id_niveau': '1'
         })
         
-        # After error, user is redirected back to register page
         assert response.status_code in [200, 302]
 
     def test_logout(self, client):
         """Test logout functionality."""
         with client:
-            # Set a session
             with client.session_transaction() as sess:
                 sess['user_id'] = 1
                 sess['prenom'] = 'John'
                 sess['nom'] = 'Doe'
             
-            # Perform logout
             response = client.get('/logout', follow_redirects=True)
             
-            # Check that session is cleared
             with client.session_transaction() as sess:
                 assert 'user_id' not in sess
             
@@ -215,17 +174,14 @@ class TestAuthSecurity:
 
     def test_session_isolation(self, client):
         """Test that sessions are isolated between requests."""
-        # Test 1: Set session data
         with client:
             with client.session_transaction() as sess:
                 sess['user_id'] = 1
                 sess['data'] = 'sensitive'
             
-            # Within the same context, session data is present
             with client.session_transaction() as sess:
                 assert sess.get('user_id') == 1
             
-            # Clear session
             with client.session_transaction() as sess:
                 sess.clear()
 
@@ -238,11 +194,7 @@ class TestAuthSecurity:
         valid, msg = valider_mot_de_passe(password)
         assert valid is True
         
-        # Simulate what registration does
         hashed = bcrypt.hashpw(password.encode('utf-8'), bcrypt.gensalt())
         
-        # Verify hash is different from password
         assert hashed.decode('utf-8') != password
-        
-        # Verify password can be checked
         assert bcrypt.checkpw(password.encode('utf-8'), hashed)

@@ -1,13 +1,18 @@
 # CHABI AYEDOUN Yoéla
 from flask import Blueprint, render_template, session, redirect, url_for
 from db.database import fetch_all, fetch_one
-from utils.responses import login_required, get_user_context
+
+# Importation globale et sécurisée du décorateur depuis son nouveau fichier dédié
+from utils.decorators import login_required
 
 users_bp = Blueprint('users', __name__)
 
 @users_bp.route('/dashboard')
 @login_required
 def dashboard():
+    # Seul get_user_context reste importé ici pour protéger la base de données
+    from utils.responses import get_user_context
+    
     try:
         user_id = session['user_id']
 
@@ -26,7 +31,7 @@ def dashboard():
                 SELECT COUNT(o.id) as total 
                 FROM offre_mentorat o
                 JOIN utilisateurs u ON u.id = o.utilisateur_id
-                WHERE u.id_filiere = %s AND o.utilisateur_id != %s
+                WHERE u.id_filiere = %s AND o.utilisateur_id != %s AND o.statut_offre = 1
             """, (id_filiere, user_id))
             nb_offres_filiere = res_offres['total'] if res_offres else 0
 
@@ -35,7 +40,7 @@ def dashboard():
             SELECT COUNT(d.id) as total 
             FROM demande_mentorat d
             JOIN competences_utilisateur cu ON cu.matiere_id = d.matiere_id
-            WHERE cu.utilisateur_id = %s AND d.utilisateur_id != %s
+            WHERE cu.utilisateur_id = %s AND d.utilisateur_id != %s AND d.statut_demande = 1
         """, (user_id, user_id))
         nb_demandes_profil = res_demandes['total'] if res_demandes else 0
 
@@ -73,26 +78,26 @@ def dashboard():
 
         # F. Ses publications (Ses propres offres et demandes combinées avec UNION)
         ses_publications = fetch_all("""
-            SELECT 'offre' as type_pub, o.id, o.description, o.format, o.cree_le, m.nom as matiere
+            SELECT 'offre' as type_pub, o.id, o.description, o.date_creation, m.nom as matiere
             FROM offre_mentorat o
             JOIN matieres m ON m.id = o.matiere_id
             WHERE o.utilisateur_id = %s
             
             UNION ALL
             
-            SELECT 'demande' as type_pub, d.id, d.description, d.format, d.cree_le, m.nom as matiere
+            SELECT 'demande' as type_pub, d.id, d.description, d.date_creation, m.nom as matiere
             FROM demande_mentorat d
             JOIN matieres m ON m.id = d.matiere_id
             WHERE d.utilisateur_id = %s
             
-            ORDER BY cree_le DESC
+            ORDER BY date_creation DESC
         """, (user_id, user_id))
 
         # G. Activités récentes (Les dernières notifications reçues)
         activites_recentes = fetch_all("""
-            SELECT 'notification' as type_act, type as contenu, cree_le 
+            SELECT 'notification' as type_act, type_notification as contenu, date_creation 
             FROM notifications WHERE utilisateur_id = %s
-            ORDER BY cree_le DESC LIMIT 5
+            ORDER BY date_creation DESC LIMIT 5
         """, (user_id,))
 
 
@@ -118,10 +123,13 @@ def dashboard():
 @users_bp.route('/profil/<int:user_id>')
 @login_required
 def profil(user_id):
+    # Injection locale isolée pour get_user_context
+    from utils.responses import get_user_context
+    
     try:
         # 1. Informations générales complètes de l'utilisateur
         profil_user = fetch_one("""
-            SELECT u.id, u.nom, u.prenom, u.email, u.telephone, u.biographie, u.avatar_url,
+            SELECT u.id, u.nom, u.prenom, u.email, u.biographie,
                    f.nom as filiere, n.nom as niveau
             FROM utilisateurs u
             JOIN filieres_etudes f ON f.id = u.id_filiere
@@ -139,14 +147,14 @@ def profil(user_id):
             WHERE cu.utilisateur_id = %s
         """, (user_id,))
 
-        # 3. Lacunes (Matières associées à ses difficultés dans ta table SQL)
+        # 3. Lacunes (Matières associées à ses difficultés)
         lacunes = fetch_all("""
-            SELECT m.nom FROM difficultes_utilisateur du
-            JOIN matieres m ON m.id = du.matiere_id
-            WHERE du.utilisateur_id = %s
+            SELECT m.nom FROM plus_basses_notes pbn
+            JOIN matieres m ON m.id = pbn.matiere_id
+            WHERE pbn.utilisateur_id = %s
         """, (user_id,))
 
-        # 4. Disponibilités (Conforme au nom de table 'disponibilites' et colonne 'jour_semaine')
+        # 4. Disponibilités 
         disponibilites = fetch_all("""
             SELECT jour_semaine, heure_debut, heure_fin 
             FROM disponibilites
@@ -159,7 +167,7 @@ def profil(user_id):
             SELECT o.*, m.nom as matiere
             FROM offre_mentorat o
             JOIN matieres m ON m.id = o.matiere_id
-            WHERE o.utilisateur_id = %s
+            WHERE o.utilisateur_id = %s AND o.statut_offre = 1
         """, (user_id,))
 
         # Envoi au template

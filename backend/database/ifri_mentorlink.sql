@@ -55,7 +55,7 @@ CREATE TABLE utilisateurs (
     -- reset_token : token généré et envoyé par email à l'utilisateur 
     -- reset_token : date/heure d'expiration du token
     reset_token VARCHAR(255) DEFAULT NULL,
-    reset_token DATETIME DEFAULT NULL,
+    reset_expire DATETIME DEFAULT NULL,
     FOREIGN KEY (id_filiere) REFERENCES filieres_etudes(id) ON DELETE CASCADE,
     FOREIGN KEY (id_niveau) REFERENCES niveaux_etudes(id) ON DELETE CASCADE
 ) ENGINE=InnoDB;
@@ -103,6 +103,7 @@ CREATE TABLE offre_mentorat (
     matiere_id INT NOT NULL,
     format VARCHAR(20) NOT NULL,
     description TEXT,
+    statut_offre TINYINT(1) DEFAULT 1,
     cree_le TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     CHECK (format IN ('en_ligne', 'presentiel', 'les_deux')),
     FOREIGN KEY (utilisateur_id) REFERENCES utilisateurs(id) ON DELETE CASCADE,
@@ -115,6 +116,7 @@ CREATE TABLE demande_mentorat (
     matiere_id INT NOT NULL,
     format VARCHAR(20) NOT NULL,
     description TEXT,
+    statut_demande TINYINT(1) DEFAULT 1,
     cree_le TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     CHECK (format IN ('en_ligne', 'presentiel', 'les_deux')),
     FOREIGN KEY (utilisateur_id) REFERENCES utilisateurs(id) ON DELETE CASCADE,
@@ -126,9 +128,12 @@ CREATE TABLE correspondances (
     mentor_id INT NOT NULL,
     mentee_id INT NOT NULL,
     score_compatibilite DECIMAL(5,2) NOT NULL,
+    statut_correspondance INT DEFAULT 0,
+    initiateur_id INT NULL,
     cree_le TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     FOREIGN KEY (mentor_id) REFERENCES utilisateurs(id) ON DELETE CASCADE,
-    FOREIGN KEY (mentee_id) REFERENCES utilisateurs(id) ON DELETE CASCADE
+    FOREIGN KEY (mentee_id) REFERENCES utilisateurs(id) ON DELETE CASCADE,
+    FOREIGN KEY (initiateur_id) REFERENCES utilisateurs(id) ON DELETE SET NULL
 ) ENGINE=InnoDB;
 
 CREATE TABLE participants_conversation (
@@ -152,7 +157,9 @@ CREATE TABLE messages (
 CREATE TABLE notifications (
     id INT AUTO_INCREMENT PRIMARY KEY,
     utilisateur_id INT NOT NULL,
-    type VARCHAR(50) NOT NULL,
+    correspondance_id INT NULL,
+    message TEXT NOT NULL,
+    type_notification VARCHAR(50) DEFAULT 'info',
     est_lu TINYINT(1) DEFAULT 0,
     cree_le TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     FOREIGN KEY (utilisateur_id) REFERENCES utilisateurs(id) ON DELETE CASCADE
@@ -160,9 +167,35 @@ CREATE TABLE notifications (
 
 
 
+-- CHABI AYEDOUN Yoéla
+-- Optimisation des performances pour le moteur de matching et les notifications
+
+-- 1. Index pour la table 'utilisateurs'
+-- Accélère le filtrage des étudiants actifs lors du chargement global
+CREATE INDEX idx_utilisateurs_actif ON utilisateurs(est_actif);
+
+-- 2. Index pour la table 'offre_mentorat'
+-- Accélère la recherche des matières proposées par un utilisateur spécifique
+CREATE INDEX idx_offre_utilisateur_statut ON offre_mentorat(utilisateur_id, statut_offre, matiere_id);
+
+-- 3. Index pour la table 'demande_mentorat'
+-- Accélère la recherche des matières recherchées par un utilisateur spécifique
+CREATE INDEX idx_demande_utilisateur_statut ON demande_mentorat(utilisateur_id, statut_demande, matiere_id);
+
+-- 4. Index pour la table 'correspondances'
+-- Crucial : accélère la vérification des doublons et l'affichage des matchs validés ou en attente
+CREATE INDEX idx_correspondances_membres_statut ON correspondances(mentor_id, mentee_id, statut_correspondance);
+CREATE INDEX idx_correspondances_initiateur ON correspondances(initiateur_id);
+
+-- 5. Index pour la table 'notifications'
+-- Indispensable pour récupérer instantanément les alertes non lues d'un étudiant (compteur de la cloche)
+CREATE INDEX idx_notifications_utilisateur_lu ON notifications(utilisateur_id, est_lu);
+
+
+
 INSERT INTO matieres (nom) VALUES
 ('Algorithmique'), ('Base de donnees'), ('Programmation web'), ('Reseaux'),
-('Genie logiciel'), ('Mathematiques'), ('Systeme Linux'), ('Anglais technique');
+('Genie logiciel'), ('Mathematiques'), ('Systeme Linux'), ('Anglais technique'), ('Logique, arithmétique et applications'), ('Algèbre linéaire et applications'), ('Analyse et appli');
 
 INSERT INTO filieres_etudes (nom) VALUES
 ('Genie logiciel'), ('Informatique'), ('Mathematiques'), ('Systeme Linux');
@@ -191,5 +224,5 @@ INSERT INTO correspondances (mentor_id, mentee_id, score_compatibilite) VALUES (
 INSERT INTO conversations () VALUES ();
 INSERT INTO participants_conversation (conversation_id, utilisateur_id) VALUES (1, 1), (1, 2);
 INSERT INTO messages (conversation_id, expediteur_id, contenu) VALUES (1, 1, 'Bonjour Koffi, ravi de te rencontrer! Je suis Aminata, ton mentor pour la programmation web. N hesite pas a me poser toutes tes questions.'), (1, 2, 'Bonjour Aminata, merci de m accompagner! J ai deja quelques questions sur les bases de donnees, notamment les jointures. Pourrais tu m expliquer comment elles fonctionnent?');
-INSERT INTO notifications (utilisateur_id, type) VALUES (1, 'nouvelle_conversation'), (2, 'nouvelle_conversation');
+INSERT INTO notifications (utilisateur_id) VALUES (1), (2);
 INSERT INTO parametres (utilisateur_id, visibilite_profil, email_notification, push_notification, new_match_alerts, weekly_summary) VALUES (1, 'public', 1, 1, 1, 1), (2, 'public', 1, 1, 1, 1);

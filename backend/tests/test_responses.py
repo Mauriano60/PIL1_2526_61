@@ -1,6 +1,9 @@
+# CHABI AYEDOUN Yoéla
 import pytest
 from unittest.mock import patch, MagicMock
-from utils.responses import get_user_context, login_required
+from flask import session, url_for
+from utils.responses import get_user_context
+from utils.decorators import login_required
 
 
 class TestUserContext:
@@ -8,24 +11,25 @@ class TestUserContext:
 
     def test_get_user_context_no_session(self, client):
         """Test get_user_context when no user is logged in."""
-        from utils.responses import get_user_context
-        with client:
-            # Create request context without user_id
-            with client.session_transaction() as sess:
-                # Verify no user_id
-                assert 'user_id' not in sess
+        # On force un contexte de requête vide
+        with client.application.test_request_context():
+            context = get_user_context()
+            # Si pas de session, le contexte doit retourner un dictionnaire vide
+            assert context == {}
 
-    @patch('utils.responses.get_connection')
-    def test_get_user_context_with_user(self, mock_get_connection, client):
+    # CORRECTION : On patche get_db de utils.responses au lieu de get_connection
+    @patch('utils.responses.get_db')
+    def test_get_user_context_with_user(self, mock_get_db, client):
         """Test get_user_context with logged-in user."""
-        from utils.responses import get_user_context
         
-        # Mock database
+        # Mock de la structure contextuelle de PyMySQL (with get_db() as conn -> with conn.cursor() as cursor)
         mock_conn = MagicMock()
         mock_cursor = MagicMock()
-        mock_get_connection.return_value = mock_conn
-        mock_conn.cursor.return_value = mock_cursor
         
+        mock_get_db.return_value.__enter__.return_value = mock_conn
+        mock_conn.cursor.return_value.__enter__.return_value = mock_cursor
+        
+        # Simuler les retours successifs pour : 1. L'utilisateur, 2. Le COUNT des notifs
         mock_cursor.fetchone.side_effect = [
             {
                 'id': 1,
@@ -33,25 +37,25 @@ class TestUserContext:
                 'nom': 'Doe',
                 'email': 'john@example.com'
             },
-            {'nb': 3}  # 3 unread notifications
+            {'nb': 3}  # 3 notifications non lues
         ]
         
-        with client.session_transaction() as sess:
-            sess['user_id'] = 1
-        
-        # Make a request to set up request context
-        response = client.get('/login')
-        assert response.status_code == 200
+        # On exécute dans un contexte de requête avec une session active
+        with client.application.test_request_context():
+            session['user_id'] = 1
+            context = get_user_context()
+            
+            assert context['user']['prenom'] == 'John'
+            assert context['nb_notifs'] == 3
 
-    @patch('utils.responses.get_connection')
-    def test_get_user_context_no_notifications(self, mock_get_connection, client):
+    @patch('utils.responses.get_db')
+    def test_get_user_context_no_notifications(self, mock_get_db, client):
         """Test get_user_context with no unread notifications."""
-        from utils.responses import get_user_context
-        
         mock_conn = MagicMock()
         mock_cursor = MagicMock()
-        mock_get_connection.return_value = mock_conn
-        mock_conn.cursor.return_value = mock_cursor
+        
+        mock_get_db.return_value.__enter__.return_value = mock_conn
+        mock_conn.cursor.return_value.__enter__.return_value = mock_cursor
         
         mock_cursor.fetchone.side_effect = [
             {
@@ -60,15 +64,15 @@ class TestUserContext:
                 'nom': 'Doe',
                 'email': 'john@example.com'
             },
-            {'nb': 0}  # 0 unread notifications
+            {'nb': 0}  # 0 notification
         ]
         
-        with client.session_transaction() as sess:
-            sess['user_id'] = 1
-        
-        # Make a request to set up request context
-        response = client.get('/login')
-        assert response.status_code == 200
+        with client.application.test_request_context():
+            session['user_id'] = 1
+            context = get_user_context()
+            
+            assert context['user']['nom'] == 'Doe'
+            assert context['nb_notifs'] == 0
 
 
 class TestLoginRequired:
@@ -77,27 +81,28 @@ class TestLoginRequired:
     def test_login_required_with_session(self, client):
         """Test that login_required allows access when logged in."""
         @login_required
-        def test_view():
+        def dummy_view():
             return "Success"
         
-        with client:
-            with client.session_transaction() as sess:
-                sess['user_id'] = 1
-            
-            # Make a request to create request context
-            response = client.get('/')
+        # On simule un utilisateur connecté en session
+        with client.application.test_request_context():
+            session['user_id'] = 1
+            # La fonction doit s'exécuter normalement et retourner sa valeur
+            result = dummy_view()
+            assert result == "Success"
 
     def test_login_required_without_session(self, client):
         """Test that login_required redirects when not logged in."""
         @login_required
-        def test_view():
+        def dummy_view():
             return "Success"
         
-        with client:
-            # Request without user_id should be redirected
-            response = client.get('/')
-            # Should redirect to login
-            assert response.status_code == 302 or response.status_code == 200
+        # Pas d'utilisateur en session -> doit provoquer une redirection vers auth.login
+        with client.application.test_request_context():
+            response = dummy_view()
+            # Le décorateur renvoie un objet redirect (statut HTTP 302)
+            assert response.status_code == 302
+            assert '/login' in response.headers['Location']
 
     def test_login_required_preserves_function_name(self):
         """Test that login_required preserves the wrapped function's name."""
@@ -106,7 +111,7 @@ class TestLoginRequired:
             """My docstring."""
             return "result"
         
-        # The wrapper should preserve the original function's metadata
+        # Vérification des métadonnées (crucial pour le routing Flask)
         assert my_test_function.__name__ == 'my_test_function'
         assert 'My docstring' in my_test_function.__doc__
 
@@ -116,10 +121,7 @@ class TestLoginRequired:
         def test_view_with_args(user_id, name=None):
             return f"user_{user_id}_{name}"
         
-        with client:
-            with client.session_transaction() as sess:
-                sess['user_id'] = 1
-            
-            # Make request to activate context
-            response = client.get('/')
-
+        with client.application.test_request_context():
+            session['user_id'] = 1
+            result = test_view_with_args(42, name="Yoela")
+            assert result == "user_42_Yoela"
