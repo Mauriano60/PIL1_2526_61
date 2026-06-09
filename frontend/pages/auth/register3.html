@@ -1,0 +1,396 @@
+<!DOCTYPE html>
+<!-- Déclaration du type de document HTML5 -->
+<html lang="fr">
+<!-- Attribut lang pour indiquer la langue française -->
+
+<head>
+  <!-- Section d'en-tête : métadonnées, liens vers CSS et titre -->
+
+  <meta charset="UTF-8" />
+  <!-- Encodage UTF-8 pour supporter les caractères accentués français -->
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <!-- Balise viewport pour rendre la page responsive sur mobile -->
+
+  <title>Disponibilités — IFRI_MentorLink</title>
+  <!-- Titre affiché dans l'onglet du navigateur -->
+
+  <!-- Bootstrap 5 CSS : framework de mise en page et composants UI -->
+  <link
+    href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"
+    rel="stylesheet"
+  />
+
+  <!-- Bootstrap Icons : bibliothèque d'icônes SVG -->
+  <link
+    href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css"
+    rel="stylesheet"
+  />
+
+  <!-- Feuille de style partagée avec les étapes 1 et 2 -->
+  <link rel="stylesheet" href="Inscription 1.css" />
+  <link rel="stylesheet" type="text/css" href="Inscription 2.css">
+
+  <!-- Feuille de style spécifique à l'étape 3 -->
+  <link rel="stylesheet" href="Inscription 3.css" />
+
+</head>
+
+<body>
+  <!-- Corps de la page : tout le contenu visible -->
+
+  <!-- Conteneur principal : centre tout verticalement et horizontalement -->
+  <div class="main-wrapper d-flex flex-column align-items-center justify-content-center min-vh-100 py-5">
+    <!-- min-vh-100 : hauteur minimale = 100% de la fenêtre -->
+    <!-- d-flex flex-column : flexbox en colonne pour empiler logo + stepper + carte -->
+    <!-- align-items-center : centrage horizontal -->
+    <!-- justify-content-center : centrage vertical -->
+
+    <!-- ================================================
+         SECTION EN-TÊTE : Logo + Titre + Sous-titre
+         ================================================ -->
+    <div class="text-center mb-4">
+      <!-- text-center : centre le texte et les éléments inline -->
+      <!-- mb-4 : marge basse de 1.5rem -->
+
+      <!-- Icône logo : livre dans un carré arrondi bleu clair -->
+      <div class="logo-icon mb-3 mx-auto">
+        <!-- logo-icon : classe CSS personnalisée (définie dans style.css) -->
+        <!-- mb-3 : marge basse -->
+        <!-- mx-auto : centre horizontalement le bloc -->
+        <i class="bi bi-book text-primary fs-4"></i>
+        <!-- bi-book-half : icône livre Bootstrap Icons -->
+        <!-- text-primary : couleur bleue Bootstrap -->
+        <!-- fs-4 : taille de police Bootstrap (1.5rem) -->
+      </div>
+
+      <!-- Titre principal de la page d'inscription -->
+      <h1 class="fw-bold fs-3 mb-1">Créer mon compte IFRI_ MentorLink</h1>
+      <!-- fw-bold : texte en gras -->
+      <!-- fs-3 : taille de police (1.75rem) -->
+      <!-- mb-1 : petite marge basse -->
+
+      <!-- Sous-titre descriptif -->
+      <p class="text-muted small">Rejoignez la communauté de mentorat de l'IFRI</p>
+      <!-- text-muted : texte gris secondaire -->
+      <!-- small : police légèrement réduite -->
+    </div>
+    <!-- Fin section en-tête -->
+
+    <!-- ================================================
+         STEPPER : Indicateur des 3 étapes d'inscription
+         ================================================ -->
+    <div class="stepper d-flex align-items-center justify-content-center mb-4 gap-0">
+      <!-- stepper : classe CSS personnalisée -->
+      <!-- d-flex : disposition horizontale des éléments -->
+      <!-- align-items-center : aligne les cercles et lignes au centre vertical -->
+      <!-- mb-4 : marge basse sous le stepper -->
+
+      <!-- Étape 1 : Informations personnelles — COMPLÉTÉE -->
+      <div class="step-item text-center">
+        <!-- step-item : bloc d'une étape (cercle + libellé) -->
+
+        <!-- Cercle de l'étape 1 : bleu avec chiffre 1 -->
+        <div class="step-circle step-done mx-auto mb-1">1</div>
+        <!-- step-circle : style de base du cercle -->
+        <!-- step-done : variante bleue pour étape complétée (définie dans style3.css) -->
+
+        <!-- Libellé de l'étape 1 -->
+        <span class="step-label small">Informations personnelles</span>
+        <!-- step-label : style du libellé sous le cercle -->
+      </div>
+
+      <!-- Ligne de connexion entre étape 1 et 2 — BLEUE (étape passée) -->
+      <div class="step-line step-line-done"></div>
+      <!-- step-line : ligne horizontale entre deux étapes -->
+      <!-- step-line-done : coloration bleue pour étape validée -->
+
+      <!-- Étape 2 : Profil académique — COMPLÉTÉE -->
+      <div class="step-item text-center">
+
+        <!-- Cercle de l'étape 2 : bleu avec chiffre 2 -->
+        <div class="step-circle step-done mx-auto mb-1">2</div>
+
+        <!-- Libellé de l'étape 2 -->
+        <span class="step-label small">Profil académique</span>
+      </div>
+
+      <!-- Ligne de connexion entre étape 2 et 3 — BLEUE (étape 2 validée) -->
+      <div class="step-line step-line-done"></div>
+
+      <!-- Étape 3 : Disponibilités — ACTIVE (en cours) -->
+      <div class="step-item text-center">
+
+        <!-- Cercle de l'étape 3 : bleu rempli (actif) avec chiffre 3 -->
+        <div class="step-circle active mx-auto mb-1">3</div>
+        <!-- active : classe Bootstrap + style.css → fond bleu rempli -->
+
+        <!-- Libellé de l'étape 3 en gras (étape courante) -->
+        <span class="step-label fw-bold small">Disponibilités</span>
+        <!-- fw-bold : gras pour indiquer l'étape active -->
+      </div>
+
+    </div>
+    <!-- Fin stepper -->
+
+    <!-- ================================================
+         CARTE PRINCIPALE : Formulaire de disponibilités
+         ================================================ -->
+    <div class="form-card p-4 p-md-5">
+      <!-- form-card : carte blanche avec ombre (définie dans style.css) -->
+      <!-- p-4 : padding de 1.5rem sur mobile -->
+      <!-- p-md-5 : padding de 3rem sur écrans moyens et grands -->
+
+      <!-- Zone d'injection des alertes par JavaScript -->
+      <div id="zoneAlerte"></div>
+      <!-- Vide par défaut, rempli dynamiquement par afficherNotification() dans script3.js -->
+
+      <!-- Titre et sous-titre de la carte -->
+      <div class="text-center mb-4">
+        <!-- text-center : centrage du texte -->
+        <!-- mb-4 : marge basse -->
+
+        <!-- Titre principal de la carte -->
+        <h2 class="carte-titre fw-bold mb-1">Quand êtes-vous disponible ?</h2>
+        <!-- carte-titre : style personnalisé (style3.css) -->
+        <!-- fw-bold : gras -->
+
+        <!-- Sous-titre explicatif -->
+        <p class="text-muted small mb-0">Ajoutez vos créneaux de disponibilité</p>
+        <!-- mb-0 : supprime la marge basse par défaut du paragraphe -->
+      </div>
+
+      <!-- ============================================
+           LISTE DES CRÉNEAUX AJOUTÉS
+           Remplie dynamiquement par JavaScript
+           ============================================ -->
+      <div id="listeCréneaux">
+        <!-- Vide au chargement, les créneaux confirmés s'affichent ici -->
+        <!-- Chaque créneau est généré par afficherCreneaux() dans script3.js -->
+      </div>
+
+      <!-- ============================================
+           BOUTON : Ajouter un créneau
+           ============================================ -->
+      <button
+        type="button"
+        id="btnAjouter"
+        class="btn-ajouter-creneau w-100 mb-4"
+        onclick="ouvrirFormCreneau()"
+      >
+        <!-- btn-ajouter-creneau : style personnalisé (style3.css) -->
+        <!-- w-100 : largeur pleine -->
+        <!-- mb-4 : marge basse -->
+        <!-- onclick : appelle ouvrirFormCreneau() dans script3.js -->
+
+        <i class="bi bi-plus"></i> Ajouter un créneau
+        <!-- bi-plus : icône + de Bootstrap Icons -->
+      </button>
+
+      <!-- ============================================
+           FORMULAIRE INLINE D'AJOUT DE CRÉNEAU
+           Caché par défaut avec d-none
+           ============================================ -->
+      <div id="formCreneau" class="creneau-form mb-4 d-none">
+        <!-- creneau-form : style de la carte de formulaire (style3.css) -->
+        <!-- d-none : caché par défaut (Bootstrap display:none) -->
+        <!-- Affiché par ouvrirFormCreneau() et caché par annulerFormCreneau() -->
+
+        <!-- Titre du formulaire inline -->
+        <p class="small fw-semibold text-muted mb-3">Nouveau créneau</p>
+        <!-- Petit texte indicatif au-dessus des champs -->
+
+        <!-- Ligne : Jour + Heure début + Heure fin + Boutons action -->
+        <div class="row g-2 align-items-end">
+          <!-- row g-2 : grille Bootstrap avec espacement de 0.5rem entre colonnes -->
+          <!-- align-items-end : aligne tous les éléments par le bas -->
+
+          <!-- Colonne Jour -->
+          <div class="col-md-4 col-12">
+            <!-- col-md-4 : 1/3 de largeur sur grand écran -->
+            <!-- col-12 : pleine largeur sur mobile -->
+
+            <!-- Libellé du select Jour -->
+            <label for="creneauJour" class="form-label text-muted small mb-1">Jour</label>
+            <!-- form-label : style Bootstrap pour les libellés -->
+
+            <!-- Menu déroulant des jours de la semaine -->
+            <select
+              id="creneauJour"
+              class="form-select custom-input creneau-select"
+            >
+              <!-- form-select : style Bootstrap des menus déroulants -->
+              <!-- custom-input : style d'input partagé (style.css) -->
+              <!-- creneau-select : supprime la double flèche (style3.css) -->
+
+              <option value="" disabled selected>Choisir...</option>
+              <!-- Option par défaut : désactivée et sélectionnée au départ -->
+
+              <option value="Lundi">Lundi</option>
+              <option value="Mardi">Mardi</option>
+              <option value="Mercredi">Mercredi</option>
+              <option value="Jeudi">Jeudi</option>
+              <option value="Vendredi">Vendredi</option>
+              <option value="Samedi">Samedi</option>
+              <option value="Dimanche">Dimanche</option>
+            </select>
+
+            <!-- Message d'erreur Bootstrap affiché si le champ est invalide -->
+            <div class="invalid-feedback">Veuillez choisir un jour.</div>
+          </div>
+
+          <!-- Colonne Heure de début -->
+          <div class="col-md-3 col-6">
+            <!-- col-md-3 : 1/4 de largeur sur grand écran -->
+            <!-- col-6 : moitié de largeur sur mobile -->
+
+            <!-- Libellé du champ heure début -->
+            <label for="creneauDebut" class="form-label text-muted small mb-1">Début</label>
+
+            <!-- Input de type time : affiche un sélecteur d'heure HH:MM -->
+            <input
+              type="time"
+              id="creneauDebut"
+              class="form-control custom-input"
+            />
+            <!-- type="time" : champ natif d'heure du navigateur -->
+            <!-- form-control : style Bootstrap des inputs -->
+            <!-- custom-input : style personnalisé partagé (style.css) -->
+
+            <!-- Message d'erreur si l'heure de début est manquante -->
+            <div class="invalid-feedback">Heure requise.</div>
+          </div>
+
+          <!-- Colonne Heure de fin -->
+          <div class="col-md-3 col-6">
+
+            <!-- Libellé du champ heure fin -->
+            <label for="creneauFin" class="form-label text-muted small mb-1">Fin</label>
+
+            <!-- Input de type time pour l'heure de fin -->
+            <input
+              type="time"
+              id="creneauFin"
+              class="form-control custom-input"
+            />
+
+            <!-- Message d'erreur si l'heure de fin est manquante ou invalide -->
+            <div class="invalid-feedback">Heure requise.</div>
+          </div>
+
+          <!-- Colonne Boutons Confirmer + Annuler -->
+          <div class="col-md-2 col-12 d-flex gap-2 justify-content-end">
+            <!-- d-flex gap-2 : flexbox avec espace entre les deux boutons -->
+            <!-- justify-content-end : aligne les boutons à droite -->
+
+            <!-- Bouton Confirmer l'ajout du créneau (coche verte) -->
+            <button
+              type="button"
+              class="btn-confirmer"
+              onclick="confirmerCreneau()"
+              title="Confirmer ce créneau"
+            >
+              <!-- btn-confirmer : bouton carré vert (style3.css) -->
+              <!-- onclick : appelle confirmerCreneau() dans script3.js -->
+              <!-- title : info-bulle au survol -->
+              <i class="bi bi-check-lg"></i>
+              <!-- bi-check-lg : icône coche Bootstrap Icons -->
+            </button>
+
+            <!-- Bouton Annuler l'ajout du créneau (croix grise) -->
+            <button
+              type="button"
+              class="btn-annuler"
+              onclick="annulerFormCreneau()"
+              title="Annuler"
+            >
+              <!-- btn-annuler : bouton carré gris (style3.css) -->
+              <!-- onclick : appelle annulerFormCreneau() dans script3.js -->
+              <i class="bi bi-x-lg"></i>
+              <!-- bi-x-lg : icône croix Bootstrap Icons -->
+            </button>
+
+          </div>
+          <!-- Fin colonne boutons -->
+
+        </div>
+        <!-- Fin ligne row du formulaire -->
+
+      </div>
+      <!-- Fin formulaire inline créneau -->
+
+      <!-- ============================================
+           BOUTONS DE NAVIGATION : Retour + Créer
+           ============================================ -->
+      <div class="row g-3 mt-1">
+        <!-- row g-3 : grille Bootstrap avec espacement de 1rem -->
+        <!-- mt-1 : légère marge au-dessus des boutons -->
+
+        <!-- Bouton Retour vers l'étape 2 -->
+        <div class="col-md-5 col-12">
+          <!-- col-md-5 : légèrement moins large que le bouton Créer -->
+          <!-- col-12 : pleine largeur sur mobile -->
+
+          <button
+            type="button"
+            class="btn w-100 btn-retour"
+            onclick="retourEtape2()"
+          >
+            <!-- btn-retour : style contour bleu (style3.css) -->
+            <!-- w-100 : largeur pleine dans sa colonne -->
+            <!-- onclick : appelle retourEtape2() dans script3.js -->
+            ← Retour
+            <!-- Flèche gauche et texte -->
+          </button>
+        </div>
+
+        <!-- Bouton Créer mon compte (vert) -->
+        <div class="col-md-7 col-12">
+          <!-- col-md-7 : plus large que le bouton Retour -->
+
+          <button
+            type="button"
+            class="btn w-100 btn-creer-compte"
+            onclick="creerCompte()"
+          >
+            <!-- btn-creer-compte : style vert personnalisé (style3.css) -->
+            <!-- onclick : appelle creerCompte() dans script3.js -->
+            Créer mon compte ✓
+            <!-- Texte avec coche unicode -->
+          </button>
+        </div>
+
+      </div>
+      <!-- Fin boutons de navigation -->
+
+    </div>
+    <!-- Fin carte principale -->
+
+    <!-- ================================================
+         LIEN : Déjà un compte ? Se connecter
+         ================================================ -->
+    <p class="mt-4 text-muted small text-center">
+      <!-- mt-4 : marge haute -->
+      <!-- text-center : centrage du texte -->
+
+      Vous avez déjà un compte ?
+      <!-- Texte avant le lien -->
+
+      <a href="#" class="text-primary fw-semibold text-decoration-none">Se connecter</a>
+      <!-- text-primary : couleur bleue Bootstrap -->
+      <!-- fw-semibold : semi-gras -->
+      <!-- text-decoration-none : supprime le soulignement par défaut -->
+    </p>
+
+  </div>
+  <!-- Fin conteneur principal main-wrapper -->
+
+  <!-- Bootstrap 5 JS Bundle : inclut Popper.js pour les composants interactifs -->
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+
+  <!-- Script JavaScript personnalisé pour l'étape 3 -->
+  <script src="Inscription 3.js"></script>
+
+</body>
+
+</html>
