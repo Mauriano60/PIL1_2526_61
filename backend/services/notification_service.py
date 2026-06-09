@@ -1,4 +1,3 @@
-# CHABI AYEDOUN Yoéla
 from db.database import execute, fetch_one
 from app import socketio 
 

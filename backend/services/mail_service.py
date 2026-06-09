@@ -1,4 +1,3 @@
-# CHABI AYEDOUN Yoéla
 from flask_mail import Mail, Message
 from itsdangerous import URLSafeTimedSerializer
 from flask import current_app, url_for
@@ -21,7 +20,6 @@ def verify_token(token, salt_type='email-confirmation', expiration=3600):
 
 def envoyer_email_confirmation(email, prenom):
     """Envoie un email de confirmation à l'utilisateur"""
-    # Utilise le salt par défaut
     token = generate_token(email, salt_type='email-confirmation')
     lien = url_for('auth.confirmer_email', token=token, _external=True)
 

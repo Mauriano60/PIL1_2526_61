@@ -1,4 +1,3 @@
-# CHABI AYEDOUN Yoéla
 from db.database import fetch_all, fetch_one
 
 def obtenir_suggestions_matching(utilisateur_id, role='mentee'):
@@ -18,7 +17,7 @@ def obtenir_suggestions_matching(utilisateur_id, role='mentee'):
         return []
 
     try:
-        # ── 1. RÉCUPÉRATION DU PROFIL DE L'UTILISATEUR CONNECTÉ ──────────────
+        # 1. RÉCUPÉRATION DU PROFIL DE L'UTILISATEUR CONNECTÉ ──────────────
         user_connecte = fetch_one("""
             SELECT id, id_filiere, id_niveau
             FROM utilisateurs
@@ -29,7 +28,7 @@ def obtenir_suggestions_matching(utilisateur_id, role='mentee'):
             print(f"Utilisateur {utilisateur_id} introuvable ou inactif")
             return []
 
-        # ── 2. TRAITEMENT DES ANNONCES SELON LES DEUX CAS DE FIGURE ─────────
+        # 2. TRAITEMENT DES ANNONCES SELON LES DEUX CAS DE FIGURE ─────────
         mes_matieres = []
         
         if role == 'mentee':
@@ -48,7 +47,7 @@ def obtenir_suggestions_matching(utilisateur_id, role='mentee'):
             """, (utilisateur_id,))
             mes_matieres = [r['matiere_id'] for r in res_offres]
 
-        # ── 3. ISOLEMENT DES DISPONIBILITÉS RESTÉES LIBRES ──────────────────
+        # 3. ISOLEMENT DES DISPONIBILITÉS RESTÉES LIBRES
         dispos_globales_user = fetch_all("""
             SELECT jour_semaine, heure_debut, heure_fin FROM disponibilites 
             WHERE utilisateur_id = %s
@@ -70,7 +69,7 @@ def obtenir_suggestions_matching(utilisateur_id, role='mentee'):
             if not est_occupe:
                 dispos_user.append(dg)
 
-        # ── 4. CHARGEMENT OPTIMISÉ DES AUTRES COMPTES (LEFT JOIN) ───────────
+        # 4. CHARGEMENT OPTIMISÉ DES AUTRES COMPTES (LEFT JOIN)
         donnees_brutes = fetch_all("""
             SELECT u.id, u.prenom, u.nom, u.biographie, u.id_filiere, u.id_niveau,
                    f.nom as filiere, n.nom as niveau,
@@ -106,10 +105,10 @@ def obtenir_suggestions_matching(utilisateur_id, role='mentee'):
             WHERE c.statut_correspondance = 1
         """)
 
-        # ── 5. CALCUL DES SCORES DE COMPATIBILITÉ ───────────────────────────
+        # 5. CALCUL DES SCORES DE COMPATIBILITÉ 
         for cible_id, cible in utilisateurs_map.items():
 
-            # ── 5a. Évaluation des Annonces (40%) ──
+            # 5a. Évaluation des Annonces (40%) 
             nb_competences_match = 0
             
             if mes_matieres:
@@ -137,7 +136,7 @@ def obtenir_suggestions_matching(utilisateur_id, role='mentee'):
             else:
                 score_competences = 15.00  # Score neutre si pas d'annonces en commun
 
-            # ── 5b. Évaluation de l'Emploi du Temps (30%) ──
+            # 5b. Évaluation de l'Emploi du Temps (30%) 
             occupees_cible = [d for d in toutes_dispos_occupees if d['utilisateur_id'] == cible['id']]
             
             dispos_libres_cible = []
@@ -161,10 +160,10 @@ def obtenir_suggestions_matching(utilisateur_id, role='mentee'):
             else:
                 score_dispos = min((creneaux_compatibles / len(dispos_user)) * 30, 30.00)
 
-            # ── 5c. Évaluation de l'Affinité de Filière (20%) ──
+            #  5c. Évaluation de l'Affinité de Filière (20%) 
             score_filiere = 20.00 if cible['id_filiere'] == user_connecte['id_filiere'] else 10.00
 
-            # ── 5d. Évaluation de la Proximité de Promotion (10%) ──
+            #  5d. Évaluation de la Proximité de Promotion (10%) 
             difference_niveau = abs(cible['id_niveau'] - user_connecte['id_niveau'])
 
             if difference_niveau == 1:
@@ -175,11 +174,11 @@ def obtenir_suggestions_matching(utilisateur_id, role='mentee'):
                 score_niveau = 5.00
             
 
-            # ── 5e. CONSOLIDATION DU SCORE FINAL ──
+            #  5e. CONSOLIDATION DU SCORE FINAL 
             score_total = round(score_competences + score_dispos + score_filiere + score_niveau, 2)
             score_total = max(0.00, min(100.00, score_total))
 
-            # ── 6. EXCLUSION DES DOUBLONS VALIDÉS ──
+            #  6. EXCLUSION DES DOUBLONS VALIDÉS 
             deja_valide = fetch_one("""
                 SELECT id FROM correspondances
                 WHERE ((mentor_id = %s AND mentee_id = %s) OR (mentor_id = %s AND mentee_id = %s))
