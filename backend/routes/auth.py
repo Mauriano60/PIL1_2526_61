@@ -1,6 +1,4 @@
-# CHABI AYEDOUN Yoéla
 from flask import Blueprint, render_template, request, redirect, url_for, session, flash
-# On utilise les fonctions de ton database.py
 from db.database import fetch_one, fetch_all, execute
 from utils.validators import valider_inscription, valider_competences_et_lacunes
 from extensions import limiter

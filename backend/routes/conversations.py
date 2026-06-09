@@ -1,4 +1,3 @@
-# CHABI AYEDOUN Yoéla
 from flask import Blueprint, render_template, request, session, redirect, url_for
 from db.database import fetch_all, fetch_one, execute
 

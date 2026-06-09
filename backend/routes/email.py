@@ -1,4 +1,3 @@
-# CHABI AYEDOUN Yoéla
 from flask import Blueprint, flash, redirect, render_template, request, url_for
 import secrets
 from datetime import datetime, timedelta

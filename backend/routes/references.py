@@ -1,6 +1,4 @@
-# CHABI AYEDOUN Yoéla
 from flask import Blueprint, render_template, session, redirect, url_for
-# Centralisation des accès BDD avec l'outil d'abstraction de ton database.py
 from db.database import fetch_all
 
 references_bp = Blueprint('references', __name__)

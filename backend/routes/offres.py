@@ -1,4 +1,3 @@
-# CHABI AYEDOUN Yoéla
 from flask import Blueprint, render_template, request, session, redirect, url_for, flash
 from db.database import fetch_all, execute
 from services.matching_service import obtenir_suggestions_matching
@@ -99,8 +98,7 @@ def creer_offre():
                 # Tri décroissant selon le score de pertinence
                 toutes_suggestions.sort(key=lambda x: x['score_compatibilite'], reverse=True)
                 
-                # On capture le top 5 des mentees compatibles. 
-                # Le fait de remplir cette variable fera disparaître le formulaire côté HTML.
+                # On capture le top 5 des mentees compatibles.
                 matchs_trouves = toutes_suggestions[:5]
                 
             except Exception as e:

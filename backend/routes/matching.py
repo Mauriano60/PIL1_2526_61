@@ -1,4 +1,3 @@
-# CHABI AYEDOUN Yoéla
 from flask import Blueprint, render_template, session, redirect, url_for, request, flash
 from services.matching_service import obtenir_suggestions_matching
 from services.notification_service import creer_notification

@@ -1,4 +1,3 @@
-# CHABI AYEDOUN Yoéla
 from flask import Blueprint, render_template, request, redirect, url_for, session
 from db.database import fetch_all, fetch_one, execute
 from utils.validators import valider_competences_et_lacunes
@@ -48,7 +47,6 @@ def modifier_profil_matieres():
                     
                 success = "Vos compétences et lacunes ont été mises à jour avec succès."
 
-        # PREPARATION DES DONNÉES POUR LE RENDU HTML :
         # A. Charger toutes les matières disponibles dans l'application
         toutes_matieres = fetch_all("SELECT * FROM matieres ORDER BY nom ASC")
         

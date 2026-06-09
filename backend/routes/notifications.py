@@ -1,6 +1,4 @@
-# CHABI AYEDOUN Yoéla
 from flask import Blueprint, render_template, session, redirect, url_for, flash
-# On importe les deux outils nécessaires depuis ton database.py
 from db.database import fetch_all, fetch_one, execute
 
 notifications_bp = Blueprint('notifications', __name__)
@@ -57,7 +55,6 @@ def repondre_notification(notif_id, action):
                 
             elif action == 'refuser':
                 # Le destinataire refuse : le match passe au statut 2 (Refusé/Annulé)
-                # Tu peux aussi faire un DELETE selon ta préférence, mais passer à 2 garde une trace propre
                 execute("""
                     UPDATE correspondances 
                     SET statut_correspondance = 2 

@@ -1,8 +1,5 @@
-# CHABI AYEDOUN Yoéla
 from flask import Blueprint, render_template, session, redirect, url_for
 from db.database import fetch_all, fetch_one
-
-# Importation globale et sécurisée du décorateur depuis son nouveau fichier dédié
 from utils.decorators import login_required
 
 users_bp = Blueprint('users', __name__)
@@ -10,13 +7,12 @@ users_bp = Blueprint('users', __name__)
 @users_bp.route('/dashboard')
 @login_required
 def dashboard():
-    # Seul get_user_context reste importé ici pour protéger la base de données
     from utils.responses import get_user_context
     
     try:
         user_id = session['user_id']
 
-        # 0. Récupérer la filière de l'étudiant connecté pour filtrer les offres
+        # Récupérer la filière de l'étudiant connecté pour filtrer les offres
         user_info = fetch_one("SELECT id_filiere FROM utilisateurs WHERE id = %s", (user_id,))
         id_filiere = user_info['id_filiere'] if user_info else None
 

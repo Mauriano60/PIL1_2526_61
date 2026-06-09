@@ -1,4 +1,3 @@
-# CHABI AYEDOUN Yoéla
 from flask import Blueprint, render_template, request, session, redirect, url_for, flash
 from db.database import fetch_all, execute
 from services.matching_service import obtenir_suggestions_matching
@@ -103,7 +102,7 @@ def creer_demande():
                 # Tri par score de compatibilité décroissant
                 toutes_suggestions.sort(key=lambda x: x['score_compatibilite'], reverse=True)
                 
-                # Top 5 des mentors potentiels. Sa simple présence masquera le formulaire dans ton HTML.
+                # Top 5 des mentors potentiels
                 matchs_trouves = toutes_suggestions[:5]
                 
             except Exception as e:
