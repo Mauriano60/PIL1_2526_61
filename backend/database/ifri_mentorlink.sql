@@ -53,7 +53,7 @@ CREATE TABLE utilisateurs (
     id_niveau INT NOT NULL,
     --  Champs pour la récupération de mot de passe oublié
     -- reset_token : token généré et envoyé par email à l'utilisateur 
-    -- reset_token : date/heure d'expiration du token
+    -- reset_expire : date/heure d'expiration du token
     reset_token VARCHAR(255) DEFAULT NULL,
     reset_expire DATETIME DEFAULT NULL,
     FOREIGN KEY (id_filiere) REFERENCES filieres_etudes(id) ON DELETE CASCADE,
@@ -227,15 +227,15 @@ INSERT INTO filieres_etudes (nom) VALUES
 ('Génie Logiciel'), ('Sécurité Informatique'), ('Intelligence Artificielle'), ('Internet et Multimédia'), ('Systèmes embarqués et Internet des Objets');
 
 INSERT INTO niveaux_etudes (nom) VALUES
-('Licence 1'), ('Licence 2');
+('Licence 1'), ('Licence 2'), ('Licence 3');
 
 INSERT INTO utilisateurs (email, telephone, mot_de_passe, prenom, nom, id_filiere, id_niveau, biographie, email_verifie, est_actif)
 VALUES
 ('mentor@ifri.test', '97000001', '$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2uheWG/igi.', 'Aminata', 'Mensah', 1, 3, 'Je peux aider en web, bases de donnees et methodologie de projet.', 1, 1),
 ('mentee@ifri.test', '97000002', '$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2uheWG/igi.', 'Koffi', 'Dossou', 2, 1, 'Je cherche un accompagnement regulier pour progresser en programmation.', 1, 1);
 
-INSERT INTO competences_utilisateur VALUES (1, 2), (1, 3), (1, 5), (2, 7);
-INSERT INTO difficultes_utilisateur VALUES (2, 2), (2, 3), (1, 6);
+INSERT INTO competences_utilisateur (matiere_id) VALUES (1), (2), (3), (4), (5), (6), (7), (8), (9), (10), (11), (12),(13), (14), (15), (16), (17), (18), (19), (20), (21), (22), (23), (24), (25), (26), (27), (28), (29), (30), (31), (32), (33), (34), (35), (36), (37), (38), (39), (40), (41), (42), (43);
+INSERT INTO difficultes_utilisateur (matiere_id)VALUES (1), (2), (3), (4), (5), (6), (7), (8), (9), (10), (11), (12),(13), (14), (15), (16), (17), (18), (19), (20), (21), (22), (23), (24), (25), (26), (27), (28), (29), (30), (31), (32), (33), (34), (35), (36), (37), (38), (39), (40), (41), (42),(43);
 
 INSERT INTO disponibilites (utilisateur_id, jour_semaine, heure_debut, heure_fin)
 VALUES (1, 'Samedi', '09:00:00', '12:00:00'), (2, 'Samedi', '10:00:00', '13:00:00');

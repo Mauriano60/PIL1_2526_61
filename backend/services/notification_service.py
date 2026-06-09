@@ -1,7 +1,7 @@
 from db.database import execute, fetch_one
-from app import socketio 
 
 def creer_notification(utilisateur_id, message, type_notification="info", correspondance_id=None):
+    from app import socketio
     """
     Insère une notification interactive ou informative en base et déclenche 
     un signal WebSocket en temps réel.

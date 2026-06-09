@@ -11,7 +11,7 @@ auth_bp = Blueprint('auth', __name__)
 
 @auth_bp.route('/')
 def index():
-    return redirect(url_for('auth.login'))
+    return render_template('landing.html')
 
 @auth_bp.route('/login', methods=['GET', 'POST'])
 @limiter.limit("5 per minute")
@@ -44,19 +44,24 @@ def login():
 def register():
     error = None
     
-    # Chargement dynamique des filières et niveaux avec fetch_all
+    # Chargement dynamique des filières, niveaux et matières avec fetch_all
     try:
         filieres = fetch_all("SELECT * FROM filieres_etudes")
         niveaux = fetch_all("SELECT * FROM niveaux_etudes")
+        matieres = fetch_all("SELECT * FROM matieres ORDER BY nom")
     except Exception as e:
         filieres = []
         niveaux = []
-        error = f"Erreur lors du chargement des filières et niveaux: {str(e)}"
+        matieres = []
+        error = f"Erreur lors du chargement des données: {str(e)}"
+
+    current_step = request.form.get('step', '1')
 
     if request.method == 'POST':
         erreurs = valider_inscription(request.form)
         if erreurs:
             error = " | ".join(erreurs)
+            current_step = '1'
         else:
             try:
                 prenom = request.form['prenom']
@@ -75,7 +80,8 @@ def register():
                 est_valide, message_erreur = valider_competences_et_lacunes(competences, lacunes)
                 if not est_valide:
                     error = message_erreur
-                    return render_template('auth/register.html', error=error, filieres=filieres, niveaux=niveaux)
+                    current_step = '2'
+                    return render_template('auth/register.html', error=error, filieres=filieres, niveaux=niveaux, matieres=matieres, current_step=current_step)
                 
                 # Hachage sécurisé du mot de passe
                 hashed = bcrypt.hashpw(password.encode('utf-8'), bcrypt.gensalt())
@@ -113,8 +119,9 @@ def register():
                     
             except Exception as e:
                 error = "Email ou téléphone déjà utilisé"
+                current_step = '2'
 
-    return render_template('auth/register.html', error=error, filieres=filieres, niveaux=niveaux)
+    return render_template('auth/register.html', error=error, filieres=filieres, niveaux=niveaux, matieres=matieres, current_step=current_step)
 
 @auth_bp.route('/email-envoye')
 def email_envoye():
@@ -124,16 +131,16 @@ def email_envoye():
 def confirmer_email(token):
     email = verify_token(token)
     if not email:
-        return "Lien invalide ou expiré. Veuillez vous réinscrire.", 400
+        return render_template('auth/email_confirme.html', error=True)
     
     try:
         execute("""
             UPDATE utilisateurs SET email_verifie = 1
             WHERE email = %s
         """, (email,))
-        return redirect(url_for('auth.login'))
+        return render_template('auth/email_confirme.html', error=False)
     except Exception as e:
-        return f"Erreur : {str(e)}", 500
+        return render_template('auth/email_confirme.html', error=True)
 
 @auth_bp.route('/logout')
 def logout():

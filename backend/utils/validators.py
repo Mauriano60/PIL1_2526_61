@@ -5,7 +5,10 @@ def valider_email(email):
     return re.match(pattern, email) is not None
 
 def valider_telephone(telephone):
-    return telephone.isdigit() and len(telephone) >= 8
+    nettoye = telephone.replace(' ', '').replace('-', '').replace('.', '')
+    if nettoye.startswith('+'):
+        return nettoye.startswith('+229') and len(nettoye) >= 12 and nettoye[1:].isdigit()
+    return nettoye.isdigit() and len(nettoye) >= 8
 
 def valider_mot_de_passe(password):
     if len(password) < 8:

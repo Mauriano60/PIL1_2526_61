@@ -1,25 +1,182 @@
 <!DOCTYPE html>
-<html>
-<head><title>Inscription - IFRI_MentorLink</title></head>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Créer mon compte IFRI_MentorLink</title>
+
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" />
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" rel="stylesheet" />
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/register1.css') }}" />
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/register2.css') }}" />
+</head>
 <body>
-    <h1>Inscription</h1>
-    {% if error %}<p class="error">{{ error }}</p>{% endif %}
-    <form method="POST">
-        <input type="text" name="prenom" placeholder="Prénom" required>
-        <input type="text" name="nom" placeholder="Nom" required>
-        <input type="email" name="email" placeholder="Email" required>
-        <input type="tel" name="telephone" placeholder="Téléphone" required>
-        <input type="password" name="password" placeholder="Mot de passe" required>
-        <select name="id_filiere" required>
-            <option value="">Filière</option>
-            {% for f in filieres %}<option value="{{ f.id }}">{{ f.nom }}</option>{% endfor %}
-        </select>
-        <select name="id_niveau" required>
-            <option value="">Niveau</option>
-            {% for n in niveaux %}<option value="{{ n.id }}">{{ n.nom }}</option>{% endfor %}
-        </select>
-        <button type="submit">S'inscrire</button>
+
+<div class="main-wrapper d-flex flex-column align-items-center justify-content-center min-vh-100 py-5">
+
+  <!-- EN-TÊTE -->
+  <div class="text-center mb-4">
+    <div class="logo-icon mb-3 mx-auto">
+      <svg xmlns="http://www.w3.org/2000/svg" width="23" height="23" fill="currentColor" class="bi bi-book" viewBox="0 0 16 16" style="color: #007bff;">
+        <path d="M1 2.828c.885-.37 2.154-.769 3.388-.893 1.33-.134 2.458.063 3.112.752v9.746c-.935-.53-2.12-.603-3.213-.493-1.18.12-2.37.461-3.287.811zm7.5-.141c.654-.689 1.782-.886 3.112-.752 1.234.124 2.503.523 3.388.893v9.923c-.918-.35-2.107-.692-3.287-.81-1.094-.111-2.278-.039-3.213.492zM8 1.783C7.015.936 5.587.81 4.287.94c-1.514.153-3.042.672-3.994 1.105A.5.5 0 0 0 0 2.5v11a.5.5 0 0 0 .707.455c.882-.4 2.303-.881 3.68-1.02 1.409-.142 2.59.087 3.223.877a.5.5 0 0 0 .78 0c.633-.79 1.814-1.019 3.222-.877 1.378.139 2.8.62 3.681 1.02A.5.5 0 0 0 16 13.5v-11a.5.5 0 0 0-.293-.455c-.952-.433-2.48-.952-3.994-1.105C10.413.809 8.985.936 8 1.783"/>
+      </svg>
+    </div>
+    <h1 class="fw-bold fs-3 mb-1">Créer mon compte IFRI_MentorLink</h1>
+    <p class="text-muted small">Rejoignez la communauté de mentorat de l'IFRI</p>
+  </div>
+
+  <!-- STEPPER -->
+  <div class="stepper d-flex align-items-center justify-content-center mb-4 gap-0">
+    <div class="step-item text-center">
+      <div class="step-circle active mx-auto mb-1" id="stepCircle1">1</div>
+      <span class="step-label fw-bold small" id="stepLabel1">Informations personnelles</span>
+    </div>
+    <div class="step-line" id="stepLine1"></div>
+    <div class="step-item text-center">
+      <div class="step-circle mx-auto mb-1" id="stepCircle2">2</div>
+      <span class="step-label text-muted small" id="stepLabel2">Profil académique</span>
+    </div>
+    <div class="step-line" id="stepLine2"></div>
+    <div class="step-item text-center">
+      <div class="step-circle mx-auto mb-1" id="stepCircle3">3</div>
+      <span class="step-label text-muted small" id="stepLabel3">Disponibilités</span>
+    </div>
+  </div>
+
+  <!-- CARTE FORMULAIRE -->
+  <div class="form-card p-4 p-md-5">
+
+    {% if error %}
+      <div class="alert alert-danger alert-dismissible fade show mb-3" role="alert">
+        {{ error }}
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Fermer"></button>
+      </div>
+    {% endif %}
+
+    <div id="zoneAlerte"></div>
+
+    <form method="POST" action="{{ url_for('auth.register') }}" id="registerForm" novalidate>
+      <input type="hidden" name="step" id="currentStep" value="{{ current_step | default('1') }}" />
+
+      <!-- ===== ÉTAPE 1 : Informations personnelles ===== -->
+      <div id="step1">
+        <div class="row g-3 mb-3">
+          <div class="col-md-6">
+            <label for="nom" class="form-label text-muted small">Nom</label>
+            <input type="text" id="nom" name="nom" class="form-control custom-input" placeholder="Dupont" required />
+            <div class="invalid-feedback">Le nom est requis.</div>
+          </div>
+          <div class="col-md-6">
+            <label for="prenom" class="form-label text-muted small">Prénom</label>
+            <input type="text" id="prenom" name="prenom" class="form-control custom-input" placeholder="Jean" required />
+            <div class="invalid-feedback">Le prénom est requis.</div>
+          </div>
+        </div>
+
+        <div class="mb-3">
+          <label for="email" class="form-label text-muted small">Email</label>
+          <input type="email" id="email" name="email" class="form-control custom-input" placeholder="jean.dupont@ifri.edu" required />
+          <div class="invalid-feedback">Un email valide est requis.</div>
+        </div>
+
+        <div class="mb-3">
+          <label for="telephone" class="form-label text-muted small">Téléphone</label>
+          <input type="tel" id="telephone" name="telephone" class="form-control custom-input" placeholder="+229 01 XX XX XX XX" required />
+          <div class="invalid-feedback">Un numéro de téléphone valide est requis.</div>
+        </div>
+
+        <div class="row g-3 mb-4">
+          <div class="col-md-6">
+            <label for="motdepasse" class="form-label text-muted small">Mot de passe</label>
+            <div class="input-group">
+              <input type="password" id="motdepasse" name="password" class="form-control custom-input" placeholder="••••••••" required />
+              <button type="button" class="btn btn-outline-secondary toggle-password" data-target="motdepasse">
+                <i class="bi bi-eye-slash"></i>
+              </button>
+            </div>
+            <div class="invalid-feedback">Le mot de passe est requis (min. 8 caractères).</div>
+          </div>
+          <div class="col-md-6">
+            <label for="confirmer" class="form-label text-muted small">Confirmer le mot de passe</label>
+            <div class="input-group">
+              <input type="password" id="confirmer" class="form-control custom-input" placeholder="••••••••" required />
+              <button type="button" class="btn btn-outline-secondary toggle-password" data-target="confirmer">
+                <i class="bi bi-eye-slash"></i>
+              </button>
+            </div>
+            <div class="invalid-feedback">Les mots de passe ne correspondent pas.</div>
+          </div>
+        </div>
+
+        <button type="button" class="btn btn-primary w-100 btn-suivant" id="btnSuivant">Suivant →</button>
+      </div>
+
+      <!-- ===== ÉTAPE 2 : Profil académique ===== -->
+      <div id="step2" style="display: none;">
+        <div class="row g-3 mb-4">
+          <div class="col-md-6">
+            <label for="filiere" class="form-label text-muted small">Filière</label>
+            <select id="filiere" name="id_filiere" class="form-select custom-input" required>
+              <option value="" disabled selected>Sélectionnez...</option>
+              {% for f in filieres %}
+                <option value="{{ f.id }}">{{ f.nom }}</option>
+              {% endfor %}
+            </select>
+            <div class="invalid-feedback">Veuillez sélectionner une filière.</div>
+          </div>
+          <div class="col-md-6">
+            <label for="niveau" class="form-label text-muted small">Niveau</label>
+            <select id="niveau" name="id_niveau" class="form-select custom-input" required>
+              <option value="" disabled selected>Sélectionnez...</option>
+              {% for n in niveaux %}
+                <option value="{{ n.id }}">{{ n.nom }}</option>
+              {% endfor %}
+            </select>
+            <div class="invalid-feedback">Veuillez sélectionner un niveau.</div>
+          </div>
+        </div>
+
+        <div class="mb-4">
+          <p class="section-label mb-2">Compétences maîtrisées</p>
+          <ul class="bullet-list" id="competences">
+            {% for m in matieres %}
+              <li data-valeur="{{ m.id }}">{{ m.nom }}</li>
+            {% endfor %}
+          </ul>
+        </div>
+
+        <div class="mb-5">
+          <p class="section-label mb-2">Lacunes / Besoins académiques</p>
+          <ul class="bullet-list" id="lacunes">
+            {% for m in matieres %}
+              <li data-valeur="{{ m.id }}">{{ m.nom }}</li>
+            {% endfor %}
+          </ul>
+        </div>
+
+        <div class="row g-3">
+          <div class="col-md-5">
+            <button type="button" class="btn btn-outline-primary w-100 btn-retour" id="btnRetour">← Retour</button>
+          </div>
+          <div class="col-md-7">
+            <button type="button" class="btn btn-primary w-100 btn-suivant" id="btnInscrire">S'inscrire →</button>
+          </div>
+        </div>
+      </div>
+
     </form>
-    <a href="{{ url_for('auth.login') }}">Déjà un compte</a>
+
+  </div>
+
+  <p class="mt-4 text-muted small text-center">
+    Vous avez déjà un compte ?
+    <a href="{{ url_for('auth.login') }}" class="text-primary fw-semibold text-decoration-none">Se connecter</a>
+  </p>
+
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+<script src="{{ url_for('static', filename='js/register.js') }}"></script>
+
 </body>
 </html>

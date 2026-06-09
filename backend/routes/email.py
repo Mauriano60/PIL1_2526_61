@@ -49,14 +49,14 @@ def forgot_password():
 
             # Utilisation directe de ta fonction execute (qui gère le commit)
             execute(
-                "UPDATE utilisateurs SET reset_token=%s, reset_expires=%s WHERE id=%s",
+                "UPDATE utilisateurs SET reset_token=%s, reset_expire=%s WHERE id=%s",
                 (token, expires, user["id"])
             )
 
             reset_link = url_for("email_bp.reset_password", token=token, _external=True)
             send_reset_email(user["email"], reset_link)
 
-        flash("Si cette adresse existe, un email a été envoyé.", "info")
+        flash("Un email de réinitialisation vous a été envoyé.", "success")
         return redirect(url_for("auth.login"))
 
     return render_template("forgot_password.html")
@@ -66,7 +66,7 @@ def forgot_password():
 def reset_password(token):
     
     user = fetch_one(
-        "SELECT id FROM utilisateurs WHERE reset_token=%s AND reset_expires > NOW()",
+        "SELECT id FROM utilisateurs WHERE reset_token=%s AND reset_expire > NOW()",
         (token,)
     )
 
@@ -87,7 +87,7 @@ def reset_password(token):
 
         # Mise à jour et nettoyage du token en une seule fois
         execute(
-            "UPDATE utilisateurs SET mot_de_passe=%s, reset_token=NULL, reset_expires=NULL WHERE id=%s",
+            "UPDATE utilisateurs SET mot_de_passe=%s, reset_token=NULL, reset_expire=NULL WHERE id=%s",
             (hashed_password, user["id"])
         )
 
