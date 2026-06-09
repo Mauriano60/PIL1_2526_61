@@ -1,0 +1,709 @@
+/* ============================================================
+   Demandes.css — Styles de la page Offres IFRI_MentorLink
+   ============================================================ */
+
+/* ----- Variables CSS globales ----- */
+:root {
+  --sidebar-bg: #0f172a;        /* Fond sidebar bleu très foncé / quasi noir */
+  --sidebar-width: 260px;       /* Largeur fixe de la sidebar */
+  --sidebar-text: #cbd5e1;      /* Texte gris clair dans la sidebar */
+  --sidebar-active-bg: #2563eb; /* Fond bleu du lien actif */
+  --sidebar-hover-bg: #1e293b;  /* Fond légèrement plus clair au survol */
+  --topbar-height: 64px;        /* Hauteur de la barre du haut */
+  --topbar-bg: #ffffff;         /* Fond blanc de la topbar */
+  --body-bg: #f1f5f9;           /* Fond gris clair de la zone de contenu */
+  --blue-primary: #2563eb;      /* Bleu principal (boutons, accents) */
+  --card-bg: #ffffff;           /* Fond des cartes offres */
+  --card-radius: 14px;          /* Rayon de bordure des cartes */
+  --text-dark: #0f172a;         /* Texte foncé principal */
+  --text-muted: #64748b;        /* Texte gris secondaire */
+  --border-color: #e2e8f0;      /* Gris clair pour les bordures */
+}
+
+/* ----- Reset de base ----- */
+*, *::before, *::after {
+  box-sizing: border-box; /* Modèle de boîte uniforme */
+}
+
+body {
+  margin: 0;                             /* Pas de marge par défaut */
+  padding: 0;                            /* Pas de padding par défaut */
+  font-family: 'Inter',sans-serif; /* Police moderne */
+  background-color: var(--body-bg);     /* Fond gris clair */
+  color: var(--text-dark);              /* Texte foncé par défaut */
+}
+
+/* ============================================================
+   LAYOUT PRINCIPAL : sidebar + contenu côte à côte
+   ============================================================ */
+
+/* Conteneur flex principal qui occupe toute la fenêtre */
+.app-layout {
+  display: flex;        /* Disposition côte à côte */
+  min-height: 100vh;    /* Hauteur minimale = toute la fenêtre */
+}
+
+/* ============================================================
+   SIDEBAR GAUCHE
+   ============================================================ */
+
+/* Colonne sidebar : fixe à gauche, hauteur pleine fenêtre */
+.sidebar {
+  width: var(--sidebar-width);     /* Largeur fixe définie en variable */
+  min-height: 100vh;               /* Hauteur totale de la fenêtre */
+  background-color: var(--sidebar-bg); /* Fond bleu nuit */
+  padding: 8px 16px;              /* Espacement intérieur */
+  position: fixed;                 /* Fixe dans la fenêtre, ne scroll pas */
+  z-index: 100;                    /* Au-dessus du contenu principal */
+  display: flex;                   /* Flexbox pour empiler logo + nav + user */
+  flex-direction: column;          /* Disposition verticale */
+}
+
+/* Logo IFRI MentorLink en haut de la sidebar */
+.sidebar-logo {
+  padding: 8px 4px 24px 4px; /* Espace autour du logo */
+  border-bottom: 1px solid #1e293b; /* Ajoute un trait sous le logo */
+  padding-bottom: 20px;             /* Espace avant le trait */
+  margin-bottom: 8px;               /* Espace après le trait */
+}
+
+/* Icône du logo */
+.sidebar-logo-icon {
+  color: #ffffff;      /* Blanc */
+}
+
+/* Texte du logo */
+.sidebar-logo-text {
+  color: #ffffff;       /* Blanc */
+  font-size: 20px;   /* Taille légèrement plus grande */
+  font-weight: 700;     /* Gras */
+  letter-spacing: -0.3px; /* Légèrement condensé */
+}
+
+/* ---- Liens de navigation ---- */
+
+/* Liste des items de navigation — pas de style par défaut */
+.sidebar-nav ul {
+  padding: 0;    /* Pas de padding */
+  margin: 0;     /* Pas de marge */
+}
+
+/* Chaque item de navigation */
+.nav-item {
+  margin-bottom: 2px; /* Très petit espace entre les liens */
+}
+
+/* Lien de la sidebar */
+.nav-link-sidebar {
+  display: flex;               /* Flex pour aligner icône + texte + badge */
+  align-items: center;         /* Centrage vertical */
+  gap: 12px;                   /* Espace entre icône et texte */
+  padding: 10px 14px;          /* Espacement intérieur du lien */
+  border-radius: 10px;         /* Coins arrondis */
+  color: var(--sidebar-text);  /* Texte gris clair */
+  text-decoration: none;       /* Pas de soulignement */
+  font-size: 0.92rem;          /* Taille de police */
+  font-weight: 500;            /* Semi-gras */
+  transition: background-color 0.15s ease, color 0.15s ease; /* Transition hover */
+}
+
+/* Survol d'un lien de navigation */
+.nav-link-sidebar:hover {
+  background-color: var(--sidebar-hover-bg); /* Fond légèrement plus clair */
+  color: #ffffff;                            /* Texte blanc au survol */
+}
+
+/* Lien actif (page courante) */
+.nav-link-sidebar.active {
+  background-color: var(--sidebar-active-bg); /* Fond bleu principal */
+  color: #ffffff;                             /* Texte blanc */
+  font-weight: 600;                           /* Légèrement plus gras */
+}
+
+/* Icône des liens de navigation */
+.nav-icon {
+  font-size: 20px;   /* Taille de l'icône */
+  flex-shrink: 0;    /* Empêche l'icône de rétrécir */
+}
+
+/* ---- Badge numérique dans la sidebar (ex: 12, 5, 3) ---- */
+.badge-count {
+  font-size: 0.7rem;    /* Petite police */
+  font-weight: 700;     /* Gras */
+  color: #ffffff;       /* Texte blanc */
+  border-radius: 999px; /* Forme pilule */
+  padding: 2px 8px;     /* Espacement intérieur */
+  min-width: 22px;      /* Largeur minimale pour les petits chiffres */
+  text-align: center;   /* Centrage du chiffre */
+}
+
+/* ---- Séparateur horizontal dans la sidebar ---- */
+.sidebar-separator {
+  border-color: #1e293b; /* Séparateur légèrement plus clair que le fond */
+  margin: 12px 0;        /* Espace au-dessus et en dessous */
+  opacity: 1;            /* Bootstrap met opacity: 0.25 par défaut, on force à 1 */
+}
+
+/* ---- Lien Déconnexion en rouge ---- */
+.nav-deconnexion {
+  color: #f87171 !important; /* Rouge clair */
+}
+
+.nav-deconnexion:hover {
+  background-color: rgba(239, 68, 68, 0.12) !important; /* Fond rouge transparent */
+  color: #ef4444 !important;                            /* Rouge plus vif */
+}
+
+/* ---- Profil utilisateur en bas de la sidebar ---- */
+.sidebar-user {
+  padding: 12px 4px 0 4px; /* Espace au-dessus */
+  border-top: 1px solid #1e293b; /* Trait au-dessus de l'utilisateur */
+  padding-top: 16px;             /* Espace après le trait */
+  margin-top: 70px;               /* Espace avant le trait */
+}
+
+/* Avatar rond avec initiale */
+.user-avatar {
+  width: 36px;                      /* Largeur du cercle */
+  height: 36px;                     /* Hauteur = largeur pour cercle */
+  border-radius: 50%;               /* Cercle parfait */
+  background-color: var(--blue-primary); /* Fond bleu */
+  color: #ffffff;                   /* Texte blanc */
+  display: flex;                    /* Flex pour centrer l'initiale */
+  align-items: center;              /* Centrage vertical */
+  justify-content: center;          /* Centrage horizontal */
+  font-size: 0.9rem;                /* Taille de l'initiale */
+  font-weight: 700;                 /* Gras */
+  flex-shrink: 0;                   /* Empêche le rétrécissement */
+}
+
+/* Nom de l'utilisateur */
+.user-name {
+  color: #ffffff;       /* Texte blanc */
+  font-size: 0.85rem;   /* Petite police */
+  font-weight: 600;     /* Semi-gras */
+}
+
+/* Rôle de l'utilisateur */
+.user-role {
+  color: var(--sidebar-text); /* Gris clair */
+  font-size: 0.75rem;         /* Encore plus petit */
+}
+
+/* ============================================================
+   CONTENU PRINCIPAL (à droite de la sidebar)
+   ============================================================ */
+
+/* Zone principale : margin-left = largeur de la sidebar fixe */
+.main-content {
+  margin-left: var(--sidebar-width); /* Décale le contenu pour éviter la sidebar */
+  flex: 1;                           /* Prend tout l'espace restant */
+  display: flex;                     /* Flex pour empiler topbar + content-area */
+  flex-direction: column;            /* Disposition verticale */
+  min-height: 100vh;                 /* Hauteur totale */
+}
+
+/* ============================================================
+   TOPBAR (barre du haut)
+   ============================================================ */
+
+.topbar {
+  height: var(--topbar-height);       /* Hauteur fixe */
+  background-color: var(--topbar-bg); /* Fond blanc */
+  border-bottom: 1px solid var(--border-color); /* Ligne séparatrice en bas */
+  position: sticky;                   /* Reste visible au scroll */
+  top: 0;                             /* Collé en haut */
+  z-index: 50;                        /* Au-dessus du contenu */
+}
+
+/* Titre "Offres" dans la topbar */
+.topbar-title {
+  font-size: 1.2rem;  /* Taille du titre */
+  font-weight: 700;   /* Gras */
+  color: var(--text-dark); /* Foncé */
+}
+
+/* Barre de recherche dans la topbar */
+.topbar-search {
+  background-color: #f8fafc;       /* Fond très légèrement gris */
+  border: 1px solid var(--border-color); /* Bordure grise */
+  border-radius: 8px;              /* Coins arrondis */
+  padding: 6px 14px;               /* Espacement intérieur */
+  min-width: 260px;                /* Largeur minimale */
+}
+
+/* Input de la barre de recherche topbar */
+.topbar-input {
+  border: none;              /* Pas de bordure */
+  outline: none;             /* Pas de contour au focus */
+  background: transparent;   /* Transparent */
+  font-size: 0.88rem;        /* Petite police */
+  color: var(--text-dark);   /* Texte foncé */
+  width: 100%;               /* Pleine largeur du conteneur */
+}
+
+/* Icônes dans la topbar (cloche) */
+.topbar-icon {
+  font-size: 1.2rem;        /* Taille de l'icône */
+  color: var(--text-muted); /* Gris */
+  cursor: pointer;          /* Pointeur au survol */
+}
+
+/* Point orange de notification (cloche) */
+.notif-dot {
+  position: absolute;              /* Positionné par rapport au parent relative */
+  top: -2px;                       /* En haut */
+  right: -2px;                     /* À droite */
+  width: 9px;                      /* Petit cercle */
+  height: 9px;                     /* Idem */
+  background-color: #f97316;       /* Orange */
+  border-radius: 50%;              /* Cercle parfait */
+  border: 2px solid var(--topbar-bg); /* Bordure blanche pour le faire ressortir */
+}
+
+/* ============================================================
+   ZONE DE CONTENU SCROLLABLE
+   ============================================================ */
+
+/* Conteneur du contenu scrollable */
+.content-area {
+  flex: 1;                         /* Prend tout l'espace restant */
+  overflow-y: auto;                /* Scroll vertical si besoin */
+  background-color: var(--body-bg); /* Fond gris clair */
+}
+
+/* ============================================================
+   PANNEAU DE FILTRES
+   ============================================================ */
+
+/* Carte blanche contenant les filtres */
+.filter-panel {
+  background-color: var(--card-bg);   /* Fond blanc */
+  border-radius: var(--card-radius);  /* Coins arrondis */
+  border: 1px solid var(--border-color); /* Bordure gris clair */
+  padding: 20px 24px;                 /* Espacement intérieur */
+}
+
+/* Barre de recherche d'offres en haut du panneau */
+.filter-search-bar {
+  background-color: #f8fafc;             /* Fond très légèrement gris */
+  border: 1px solid var(--border-color); /* Bordure grise */
+  border-radius: 10px;                   /* Coins arrondis */
+  padding: 10px 16px;                    /* Espacement intérieur */
+}
+
+/* Input de la barre de recherche d'offres */
+.filter-input {
+  border: none;             /* Pas de bordure */
+  outline: none;            /* Pas de contour au focus */
+  background: transparent;  /* Transparent */
+  font-size: 0.9rem;        /* Taille de police */
+  color: var(--text-dark);  /* Texte foncé */
+}
+
+/* Select de filtre (Matière, Filière, Niveau, Jour) */
+.filter-select {
+  border: 1px solid var(--border-color) !important; /* Bordure grise */
+  border-radius: 8px !important;                    /* Coins arrondis */
+  font-size: 0.875rem;                              /* Petite police */
+  color: var(--text-dark);                          /* Texte foncé */
+  padding: 8px 32px 8px 12px;                       /* Espacement intérieur avec espace pour la flèche */
+  height: 40px;                                     /* Hauteur fixe */
+  min-width: 120px;                                 /* Largeur minimale */
+  background-color: #ffffff;                        /* Fond blanc */
+  cursor: pointer;                                  /* Pointeur au survol */
+  transition: border-color 0.2s ease;               /* Transition focus */
+}
+
+/* Focus sur un filtre select */
+.filter-select:focus {
+  border-color: var(--blue-primary) !important; /* Bordure bleue au focus */
+  box-shadow: 0 0 0 2px rgba(37,99,235,0.1) !important; /* Halo bleu */
+  outline: none;
+}
+
+/* Champs d'heure (time inputs) */
+.filter-time {
+  border: 1px solid var(--border-color) !important; /* Bordure grise */
+  border-radius: 8px !important;                    /* Coins arrondis */
+  font-size: 0.875rem;                              /* Petite police */
+  color: var(--text-muted);                         /* Texte gris (comme dans la maquette) */
+  height: 40px;                                     /* Hauteur identique aux selects */
+  width: 105px;                                     /* Largeur fixe pour les heures */
+  padding: 6px 10px;                                /* Espacement intérieur */
+  background-color: #ffffff;                        /* Fond blanc */
+}
+
+/* Focus sur champ d'heure */
+.filter-time:focus {
+  border-color: var(--blue-primary) !important;
+  box-shadow: 0 0 0 2px rgba(37,99,235,0.1) !important;
+  outline: none;
+  color: var(--text-dark); /* Texte foncé une fois saisie */
+}
+
+/* Bouton "Publier une offre +" */
+.btn-publier {
+  background-color: var(--blue-primary); /* Fond bleu */
+  border: none;                          /* Pas de bordure */
+  border-radius: 10px;                   /* Coins arrondis */
+  padding: 12px;                         /* Espacement intérieur */
+  font-size: 1rem;                       /* Taille de police */
+  font-weight: 600;                      /* Semi-gras */
+  letter-spacing: 0.2px;                /* Légèrement espacé */
+  transition: background-color 0.2s ease, transform 0.1s ease;
+}
+
+/* Hover du bouton Publier */
+.btn-publier:hover {
+  background-color: #1d4ed8;             /* Bleu légèrement plus foncé */
+  transform: translateY(-1px);           /* Légère élévation */
+}
+/* ============================================================
+   MODAL PERSONNALISÉ
+   ============================================================ */
+
+/* Fenêtre modale avec coins arrondis et sans bordure */
+.modal-custom {
+  border-radius: 16px; /* Coins bien arrondis */
+  border: none;        /* Supprime la bordure Bootstrap par défaut */
+}
+
+/* Suppression de la double flèche sur les selects du modal */
+.modal-select {
+  appearance: none;         /* Standard : supprime la flèche native */
+  -webkit-appearance: none; /* Safari et Chrome */
+  -moz-appearance: none;    /* Firefox */
+  cursor: pointer;          /* Curseur main au survol */
+  /* Flèche SVG personnalisée grise en arrière-plan */
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 16 16'%3E%3Cpath fill='%2364748b' d='M7.247 11.14L2.451 5.658C1.885 5.013 2.345 4 3.204 4h9.592a1 1 0 0 1 .753 1.659l-4.796 5.48a1 1 0 0 1-1.506 0z'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;           /* Flèche affichée une seule fois */
+  background-position: right 12px center; /* Positionnée à droite */
+  padding-right: 36px;                    /* Espace pour ne pas masquer la flèche */
+}
+
+/* Inputs et selects du modal : coins arrondis */
+.custom-input {
+  border-radius: 10px !important;          /* Coins arrondis */
+  border: 1.5px solid #e2e8f0 !important; /* Bordure grise légère */
+  font-size: 0.9rem;                       /* Taille de police */
+  padding: 0.6rem 1rem;                    /* Espacement intérieur */
+}
+
+/* Focus sur les champs du modal */
+.custom-input:focus {
+  border-color: #2563eb !important;                  /* Bordure bleue au focus */
+  box-shadow: 0 0 0 3px rgba(37,99,235,0.1) !important; /* Halo bleu */
+  outline: none;                                     /* Supprime le contour natif */
+}
+
+/* Bouton Publier dans la modale */
+.btn-publier-modal {
+  border-radius: 10px; /* Coins arrondis pour harmoniser */
+}
+
+/* ============================================================
+   FILTRE SELECT : suppression double flèche
+   ============================================================ */
+
+/* Supprime la flèche native des selects de filtre */
+.filter-select {
+  appearance: none;         /* Standard */
+  -webkit-appearance: none; /* Safari / Chrome */
+  -moz-appearance: none;    /* Firefox */
+}
+
+/* ============================================================
+   CARTES DE DEMANDES
+   Même structure que les cartes d'offres (offres.css)
+   Seules les couleurs des badges changent
+   ============================================================ */
+
+/* Carte individuelle d'une demande */
+.demande-card {
+  background-color: #ffffff;    /* Fond blanc */
+  border-radius: 14px;          /* Coins arrondis identiques aux offres */
+  border: 1px solid #e2e8f0;   /* Bordure grise légère */
+  padding: 20px;                /* Espacement intérieur */
+  height: 100%;                 /* Hauteur pleine colonne Bootstrap */
+  display: flex;                /* Flexbox vertical */
+  flex-direction: column;       /* Disposition en colonne */
+  transition: box-shadow 0.2s ease, transform 0.15s ease; /* Animations survol */
+}
+
+/* Survol d'une carte : ombre + élévation */
+.demande-card:hover {
+  box-shadow: 0 6px 24px rgba(15, 23, 42, 0.1); /* Ombre portée */
+  transform: translateY(-2px);                   /* Légère élévation */
+}
+
+/* ---- En-tête de carte ---- */
+
+/* Ligne supérieure : avatar + nom + badge URGENT */
+.card-header-row {
+  display: flex;                  /* Flex horizontal */
+  align-items: center;            /* Centrage vertical */
+  justify-content: space-between; /* Espace entre nom et badge */
+  margin-bottom: 12px;            /* Espace sous l'en-tête */
+}
+
+/* Zone gauche : avatar + nom + filière/niveau */
+.card-user-info {
+  display: flex;        /* Flex horizontal */
+  align-items: center;  /* Centrage vertical */
+  gap: 10px;            /* Espace entre avatar et texte */
+}
+
+/* Avatar rond coloré */
+.card-avatar {
+  width: 44px;              /* Diamètre */
+  height: 44px;             /* Hauteur = largeur pour cercle */
+  border-radius: 50%;       /* Cercle parfait */
+  color: #ffffff;           /* Initiales blanches */
+  display: flex;            /* Flex pour centrer */
+  align-items: center;
+  justify-content: center;
+  font-size: 0.88rem;       /* Taille des initiales */
+  font-weight: 700;         /* Gras */
+  flex-shrink: 0;           /* Ne rétrécit pas */
+}
+
+/* Couleurs des avatars selon l'étudiant */
+.avatar-violet  { background-color: #7c3aed; } /* Violet */
+.avatar-rose    { background-color: #e11d48; } /* Rose vif */
+.avatar-vert    { background-color: #059669; } /* Vert */
+.avatar-bleu    { background-color: #2563eb; } /* Bleu */
+.avatar-orange  { background-color: #d97706; } /* Orange */
+.avatar-indigo  { background-color: #4f46e5; } /* Indigo */
+.avatar-teal    { background-color: #0d9488; } /* Teal */
+
+/* Nom de l'étudiant */
+.card-name {
+  font-size: 0.95rem; /* Taille de police */
+  font-weight: 700;   /* Gras */
+  color: #0f172a;     /* Texte très foncé */
+  margin-bottom: 2px; /* Espace sous le nom */
+}
+
+/* Badges Filière + Niveau */
+.card-meta {
+  display: flex; /* Flex horizontal */
+  gap: 6px;      /* Espace entre les badges */
+}
+
+/* Badge individuel filière/niveau */
+.badge-meta {
+  font-size: 0.72rem;      /* Très petite police */
+  font-weight: 600;        /* Semi-gras */
+  color: #64748b;          /* Texte gris */
+  background-color: #f1f5f9; /* Fond gris très clair */
+  border-radius: 6px;      /* Coins légèrement arrondis */
+  padding: 2px 8px;        /* Espacement intérieur */
+}
+
+/* ---- Badge URGENT ---- */
+
+/* Badge rouge affiché sur les demandes urgentes */
+.badge-urgent {
+  font-size: 0.72rem;       /* Petite police */
+  font-weight: 800;         /* Très gras pour attirer l'attention */
+  color: #dc2626;           /* Texte rouge vif */
+  background-color: #fee2e2; /* Fond rouge très clair */
+  border: 1.5px solid #fca5a5; /* Bordure rouge clair */
+  border-radius: 6px;       /* Coins légèrement arrondis */
+  padding: 3px 10px;        /* Espacement intérieur */
+  letter-spacing: 0.5px;    /* Légèrement espacé */
+  white-space: nowrap;      /* Empêche le retour à la ligne */
+}
+
+/* ---- Badge de matière "BESOIN EN : MATIÈRE" ---- */
+
+/* Style de base du badge de besoin */
+.badge-besoin {
+  display: inline-block;  /* Bloc inline */
+  font-size: 0.72rem;     /* Très petite police */
+  font-weight: 700;       /* Gras */
+  letter-spacing: 0.6px;  /* Légèrement espacé */
+  border-radius: 6px;     /* Coins légèrement arrondis */
+  padding: 5px 12px;      /* Espacement intérieur */
+  margin-bottom: 10px;    /* Espace sous le badge */
+}
+
+/* Couleurs spécifiques par matière du besoin */
+.besoin-algorithmique { color: #d97706; background-color: #fffbeb; } /* Orange/jaune */
+.besoin-reseaux       { color: #059669; background-color: #ecfdf5; } /* Vert */
+.besoin-python        { color: #6366f1; background-color: #eef2ff; } /* Violet clair */
+.besoin-sql           { color: #2563eb; background-color: #eff6ff; } /* Bleu */
+.besoin-bdd           { color: #7c3aed; background-color: #f5f3ff; } /* Violet foncé */
+.besoin-devweb        { color: #db2777; background-color: #fdf2f8; } /* Rose */
+.besoin-javascript    { color: #ca8a04; background-color: #fefce8; } /* Jaune doré */
+
+/* ---- Description de la demande ---- */
+
+.card-description {
+  font-size: 0.875rem; /* Petite police */
+  color: #334155;      /* Gris foncé */
+  line-height: 1.55;   /* Interligne confortable */
+  flex: 1;             /* Prend l'espace disponible, pousse les boutons en bas */
+  margin-bottom: 12px; /* Espace sous la description */
+}
+
+/* ---- Section disponibilités ---- */
+
+.card-dispos {
+  margin-bottom: 16px; /* Espace sous les disponibilités */
+}
+
+/* Titre "Disponibilités" avec icône horloge */
+.dispos-title {
+  display: flex;       /* Flex horizontal */
+  align-items: center; /* Centrage vertical */
+  gap: 6px;            /* Espace icône-texte */
+  font-size: 0.8rem;   /* Petite police */
+  color: #64748b;      /* Gris secondaire */
+  margin-bottom: 4px;  /* Espace sous le titre */
+}
+
+/* Ligne de créneau horaire */
+.dispo-item {
+  font-size: 0.8rem;  /* Même taille que le titre */
+  color: #64748b;     /* Gris secondaire */
+  padding-left: 20px; /* Décalage pour aligner avec le texte du titre */
+}
+
+/* ---- Boutons d'action des cartes ---- */
+
+/* Ligne des boutons */
+.card-actions {
+  display: flex;    /* Flex horizontal */
+  gap: 8px;         /* Espace entre boutons */
+  margin-top: auto; /* Pousse les boutons en bas de la carte */
+}
+
+/* Bouton "Voir Profil" : contour gris */
+.btn-voir-profil {
+  flex: 1;                      /* Moitié de l'espace */
+  border: 1.5px solid #e2e8f0; /* Bordure grise */
+  color: #0f172a;               /* Texte foncé */
+  background-color: transparent; /* Fond transparent */
+  border-radius: 8px;           /* Coins arrondis */
+  padding: 8px 12px;            /* Espacement intérieur */
+  font-size: 0.85rem;           /* Petite police */
+  font-weight: 500;             /* Semi-gras */
+  text-align: center;           /* Centrage du texte */
+  cursor: pointer;              /* Curseur main */
+  transition: background-color 0.15s ease;
+}
+
+.btn-voir-profil:hover {
+  background-color: #f1f5f9; /* Fond gris très clair au survol */
+}
+
+/* Bouton "Voir les offres" : bleu plein */
+.btn-voir-offres {
+  flex: 1;                   /* Moitié de l'espace */
+  background-color: #2563eb; /* Fond bleu principal */
+  color: #ffffff;            /* Texte blanc */
+  border: none;              /* Pas de bordure */
+  border-radius: 8px;        /* Coins arrondis */
+  padding: 8px 12px;         /* Espacement intérieur */
+  font-size: 0.85rem;        /* Petite police */
+  font-weight: 600;          /* Semi-gras */
+  text-align: center;        /* Centrage */
+  cursor: pointer;           /* Curseur main */
+  transition: background-color 0.15s ease;
+}
+
+.btn-voir-offres:hover {
+  background-color: #1d4ed8; /* Bleu plus foncé au survol */
+}
+
+/* ============================================================
+   OFFRES CORRESPONDANTES (dans le modal)
+   Cartes affichées dans le modal "Voir les offres"
+   ============================================================ */
+
+/* Carte d'une offre correspondante dans le modal */
+.offre-match-card {
+  background-color: #f8fafc;    /* Fond gris très clair */
+  border: 1px solid #e2e8f0;   /* Bordure grise */
+  border-radius: 12px;          /* Coins arrondis */
+  padding: 16px;                /* Espacement intérieur */
+  margin-bottom: 12px;          /* Espace entre les cartes */
+}
+
+/* En-tête de la carte d'offre correspondante */
+.offre-match-header {
+  display: flex;                  /* Flex horizontal */
+  align-items: center;            /* Centrage vertical */
+  justify-content: space-between; /* Espace entre nom et score */
+  margin-bottom: 10px;            /* Espace sous l'en-tête */
+}
+
+/* Zone avatar + nom dans la carte match */
+.offre-match-user {
+  display: flex;        /* Flex horizontal */
+  align-items: center;  /* Centrage vertical */
+  gap: 10px;            /* Espace entre avatar et texte */
+}
+
+/* Score de compatibilité (ex: "94% compatible") */
+.offre-match-score {
+  font-size: 0.78rem;   /* Petite police */
+  font-weight: 700;     /* Gras */
+  color: #ffffff;       /* Texte blanc */
+  background: linear-gradient(135deg, #06b6d4, #10b981); /* Dégradé cyan → vert */
+  border-radius: 999px; /* Forme pilule */
+  padding: 4px 12px;    /* Espacement intérieur */
+}
+
+/* Description de l'offre dans le modal */
+.offre-match-desc {
+  font-size: 0.85rem;  /* Petite police */
+  color: #475569;      /* Gris moyen */
+  margin-bottom: 12px; /* Espace sous la description */
+  line-height: 1.5;    /* Interligne confortable */
+}
+
+/* Bouton "Accepter" : vert plein */
+.btn-accepter {
+  background-color: #16a34a; /* Fond vert */
+  color: #ffffff;            /* Texte blanc */
+  border: none;              /* Pas de bordure */
+  border-radius: 8px;        /* Coins arrondis */
+  padding: 8px 20px;         /* Espacement intérieur */
+  font-size: 0.85rem;        /* Petite police */
+  font-weight: 600;          /* Semi-gras */
+  cursor: pointer;           /* Curseur main */
+  transition: background-color 0.15s ease, transform 0.1s ease;
+}
+
+.btn-accepter:hover {
+  background-color: #15803d; /* Vert plus foncé au survol */
+  transform: translateY(-1px); /* Légère élévation */
+}
+
+/* Bouton "Contacter" : bleu plein */
+.btn-contacter-match {
+  background-color: #2563eb; /* Fond bleu */
+  color: #ffffff;            /* Texte blanc */
+  border: none;              /* Pas de bordure */
+  border-radius: 8px;        /* Coins arrondis */
+  padding: 8px 20px;         /* Espacement intérieur */
+  font-size: 0.85rem;        /* Petite police */
+  font-weight: 600;          /* Semi-gras */
+  cursor: pointer;           /* Curseur main */
+  transition: background-color 0.15s ease;
+}
+
+.btn-contacter-match:hover {
+  background-color: #1d4ed8; /* Bleu plus foncé */
+}
+
+/* Message "aucune offre" dans le modal */
+.aucune-offre-msg {
+  text-align: center;  /* Centrage */
+  color: #94a3b8;      /* Gris clair */
+  font-size: 0.9rem;   /* Taille de police */
+  padding: 24px 0;     /* Espacement vertical */
+}
