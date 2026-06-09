@@ -1,0 +1,323 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>IFRI_MentorLink – Notifications</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" rel="stylesheet">
+  <style>
+    html, body { height: 100%; margin: 0; background: #f5f6fa; }
+    .wrapper { display: flex; height: 100vh; }
+
+    /* SIDEBAR */
+    .sidebar {
+      width: 240px;
+      min-width: 240px;
+      background: #1a1f2e;
+      display: flex;
+      flex-direction: column;
+      height: 100vh;
+    }
+    .sidebar .logo {
+      padding: 18px 20px;
+      border-bottom: 1px solid rgba(255,255,255,0.08);
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    .logo-icon {
+      width: 28px; height: 28px;
+      background: #fff;
+      border-radius: 5px;
+      display: flex; align-items: center; justify-content: center;
+    }
+    .logo-text { color: #fff; font-size: 14px; font-weight: 600; }
+
+    .nav-link-custom {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 10px 20px;
+      color: rgba(255,255,255,0.65);
+      font-size: 14px;
+      text-decoration: none;
+      transition: background 0.15s;
+      border-radius: 0;
+    }
+    .nav-link-custom:hover { background: rgba(255,255,255,0.07); color: #fff; }
+    .nav-link-custom.active {
+      background: #2563eb;
+      color: #fff;
+      border-radius: 6px;
+      margin: 0 8px;
+      padding: 10px 12px;
+    }
+    .nav-link-custom i { font-size: 17px; }
+
+    .sidebar-bottom {
+      margin-top: auto;
+      padding: 16px 20px;
+      border-top: 1px solid rgba(255,255,255,0.08);
+    }
+    .user-avatar {
+      width: 32px; height: 32px;
+      background: #2563eb;
+      border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 13px; font-weight: 600; color: #fff;
+    }
+    .logout-link {
+      display: flex; align-items: center; gap: 10px;
+      color: #ef4444; font-size: 14px;
+      text-decoration: none; margin-top: 10px;
+    }
+
+    /* MAIN */
+    .main-content { flex: 1; display: flex; flex-direction: column; overflow: hidden; }
+
+    .topbar {
+      background: #fff;
+      height: 60px;
+      padding: 0 28px;
+      display: flex; align-items: center; gap: 14px;
+      border-bottom: 1px solid #e5e7eb;
+    }
+    .topbar-title { font-size: 16px; font-weight: 600; color: #111827; flex: 1; }
+    .search-box {
+      display: flex; align-items: center; gap: 8px;
+      background: #f9fafb;
+      border: 1px solid #e5e7eb;
+      border-radius: 8px;
+      padding: 6px 14px;
+    }
+    .search-box input {
+      border: none; background: transparent;
+      font-size: 13px; color: #6b7280;
+      outline: none; width: 190px;
+    }
+    .search-box i { color: #9ca3af; font-size: 15px; }
+    .avatar-top {
+      width: 36px; height: 36px;
+      background: #2563eb; border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 14px; font-weight: 600; color: #fff;
+    }
+    .bell-wrapper { position: relative; }
+    .bell-dot {
+      position: absolute; top: 2px; right: 2px;
+      width: 8px; height: 8px;
+      background: #f59e0b; border-radius: 50%;
+      border: 2px solid #fff;
+    }
+
+    /* NOTIFICATIONS */
+    .page-scroll { flex: 1; overflow-y: auto; padding: 28px; }
+
+    .notif-card {
+      border-left: 4px solid #2563eb !important;
+      border-radius: 10px !important;
+    }
+    .notif-card.read { border-left-color: #e5e7eb !important; }
+
+    .notif-icon {
+      width: 42px; height: 42px;
+      border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 19px;
+      flex-shrink: 0;
+    }
+    .notif-icon.blue   { background: #eff6ff; color: #2563eb; }
+    .notif-icon.green  { background: #f0fdf4; color: #16a34a; }
+    .notif-icon.yellow { background: #fffbeb; color: #f59e0b; }
+
+    .match-badge {
+      display: inline-block;
+      background: #dcfce7; color: #15803d;
+      font-size: 12px; font-weight: 600;
+      border-radius: 20px; padding: 2px 10px;
+    }
+    .btn-respond { background: #2563eb; color: #fff; font-size: 13px; border: none; border-radius: 7px; padding: 7px 16px; }
+    .btn-respond:hover { background: #1d4ed8; color: #fff; }
+    .btn-ghost { background: transparent; color: #6b7280; border: 1px solid #d1d5db; font-size: 13px; border-radius: 7px; padding: 7px 16px; }
+    .btn-ghost:hover { background: #f9fafb; }
+    .btn-outline-dark2 { background: #fff; color: #374151; border: 1px solid #d1d5db; font-size: 13px; border-radius: 7px; padding: 7px 16px; }
+    .btn-outline-dark2:hover { background: #f9fafb; }
+    .notif-time { font-size: 12px; color: #9ca3af; }
+    .notif-sub { font-size: 13px; color: #6b7280; }
+  </style>
+</head>
+<body>
+
+<div class="wrapper">
+
+  <!-- ── SIDEBAR ── -->
+  <aside class="sidebar">
+    <div class="logo">
+      <div class="logo-icon">
+        <i class="bi bi-book" style="color:#1a1f2e; font-size:15px;"></i>
+      </div>
+      <span class="logo-text">IFRI_MentorLink</span>
+    </div>
+
+    <nav class="py-2">
+      <a href="#" class="nav-link-custom">
+        <i class="bi bi-grid"></i> Dashboard
+      </a>
+      <a href="#" class="nav-link-custom">
+        <i class="bi bi-person-circle"></i> Profil
+      </a>
+      <a href="#" class="nav-link-custom">
+        <i class="bi bi-file-earmark-text"></i> Offres
+      </a>
+      <a href="#" class="nav-link-custom">
+        <i class="bi bi-inbox"></i> Demandes
+      </a>
+      <a href="#" class="nav-link-custom">
+        <i class="bi bi-lightning-charge"></i> Matching
+        <span class="badge bg-success ms-auto">12</span>
+      </a>
+      <a href="#" class="nav-link-custom">
+        <i class="bi bi-chat-left-text"></i> Messages
+        <span class="badge bg-danger ms-auto">5</span>
+      </a>
+      <a href="#" class="nav-link-custom active">
+        <i class="bi bi-bell"></i> Notifications
+        <span class="badge bg-danger ms-auto">3</span>
+      </a>
+      <a href="#" class="nav-link-custom">
+        <i class="bi bi-gear"></i> Paramètres
+      </a>
+    </nav>
+
+    <div class="sidebar-bottom">
+      <div class="d-flex align-items-center gap-2">
+        <div class="user-avatar">U</div>
+        <div>
+          <div class="text-white fw-500" style="font-size:13px;">Utilisateur</div>
+          <div style="font-size:11px; color:rgba(255,255,255,0.5);">Étudiant</div>
+        </div>
+      </div>
+      <a href="#" class="logout-link">
+        <i class="bi bi-box-arrow-right"></i> Déconnexion
+      </a>
+    </div>
+  </aside>
+
+  <!-- ── MAIN ── -->
+  <div class="main-content">
+
+    <!-- Topbar -->
+    <header class="topbar">
+      <span class="topbar-title">Notifications</span>
+      <div class="search-box">
+        <i class="bi bi-search"></i>
+        <input type="text" placeholder="Rechercher un étudiant...">
+      </div>
+      <div class="bell-wrapper">
+        <i class="bi bi-bell" style="font-size:20px; color:#6b7280;"></i>
+        <div class="bell-dot"></div>
+      </div>
+      <div class="avatar-top">U</div>
+    </header>
+
+    <!-- Page content -->
+    <div class="page-scroll">
+
+      <!-- Header -->
+      <div class="d-flex align-items-center justify-content-between mb-4">
+        <h1 class="fs-4 fw-bold text-dark mb-0">Notifications</h1>
+        <button class="btn btn-sm btn-outline-danger px-3">Effacer tout</button>
+      </div>
+
+      <!-- Notification cards -->
+      <div class="d-flex flex-column gap-3">
+
+        <!-- 1 : Message -->
+        <div class="card border notif-card shadow-none">
+          <div class="card-body d-flex align-items-start gap-3 py-3 px-4">
+            <div class="notif-icon blue">
+              <i class="bi bi-chat-left-text"></i>
+            </div>
+            <div class="flex-grow-1">
+              <p class="mb-1" style="font-size:14px; color:#374151;">
+                <strong>Marie Houngbédji</strong> vous a envoyé un message
+              </p>
+              <p class="notif-sub mb-1">Python — Session de ce mardi ?</p>
+              <p class="notif-time mb-3">Il y a 30 min</p>
+              <div class="d-flex gap-2">
+                <button class="btn-respond">Répondre</button>
+                <button class="btn-ghost">Marquer comme lu</button>
+              </div>
+            </div>
+            <button class="btn-close" aria-label="Fermer"></button>
+          </div>
+        </div>
+
+        <!-- 2 : Matching -->
+        <div class="card border notif-card shadow-none">
+          <div class="card-body d-flex align-items-start gap-3 py-3 px-4">
+            <div class="notif-icon yellow">
+              <i class="bi bi-lightning-charge"></i>
+            </div>
+            <div class="flex-grow-1">
+              <p class="mb-1" style="font-size:14px; color:#374151;">
+                Nouvelle correspondance ! <strong>Paul Adéoti</strong> correspond à <strong>87%</strong> avec votre profil
+              </p>
+              <span class="match-badge mb-2 d-inline-block">87% Match</span>
+              <p class="notif-time mb-3">Il y a 2h</p>
+              <div class="d-flex gap-2">
+                <button class="btn-outline-dark2">Voir le profil</button>
+                <button class="btn-respond">Envoyer un message</button>
+              </div>
+            </div>
+            <button class="btn-close" aria-label="Fermer"></button>
+          </div>
+        </div>
+
+        <!-- 3 : Offre acceptée -->
+        <div class="card border notif-card shadow-none">
+          <div class="card-body d-flex align-items-start gap-3 py-3 px-4">
+            <div class="notif-icon green">
+              <i class="bi bi-check-circle"></i>
+            </div>
+            <div class="flex-grow-1">
+              <p class="mb-1" style="font-size:14px; color:#374151;">
+                Votre offre de mentorat en <strong>SQL</strong> a été acceptée par <strong>Kofi Mensah</strong>
+              </p>
+              <p class="notif-time mb-3">Il y a 5h</p>
+              <div class="d-flex gap-2">
+                <button class="btn-respond">Démarrer la conversation</button>
+              </div>
+            </div>
+            <button class="btn-close" aria-label="Fermer"></button>
+          </div>
+        </div>
+
+        <!-- 4 : Demande acceptée (lue) -->
+        <div class="card border notif-card read shadow-none">
+          <div class="card-body d-flex align-items-start gap-3 py-3 px-4">
+            <div class="notif-icon green">
+              <i class="bi bi-check-circle"></i>
+            </div>
+            <div class="flex-grow-1">
+              <p class="mb-1" style="font-size:14px; color:#374151;">
+                <strong>Aminata Kora</strong> a accepté votre demande d'aide en <strong>Réseaux</strong>
+              </p>
+              <p class="notif-time mb-3">Hier, 16h45</p>
+              <div class="d-flex gap-2">
+                <button class="btn-respond">Démarrer la conversation</button>
+              </div>
+            </div>
+            <button class="btn-close" aria-label="Fermer"></button>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>
