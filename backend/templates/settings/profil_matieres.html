@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html>
+<head><title>Modifier profil matières - IFRI_MentorLink</title></head>
+<body>
+    <h1>Compétences et lacunes</h1>
+    {% if error %}<p class="error">{{ error }}</p>{% endif %}
+    {% if success %}<p class="success">{{ success }}</p>{% endif %}
+    <form method="POST">
+        <fieldset>
+            <legend>Compétences (max 4)</legend>
+            {% for m in matieres %}
+            <label><input type="checkbox" name="competences" value="{{ m.id }}" {% if m.id in mes_competences %}checked{% endif %}> {{ m.nom }}</label>
+            {% endfor %}
+        </fieldset>
+        <fieldset>
+            <legend>Lacunes (max 4)</legend>
+            {% for m in matieres %}
+            <label><input type="checkbox" name="lacunes" value="{{ m.id }}" {% if m.id in mes_lacunes %}checked{% endif %}> {{ m.nom }}</label>
+            {% endfor %}
+        </fieldset>
+        <button type="submit">Enregistrer</button>
+    </form>
+</body>
+</html>

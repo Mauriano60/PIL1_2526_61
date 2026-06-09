@@ -1,0 +1,12 @@
+<!DOCTYPE html>
+<html>
+<head><title>Supprimer mon compte - IFRI_MentorLink</title></head>
+<body>
+    <h1>Supprimer mon compte</h1>
+    <p>Cette action est irréversible.</p>
+    {% if error %}<p class="error">{{ error }}</p>{% endif %}
+    <form method="POST">
+        <button type="submit">Supprimer définitivement</button>
+    </form>
+</body>
+</html>

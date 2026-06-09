@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html>
+<head><title>Demandes d'aide - IFRI_MentorLink</title></head>
+<body>
+    <h1>Demandes d'aide</h1>
+    <a href="{{ url_for('demandes.creer_demande') }}">Publier une demande</a>
+    <ul>
+    {% for demande in demandes %}
+        <li>
+            <strong>{{ demande.matiere }}</strong> - {{ demande.prenom }} {{ demande.nom_user }}
+            <p>{{ demande.description }}</p>
+            <small>Score: {{ demande.score_affiche }}%</small>
+        </li>
+    {% endfor %}
+    </ul>
+</body>
+</html>

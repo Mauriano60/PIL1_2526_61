@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html>
+<head><title>Inscription - IFRI_MentorLink</title></head>
+<body>
+    <h1>Inscription</h1>
+    {% if error %}<p class="error">{{ error }}</p>{% endif %}
+    <form method="POST">
+        <input type="text" name="prenom" placeholder="Prénom" required>
+        <input type="text" name="nom" placeholder="Nom" required>
+        <input type="email" name="email" placeholder="Email" required>
+        <input type="tel" name="telephone" placeholder="Téléphone" required>
+        <input type="password" name="password" placeholder="Mot de passe" required>
+        <select name="id_filiere" required>
+            <option value="">Filière</option>
+            {% for f in filieres %}<option value="{{ f.id }}">{{ f.nom }}</option>{% endfor %}
+        </select>
+        <select name="id_niveau" required>
+            <option value="">Niveau</option>
+            {% for n in niveaux %}<option value="{{ n.id }}">{{ n.nom }}</option>{% endfor %}
+        </select>
+        <button type="submit">S'inscrire</button>
+    </form>
+    <a href="{{ url_for('auth.login') }}">Déjà un compte</a>
+</body>
+</html>

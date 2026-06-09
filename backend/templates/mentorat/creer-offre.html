@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html>
+<head><title>Créer une offre - IFRI_MentorLink</title></head>
+<body>
+    <h1>Publier une offre de mentorat</h1>
+    {% if error %}<p class="error">{{ error }}</p>{% endif %}
+    {% if matchs %}
+    <h2>Mentees potentiels</h2>
+    <ul>
+    {% for m in matchs %}
+        <li>{{ m.prenom }} {{ m.nom }} - Score: {{ m.score_compatibilite }}%</li>
+    {% endfor %}
+    </ul>
+    {% else %}
+    <form method="POST">
+        <select name="matiere_id" required>
+            <option value="">Matière</option>
+            {% for m in matieres %}<option value="{{ m.id }}">{{ m.nom }}</option>{% endfor %}
+        </select>
+        <select name="format" required>
+            <option value="">Format</option>
+            <option value="en_ligne">En ligne</option>
+            <option value="presentiel">Présentiel</option>
+            <option value="les_deux">Les deux</option>
+        </select>
+        <textarea name="description" placeholder="Description (max 1000 caractères)"></textarea>
+        <button type="submit">Publier</button>
+    </form>
+    {% endif %}
+</body>
+</html>
