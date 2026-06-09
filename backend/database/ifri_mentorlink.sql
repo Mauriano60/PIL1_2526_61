@@ -227,7 +227,7 @@ INSERT INTO filieres_etudes (nom) VALUES
 ('Génie Logiciel'), ('Sécurité Informatique'), ('Intelligence Artificielle'), ('Internet et Multimédia'), ('Systèmes embarqués et Internet des Objets');
 
 INSERT INTO niveaux_etudes (nom) VALUES
-('Licence 1'), ('Licence 2');
+('Licence 1'), ('Licence 2'), ('Licence 3');
 
 INSERT INTO utilisateurs (email, telephone, mot_de_passe, prenom, nom, id_filiere, id_niveau, biographie, email_verifie, est_actif)
 VALUES
