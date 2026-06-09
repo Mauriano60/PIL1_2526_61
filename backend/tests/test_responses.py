@@ -1,4 +1,3 @@
-# CHABI AYEDOUN Yoéla
 import pytest
 from unittest.mock import patch, MagicMock
 from flask import session, url_for
@@ -96,11 +95,9 @@ class TestLoginRequired:
         @login_required
         def dummy_view():
             return "Success"
-        
-        # Pas d'utilisateur en session -> doit provoquer une redirection vers auth.login
+
         with client.application.test_request_context():
             response = dummy_view()
-            # Le décorateur renvoie un objet redirect (statut HTTP 302)
             assert response.status_code == 302
             assert '/login' in response.headers['Location']
 

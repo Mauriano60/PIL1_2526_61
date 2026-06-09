@@ -167,41 +167,67 @@ CREATE TABLE notifications (
 
 
 
--- CHABI AYEDOUN Yoéla
--- Optimisation des performances pour le moteur de matching et les notifications
-
--- 1. Index pour la table 'utilisateurs'
--- Accélère le filtrage des étudiants actifs lors du chargement global
+-- INDEXATION DES TABLES POUR OPTIMISER LES REQUÊTES
 CREATE INDEX idx_utilisateurs_actif ON utilisateurs(est_actif);
-
--- 2. Index pour la table 'offre_mentorat'
--- Accélère la recherche des matières proposées par un utilisateur spécifique
 CREATE INDEX idx_offre_utilisateur_statut ON offre_mentorat(utilisateur_id, statut_offre, matiere_id);
-
--- 3. Index pour la table 'demande_mentorat'
--- Accélère la recherche des matières recherchées par un utilisateur spécifique
 CREATE INDEX idx_demande_utilisateur_statut ON demande_mentorat(utilisateur_id, statut_demande, matiere_id);
-
--- 4. Index pour la table 'correspondances'
--- Crucial : accélère la vérification des doublons et l'affichage des matchs validés ou en attente
 CREATE INDEX idx_correspondances_membres_statut ON correspondances(mentor_id, mentee_id, statut_correspondance);
 CREATE INDEX idx_correspondances_initiateur ON correspondances(initiateur_id);
-
--- 5. Index pour la table 'notifications'
--- Indispensable pour récupérer instantanément les alertes non lues d'un étudiant (compteur de la cloche)
 CREATE INDEX idx_notifications_utilisateur_lu ON notifications(utilisateur_id, est_lu);
 
 
 
 INSERT INTO matieres (nom) VALUES
-('Algorithmique'), ('Base de donnees'), ('Programmation web'), ('Reseaux'),
-('Genie logiciel'), ('Mathematiques'), ('Systeme Linux'), ('Anglais technique'), ('Logique, arithmétique et applications'), ('Algèbre linéaire et applications'), ('Analyse et appli');
+('Logique, arithmétique et applications'),
+('Algèbre linéaire et applications'),
+('Analyse et applications'),
+('Probabilité et statistique'),
+('Architecture et topologie des réseaux informatiques'),
+('Système d exploitation et outils de base en informatique'),
+('Base de la programmation'),
+('Déontologie et droit liés aux TIC'),
+('Techniques d expression écrite et orale'),
+('Programmation Python'),
+('Base de données relationnelles'),
+('Technologies web et infographie'),
+('Mathématiques appliquées'),
+('Projet intégrateur'),
+('Administration des réseaux sous Windows/Linux'),
+('Convergence et calcul différentiel'),
+('Anglais technique'),
+('Structures algébriques et leurs applications en informatique'),
+('Approche orientée objet'),
+('Structures de données et applications avec C/Python'),
+('Administration systèmes et réseaux'),
+('Sécurité des systèmes informatiques'),
+('Management de la sécurité du système d information'),
+('Sécurité des réseaux'),
+('Maintenance des appareils électroniques'),
+('Politique de sécurité des systèmes d information'),
+('Commutation et routage'),
+('Audit, normes de sécurité et gestion des risques et incidents'),
+('Sécurisation des réseaux sans fil'),
+('Cryptographie et applications'),
+('Gestion des projets'),
+('Communication managériale'),
+('Anglais pour la communication scientifique'),
+('Programmation avancée en Java'),
+('Programmation graphique en Qt/C++'),
+('Aspects avancés des technologies web'),
+('Bases du génie logiciel'),
+('Programmation avancée en Python et R'),
+('Structure de données avancées'),
+('Aspects avancés des bases de données'),
+('Système d information décisionnelle'),
+('Ingénierie logicielle et les PGI/ERP'),
+('Cycle de vie d un logiciel et assurance qualité');
+
 
 INSERT INTO filieres_etudes (nom) VALUES
-('Genie logiciel'), ('Informatique'), ('Mathematiques'), ('Systeme Linux');
+('Génie Logiciel'), ('Sécurité Informatique'), ('Intelligence Artificielle'), ('Internet et Multimédia'), ('Systèmes embarqués et Internet des Objets');
 
 INSERT INTO niveaux_etudes (nom) VALUES
-('Licence 1'), ('Licence 2'), ('Licence 3'), ('Master 1'), ('Master 2');
+('Licence 1'), ('Licence 2');
 
 INSERT INTO utilisateurs (email, telephone, mot_de_passe, prenom, nom, id_filiere, id_niveau, biographie, email_verifie, est_actif)
 VALUES

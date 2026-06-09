@@ -1,4 +1,3 @@
-# CHABI AYEDOUN Yoéla
 from flask import session
 from db.database import get_db
 
@@ -8,7 +7,6 @@ def get_user_context():
         return {}
         
     try:
-        # L'utilisation du double 'with' sécurise la libération des ressources de la BDD
         with get_db() as conn:
             with conn.cursor() as cursor:
                 # 1. Récupération de l'utilisateur
@@ -22,7 +20,6 @@ def get_user_context():
                 """, (session['user_id'],))
                 notifs = cursor.fetchone()
                 
-                # Sécurisation du dictionnaire : on gère le cas où le curseur renverrait un tuple ou None
                 nb_notifs = 0
                 if notifs:
                     if isinstance(notifs, dict):

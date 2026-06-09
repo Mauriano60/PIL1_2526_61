@@ -1,4 +1,3 @@
-# CHABI AYEDOUN Yoéla
 import pytest
 from utils.validators import (
     valider_email,
@@ -147,7 +146,6 @@ class TestRegistrationValidation:
             'id_niveau': '1'
         }
         erreurs = valider_inscription(form)
-        # Utilisation de .lower() pour éviter les rejets liés à la casse
         assert any('prénom' in e.lower() for e in erreurs)
 
     def test_missing_last_name(self):

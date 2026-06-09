@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html>
+<head><title>Matching - IFRI_MentorLink</title></head>
+<body>
+    <h1>Suggestions de matching</h1>
+    <p>Rôle actuel : {{ role_actuel }}</p>
+    <h2>Top recommandations</h2>
+    <ul>
+    {% for mentor in mentors %}
+        <li>{{ mentor.prenom }} {{ mentor.nom }} - {{ mentor.filiere }} - Score: {{ mentor.score_compatibilite }}%</li>
+    {% endfor %}
+    </ul>
+    {% if matchs_en_attente %}
+    <h2>En attente</h2>
+    <ul>
+    {% for m in matchs_en_attente %}
+        <li>{{ m.prenom }} {{ m.nom }}</li>
+    {% endfor %}
+    </ul>
+    {% endif %}
+    {% if matchs_acceptes %}
+    <h2>Acceptés</h2>
+    <ul>
+    {% for m in matchs_acceptes %}
+        <li>{{ m.prenom }} {{ m.nom }}</li>
+    {% endfor %}
+    </ul>
+    {% endif %}
+</body>
+</html>

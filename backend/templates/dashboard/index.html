@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html>
+<head><title>Tableau de bord - IFRI_MentorLink</title></head>
+<body>
+    <h1>Tableau de bord</h1>
+    <p>Bienvenue {{ user.prenom }} {{ user.nom }}</p>
+    <ul>
+        <li>Offres dans ma filière : {{ nb_offres_filiere }}</li>
+        <li>Demandes correspondantes : {{ nb_demandes_profil }}</li>
+        <li>Correspondances : {{ nb_correspondances }}</li>
+        <li>Messages non lus : {{ nb_messages_non_lus }}</li>
+    </ul>
+    <nav>
+        <a href="{{ url_for('matching.matching') }}">Matching</a>
+        <a href="{{ url_for('offres.offres') }}">Offres</a>
+        <a href="{{ url_for('demandes.demandes') }}">Demandes</a>
+        <a href="{{ url_for('conversations.conversations') }}">Messages</a>
+        <a href="{{ url_for('notifications.notifications') }}">Notifications</a>
+        <a href="{{ url_for('auth.logout') }}">Déconnexion</a>
+    </nav>
+</body>
+</html>

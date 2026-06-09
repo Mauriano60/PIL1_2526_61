@@ -1,8 +1,9 @@
 # CHABI AYEDOUN Yoéla
-from flask import Blueprint, render_template, request, redirect, url_for, session
-# CORRECTION : On importe les fonctions réelles de ton database.py
+from flask import Blueprint, render_template, request, redirect, url_for, session, flash
+# On utilise les fonctions de ton database.py
 from db.database import fetch_one, fetch_all, execute
-from utils.validators import valider_inscription
+from utils.validators import valider_inscription, valider_competences_et_lacunes
+from extensions import limiter
 from services.mail_service import envoyer_email_confirmation, verify_token
 import bcrypt
 
@@ -13,6 +14,7 @@ def index():
     return redirect(url_for('auth.login'))
 
 @auth_bp.route('/login', methods=['GET', 'POST'])
+@limiter.limit("5 per minute")
 def login():
     error = None
     if request.method == 'POST':
@@ -20,7 +22,6 @@ def login():
         password = request.form['password']
         
         try:
-            # Utilisation de fetch_one (gère automatiquement la connexion et la fermeture)
             user = fetch_one("SELECT * FROM utilisateurs WHERE email = %s AND est_actif = 1", (email,))
             
             if user and bcrypt.checkpw(password.encode('utf-8'), user['mot_de_passe'].encode('utf-8')):
@@ -66,22 +67,51 @@ def register():
                 id_filiere = request.form['id_filiere']
                 id_niveau = request.form['id_niveau']
                 
-                hashed = bcrypt.hashpw(password.encode('utf-8'), bcrypt.gensalt())
+                # Récupération des listes de matières
+                competences = request.form.getlist('competences')
+                lacunes = request.form.getlist('lacunes')
                 
+                # SÉCURITÉ CRUCIALE : Validation des contraintes métiers
+                est_valide, message_erreur = valider_competences_et_lacunes(competences, lacunes)
+                if not est_valide:
+                    error = message_erreur
+                    return render_template('auth/register.html', error=error, filieres=filieres, niveaux=niveaux)
+                
+                # Hachage sécurisé du mot de passe
+                hashed = bcrypt.hashpw(password.encode('utf-8'), bcrypt.gensalt())
+
                 # Insertion de l'utilisateur avec execute (renvoie directement le lastrowid)
                 user_id = execute("""
                     INSERT INTO utilisateurs (email, telephone, mot_de_passe, prenom, nom, id_filiere, id_niveau)
                     VALUES (%s, %s, %s, %s, %s, %s, %s)
                 """, (email, telephone, hashed.decode('utf-8'), prenom, nom, id_filiere, id_niveau))
                 
-                # Insertion des paramètres initiaux
-                execute("INSERT INTO parametres (utilisateur_id) VALUES (%s)", (user_id,))
+                if user_id:
+                    # Insertion des compétences sélectionnées en BDD (Table d'association)
+                    for comp_id in competences:
+                        execute("""
+                        INSERT INTO competences_utilisateur (utilisateur_id, matiere_id) 
+                        VALUES (%s, %s)
+                        """, (user_id, comp_id))
+                        
+                    # Insertion des lacunes sélectionnées en BDD (Table d'association)
+                    for lacune_id in lacunes:
+                        execute("""
+                        INSERT INTO difficultes_utilisateur (utilisateur_id, matiere_id) 
+                        VALUES (%s, %s)
+                        """, (user_id, lacune_id))
 
-                # Envoyer l'email de confirmation
-                envoyer_email_confirmation(email, prenom)
+                    # Insertion des paramètres initiaux
+                    execute("INSERT INTO parametres (utilisateur_id) VALUES (%s)", (user_id,))
 
-                return redirect(url_for('auth.email_envoye'))
-            except Exception:
+                    # Envoyer l'email de confirmation
+                    envoyer_email_confirmation(email, prenom)
+
+                    return redirect(url_for('auth.email_envoye'))
+                else:
+                    error = "Une erreur s'est produite lors de la création de votre compte."
+                    
+            except Exception as e:
                 error = "Email ou téléphone déjà utilisé"
 
     return render_template('auth/register.html', error=error, filieres=filieres, niveaux=niveaux)
@@ -92,13 +122,11 @@ def email_envoye():
 
 @auth_bp.route('/confirmer-email/<token>')
 def confirmer_email(token):
-    # Vérifier le token
     email = verify_token(token)
     if not email:
         return "Lien invalide ou expiré. Veuillez vous réinscrire.", 400
     
     try:
-        # Mise à jour du statut de l'étudiant
         execute("""
             UPDATE utilisateurs SET email_verifie = 1
             WHERE email = %s

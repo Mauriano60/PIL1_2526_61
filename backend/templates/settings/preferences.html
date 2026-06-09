@@ -1,0 +1,16 @@
+<!DOCTYPE html>
+<html>
+<head><title>Préférences - IFRI_MentorLink</title></head>
+<body>
+    <h1>Préférences de notification</h1>
+    {% if error %}<p class="error">{{ error }}</p>{% endif %}
+    {% if success %}<p class="success">{{ success }}</p>{% endif %}
+    <form method="POST">
+        <label><input type="checkbox" name="email_notification" {% if params and params.email_notification %}checked{% endif %}> Email</label>
+        <label><input type="checkbox" name="push_notification" {% if params and params.push_notification %}checked{% endif %}> Push</label>
+        <label><input type="checkbox" name="new_match_alerts" {% if params and params.new_match_alerts %}checked{% endif %}> Nouveaux matchs</label>
+        <label><input type="checkbox" name="weekly_summary" {% if params and params.weekly_summary %}checked{% endif %}> Résumé hebdo</label>
+        <button type="submit">Enregistrer</button>
+    </form>
+</body>
+</html>

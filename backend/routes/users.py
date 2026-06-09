@@ -35,7 +35,7 @@ def dashboard():
             """, (id_filiere, user_id))
             nb_offres_filiere = res_offres['total'] if res_offres else 0
 
-        # B. Nombre de demandes correspondantes à son profil (matières qu'il maîtrise, exclure les siennes)
+        # B. Nombre de demandes correspondantes à son profil
         res_demandes = fetch_one("""
             SELECT COUNT(d.id) as total 
             FROM demande_mentorat d
@@ -123,7 +123,6 @@ def dashboard():
 @users_bp.route('/profil/<int:user_id>')
 @login_required
 def profil(user_id):
-    # Injection locale isolée pour get_user_context
     from utils.responses import get_user_context
     
     try:
@@ -141,6 +140,7 @@ def profil(user_id):
             return "Utilisateur introuvable", 404
             
         # 2. Compétences (Matières maîtrisées)
+        # ALIGNEMENT BDD : Table utilisateur_competences
         competences = fetch_all("""
             SELECT m.nom FROM competences_utilisateur cu
             JOIN matieres m ON m.id = cu.matiere_id
@@ -148,10 +148,11 @@ def profil(user_id):
         """, (user_id,))
 
         # 3. Lacunes (Matières associées à ses difficultés)
+        # ALIGNEMENT BDD : Remplacement de plus_basses_notes par utilisateur_lacunes
         lacunes = fetch_all("""
-            SELECT m.nom FROM plus_basses_notes pbn
-            JOIN matieres m ON m.id = pbn.matiere_id
-            WHERE pbn.utilisateur_id = %s
+            SELECT m.nom FROM difficultes_utilisateur du
+            JOIN matieres m ON m.id = du.matiere_id
+            WHERE du.utilisateur_id = %s
         """, (user_id,))
 
         # 4. Disponibilités 

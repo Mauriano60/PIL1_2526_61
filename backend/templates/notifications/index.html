@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html>
+<head><title>Notifications - IFRI_MentorLink</title></head>
+<body>
+    <h1>Notifications</h1>
+    <ul>
+    {% for n in notifications %}
+        <li>
+            {{ n.message }} 
+            <small>{{ n.cree_le }}</small>
+            {% if n.correspondance_id and n.type_notification == 'match_demande' %}
+            <form method="POST" action="{{ url_for('notifications.repondre_notification', notif_id=n.id, action='accepter') }}">
+                <button type="submit">Accepter</button>
+            </form>
+            <form method="POST" action="{{ url_for('notifications.repondre_notification', notif_id=n.id, action='refuser') }}">
+                <button type="submit">Refuser</button>
+            </form>
+            {% endif %}
+        </li>
+    {% endfor %}
+    </ul>
+</body>
+</html>

@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html>
+<head><title>Confidentialité - IFRI_MentorLink</title></head>
+<body>
+    <h1>Confidentialité</h1>
+    {% if error %}<p class="error">{{ error }}</p>{% endif %}
+    {% if success %}<p class="success">{{ success }}</p>{% endif %}
+    <form method="POST">
+        <label>Visibilité :
+            <select name="visibilite_profil">
+                <option value="public" {% if params and params.visibilite_profil == 'public' %}selected{% endif %}>Public</option>
+                <option value="prive" {% if params and params.visibilite_profil == 'prive' %}selected{% endif %}>Privé</option>
+            </select>
+        </label>
+        <button type="submit">Enregistrer</button>
+    </form>
+</body>
+</html>

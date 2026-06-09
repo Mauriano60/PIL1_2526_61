@@ -1,0 +1,16 @@
+<!DOCTYPE html>
+<html>
+<head><title>Profil - IFRI_MentorLink</title></head>
+<body>
+    <h1>{{ profil_user.prenom }} {{ profil_user.nom }}</h1>
+    <p>Filière : {{ profil_user.filiere }} - Niveau : {{ profil_user.niveau }}</p>
+    {% if profil_user.biographie %}<p>{{ profil_user.biographie }}</p>{% endif %}
+    <h2>Compétences</h2>
+    <ul>{% for c in competences %}<li>{{ c.nom }}</li>{% endfor %}</ul>
+    <h2>Lacunes</h2>
+    <ul>{% for l in lacunes %}<li>{{ l.nom }}</li>{% endfor %}</ul>
+    <h2>Disponibilités</h2>
+    <ul>{% for d in disponibilites %}<li>{{ d.jour_semaine }}: {{ d.heure_debut }}-{{ d.heure_fin }}</li>{% endfor %}</ul>
+    <a href="{{ url_for('users.dashboard') }}">Retour</a>
+</body>
+</html>

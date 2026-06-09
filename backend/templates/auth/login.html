@@ -1,0 +1,15 @@
+<!DOCTYPE html>
+<html>
+<head><title>Connexion - IFRI_MentorLink</title></head>
+<body>
+    <h1>Connexion</h1>
+    {% if error %}<p class="error">{{ error }}</p>{% endif %}
+    <form method="POST">
+        <input type="email" name="email" placeholder="Email" required>
+        <input type="password" name="password" placeholder="Mot de passe" required>
+        <button type="submit">Se connecter</button>
+    </form>
+    <a href="{{ url_for('auth.register') }}">Créer un compte</a>
+    <a href="{{ url_for('email_bp.forgot_password') }}">Mot de passe oublié</a>
+</body>
+</html>

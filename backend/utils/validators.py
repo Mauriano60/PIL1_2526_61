@@ -36,3 +36,23 @@ def valider_inscription(form):
         erreurs.append("Filière et niveau obligatoires")
 
     return erreurs
+
+def valider_competences_et_lacunes(liste_competences, liste_lacunes):
+    """
+    Fonction de sécurité unifiée.
+    Retourne (True, None) si tout est correct, ou (False, "Message d'erreur") en cas d'incohérence.
+    """
+    # 1. Limite stricte de 4 choix
+    if len(liste_competences) > 4:
+        return False, "Vous ne pouvez pas sélectionner plus de 4 compétences."
+    if len(liste_lacunes) > 4:
+        return False, "Vous ne pouvez pas sélectionner plus de 4 lacunes."
+        
+    # 2. Interdiction d'avoir une matière dans les deux listes
+    set_competences = set(liste_competences)
+    set_lacunes = set(liste_lacunes)
+    
+    if set_competences.intersection(set_lacunes):
+        return False, "Une matière ne peut pas être simultanément une compétence et une lacune."
+        
+    return True, None

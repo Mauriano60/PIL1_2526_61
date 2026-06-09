@@ -1,4 +1,3 @@
-# CHABI AYEDOUN Yoéla
 import pytest
 from unittest.mock import patch, MagicMock
 from flask import session
@@ -19,7 +18,6 @@ class TestAuthRoutes:
         assert response.status_code == 200
         assert b'login' in response.data.lower()
 
-    # CORRECTION : On patche les fonctions globales db.database importées ou utilisées dans auth
     @patch('routes.auth.fetch_one')
     def test_login_successful(self, mock_fetch_one, client):
         """Test successful login."""
@@ -27,28 +25,30 @@ class TestAuthRoutes:
         password = "TestPassword123"
         hashed = bcrypt.hashpw(password.encode('utf-8'), bcrypt.gensalt())
         
-        # On simule directement le retour de fetch_one de manière propre
+
         mock_fetch_one.return_value = {
             'id': 1,
             'email': 'test@example.com',
             'mot_de_passe': hashed.decode('utf-8'),
             'prenom': 'John',
             'nom': 'Doe',
-            'est_actif': 1
+            'est_actif': 1,
+            'email_verifie': 1
         }
         
         response = client.post('/login', data={
             'email': 'test@example.com',
             'password': password
-        }, follow_redirects=True)
+        })
         
-        assert response.status_code == 200
+        assert response.status_code == 302
+        assert '/dashboard' in response.headers['Location']
 
     @patch('routes.auth.bcrypt.checkpw')
     @patch('routes.auth.fetch_one')
     def test_login_with_invalid_credentials(self, mock_fetch_one, mock_checkpw, client):
         """Test login with invalid credentials."""
-        # fetch_one renvoie None si l'utilisateur n'est pas trouvé en BDD
+
         mock_fetch_one.return_value = None
         
         response = client.post('/login', data={
@@ -75,7 +75,7 @@ class TestAuthRoutes:
             'est_actif': 1
         }
         
-        # Le mot de passe ne correspond pas -> checkpw doit renvoyer False
+
         mock_checkpw.return_value = False
         
         response = client.post('/login', data={
@@ -89,10 +89,10 @@ class TestAuthRoutes:
     @patch('routes.auth.fetch_all')
     def test_register_page_loads(self, mock_fetch_all, client):
         """Test that register page loads successfully."""
-        # On simule les appels successifs de fetch_all pour charger les filières et les niveaux
+
         mock_fetch_all.side_effect = [
-            [{'id': 1, 'nom': 'Informatique'}],  # Pour les filières
-            [{'id': 1, 'nom': 'L1'}]              # Pour les niveaux d'études
+            [{'id': 1, 'nom': 'Informatique'}],  
+            [{'id': 1, 'nom': 'L1'}]              
         ]
         
         response = client.get('/register')
@@ -101,7 +101,7 @@ class TestAuthRoutes:
 
     @patch('routes.auth.execute')
     @patch('routes.auth.fetch_all')
-    @patch('routes.auth.fetch_one') # Ajoute fetch_one si ton code vérifie si l'email existe déjà
+    @patch('routes.auth.fetch_one') 
     def test_register_successful(self, mock_fetch_one, mock_fetch_all, mock_execute, client):
         """Test successful registration."""
         # 1. Aucun utilisateur existant avec cet email
@@ -124,10 +124,11 @@ class TestAuthRoutes:
             'password': 'TestPassword123',
             'id_filiere': '1',
             'id_niveau': '1'
-        }, follow_redirects=True)
+        })
     
-        # Vérifie que la page finale se charge bien (200) ou qu'on est redirigé vers le login
-        assert response.status_code == 200
+        # Vérifie que l'inscription réussit et redirige vers la page email_envoye
+        assert response.status_code == 302
+        assert '/email-envoye' in response.headers['Location']
 
     @patch('routes.auth.execute')
     @patch('routes.auth.fetch_all')

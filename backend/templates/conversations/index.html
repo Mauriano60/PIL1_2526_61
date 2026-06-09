@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html>
+<head><title>Conversations - IFRI_MentorLink</title></head>
+<body>
+    <h1>Conversations</h1>
+    {% if error %}<p class="error">{{ error }}</p>{% endif %}
+    {% if conv_id %}
+    <h2>Messages</h2>
+    <ul>
+    {% for m in messages %}
+        <li><strong>{{ m.prenom }} {{ m.nom }}:</strong> {{ m.contenu }}</li>
+    {% endfor %}
+    </ul>
+    <form method="POST">
+        <textarea name="contenu" placeholder="Votre message" required></textarea>
+        <button type="submit">Envoyer</button>
+    </form>
+    {% else %}
+    <ul>
+    {% for c in conversations %}
+        <li><a href="{{ url_for('conversations.conversation', conv_id=c.id) }}">{{ c.prenom }} {{ c.nom }}</a></li>
+    {% endfor %}
+    </ul>
+    {% endif %}
+</body>
+</html>

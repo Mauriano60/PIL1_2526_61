@@ -39,18 +39,13 @@ def offres():
         """, (connecte_id, connecte_id, connecte_id))
         
         # Injection dynamique du score calculé par l'algorithme basé sur le profil
+        scores_profil = obtenir_suggestions_matching(connecte_id)
+        scores_map = {s['id']: s['score_compatibilite'] for s in scores_profil}
         for offre in offres_liste:
             if offre['statut_correspondance'] is not None:
-                # Si l'utilisateur a déjà cliqué, on affiche fixement le score sauvegardé en BDD
                 offre['score_affiche'] = offre['score_enregistre']
             else:
-                # Sinon, calcul et affichage du score de compatibilité en temps réel avant l'action
-                scores_profil = obtenir_suggestions_matching(connecte_id)
-                offre['score_affiche'] = 0.00
-                for sug in scores_profil:
-                    if sug['id'] == offre['utilisateur_id']:
-                        offre['score_affiche'] = sug['score_compatibilite']
-                        break
+                offre['score_affiche'] = scores_map.get(offre['utilisateur_id'], 0.00)
 
         return render_template('mentorat/offres.html', offres=offres_liste)
         

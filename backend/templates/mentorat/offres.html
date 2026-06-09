@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html>
+<head><title>Offres de mentorat - IFRI_MentorLink</title></head>
+<body>
+    <h1>Offres de mentorat</h1>
+    <a href="{{ url_for('offres.creer_offre') }}">Publier une offre</a>
+    <ul>
+    {% for offre in offres %}
+        <li>
+            <strong>{{ offre.matiere }}</strong> - {{ offre.prenom }} {{ offre.nom_user }}
+            <p>{{ offre.description }}</p>
+            <small>Score: {{ offre.score_affiche }}%</small>
+        </li>
+    {% endfor %}
+    </ul>
+</body>
+</html>

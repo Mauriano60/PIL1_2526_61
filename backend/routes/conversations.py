@@ -1,17 +1,16 @@
 # CHABI AYEDOUN Yoéla
 from flask import Blueprint, render_template, request, session, redirect, url_for
-# On utilise les fonctions d'abstraction de ton groupe
-from db.database import fetch_all, execute
+from db.database import fetch_all, fetch_one, execute
 
 conversations_bp = Blueprint('conversations', __name__)
+
 
 @conversations_bp.route('/conversations')
 def conversations():
     if 'user_id' not in session:
         return redirect(url_for('auth.login'))
-        
+
     try:
-        # Récupération de la liste des conversations de l'étudiant connecté
         convs = fetch_all("""
             SELECT c.id, c.cree_le,
                    u.prenom, u.nom
@@ -21,9 +20,9 @@ def conversations():
             JOIN utilisateurs u ON u.id = pc2.utilisateur_id
             WHERE pc.utilisateur_id = %s AND pc2.utilisateur_id != %s
         """, (session['user_id'], session['user_id']))
-        
+
         return render_template('conversations/index.html', conversations=convs)
-        
+
     except Exception as e:
         return f"Erreur lors du chargement des conversations: {str(e)}", 500
 
@@ -32,21 +31,32 @@ def conversations():
 def conversation(conv_id):
     if 'user_id' not in session:
         return redirect(url_for('auth.login'))
-        
+
+    # Vérification que l'utilisateur est bien participant
+    try:
+        participant = fetch_one("""
+            SELECT 1 AS existe FROM participants_conversation
+            WHERE conversation_id = %s AND utilisateur_id = %s
+        """, (conv_id, session['user_id']))
+
+        if not participant:
+            return render_template('errors/403.html'), 403
+
+    except Exception as e:
+        return f"Erreur de vérification d'accès: {str(e)}", 500
+
     error = None
     messages = []
-    
+
     # 1. Traitement de l'envoi d'un nouveau message
     if request.method == 'POST':
         try:
             contenu = request.form['contenu'].strip()
-            if contenu:  # Validation basique pour éviter les messages vides
+            if contenu:
                 execute("""
                     INSERT INTO messages (conversation_id, expediteur_id, contenu)
                     VALUES (%s, %s, %s)
                 """, (conv_id, session['user_id'], contenu))
-                
-                # Optionnel mais recommandé : Rediriger en GET pour éviter le renvoi du formulaire si on rafraîchit la page
                 return redirect(url_for('conversations.conversation', conv_id=conv_id))
         except Exception as e:
             error = f"Erreur lors de l'envoi du message: {str(e)}"
