@@ -1,0 +1,327 @@
+/* ============================================================
+   style3.css — Styles spécifiques à l'étape 3 : Disponibilités
+   Complète style.css partagé avec les étapes 1 et 2
+   ============================================================ */
+
+/* ------------------------------------------------------------
+   VARIABLES CSS
+   Réutilise les mêmes valeurs que les étapes précédentes
+   ------------------------------------------------------------ */
+:root {
+  --bleu: #2563eb;           /* Bleu principal IFRI_MentorLink */
+  --bleu-fonce: #1d4ed8;     /* Bleu légèrement plus foncé pour les hover */
+  --bleu-clair: #eff6ff;     /* Fond bleu très clair pour les tags créneaux */
+  --bleu-bordure: #bfdbfe;   /* Bordure bleu clair des tags créneaux */
+  --vert: #16a34a;           /* Vert du bouton "Créer mon compte" */
+  --vert-fonce: #15803d;     /* Vert plus foncé pour le hover */
+  --gris-bordure: #e2e8f0;   /* Gris clair pour les bordures générales */
+  --gris-fond: #f8fafc;      /* Fond gris très légèrement bleuté */
+  --gris-texte: #64748b;     /* Gris pour les textes secondaires */
+  --texte-fonce: #0f172a;    /* Texte très foncé principal */
+}
+
+/* ============================================================
+   STEPPER — Variantes pour l'étape 3
+   Les styles de base (.step-circle, .step-line, .step-item)
+   sont déjà définis dans style.css
+   ============================================================ */
+
+/* Cercle d'étape "faite" : fond bleu plein (étapes 1 et 2) */
+.step-circle.step-done {
+  background-color: var(--bleu); /* Fond bleu principal */
+  border-color: var(--bleu);     /* Bordure bleue */
+  color: #ffffff;                /* Chiffre blanc */
+  box-shadow: 0 0 0 4px rgba(37, 99, 235, 0.15); /* Halo bleu subtil */
+}
+
+/* Ligne de connexion bleue (étape déjà validée) */
+.step-line-done {
+  background-color: var(--bleu); /* Remplace le gris clair par du bleu */
+}
+
+/* ============================================================
+   CARTE PRINCIPALE
+   Le style de base (.form-card) est dans style.css
+   On ajoute uniquement ce qui est spécifique à l'étape 3
+   ============================================================ */
+
+/* Titre "Quand êtes-vous disponible ?" */
+.carte-titre {
+  font-size: 1.2rem;         /* Taille du titre */
+  color: var(--texte-fonce); /* Texte très foncé */
+  margin-bottom: 4px;        /* Petit espace sous le titre */
+}
+
+/* ============================================================
+   BOUTON "Ajouter un créneau"
+   Style : contour bleu, fond transparent, pleine largeur
+   ============================================================ */
+
+/* Style du bouton principal d'ajout */
+.btn-ajouter-creneau {
+  display: flex;                    /* Flexbox pour centrer icône + texte */
+  align-items: center;              /* Centrage vertical de l'icône et du texte */
+  justify-content: center;          /* Centrage horizontal */
+  gap: 8px;                         /* Espace de 8px entre l'icône + et le texte */
+  width: 100%;                      /* Bouton pleine largeur */
+  padding: 14px 20px;               /* Espacement intérieur généreux */
+  border: 2px solid var(--bleu);   /* Bordure bleue épaisse */
+  border-radius: 12px;              /* Coins bien arrondis */
+  background-color: transparent;    /* Fond transparent */
+  color: var(--bleu);               /* Texte et icône en bleu */
+  font-size: 0.95rem;               /* Taille de police */
+  font-weight: 600;                 /* Semi-gras */
+  cursor: pointer;                  /* Curseur main au survol */
+  transition:                       /* Transitions douces au survol */
+    background-color 0.18s ease,
+    color 0.18s ease,
+    border-color 0.18s ease;
+}
+
+/* Effet au survol du bouton Ajouter */
+.btn-ajouter-creneau:hover {
+  background-color: var(--bleu-clair); /* Fond bleu très clair */
+  color: var(--bleu-fonce);            /* Bleu légèrement plus foncé */
+  border-color: var(--bleu-fonce);     /* Bordure bleu foncé */
+}
+
+/* ============================================================
+   FORMULAIRE INLINE D'AJOUT DE CRÉNEAU
+   Panneau affiché quand on clique "Ajouter un créneau"
+   ============================================================ */
+
+/* Conteneur du formulaire inline */
+.creneau-form {
+  background-color: var(--gris-fond);   /* Fond gris très légèrement bleuté */
+  border: 1.5px solid var(--gris-bordure); /* Bordure grise */
+  border-radius: 12px;                  /* Coins arrondis */
+  padding: 16px 20px;                   /* Espacement intérieur */
+  margin-bottom: 16px;                  /* Espace sous le formulaire */
+  animation: apparition 0.2s ease;     /* Animation d'apparition douce */
+}
+
+/* Animation d'apparition du formulaire (glissement vers le bas) */
+@keyframes apparition {
+  from {
+    opacity: 0;                  /* Départ : invisible */
+    transform: translateY(-8px); /* Légèrement au-dessus de sa position finale */
+  }
+  to {
+    opacity: 1;                  /* Arrivée : complètement visible */
+    transform: translateY(0);    /* Position normale */
+  }
+}
+
+/* Select du jour : supprime la double flèche native du navigateur */
+.creneau-select {
+  appearance: none;             /* Supprime la flèche native (standard) */
+  -webkit-appearance: none;     /* Supprime la flèche native sur Safari et Chrome */
+  -moz-appearance: none;        /* Supprime la flèche native sur Firefox */
+  cursor: pointer;              /* Curseur main pour indiquer la cliquabilité */
+  /* Flèche SVG personnalisée injectée en arrière-plan */
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 16 16'%3E%3Cpath fill='%2364748b' d='M7.247 11.14L2.451 5.658C1.885 5.013 2.345 4 3.204 4h9.592a1 1 0 0 1 .753 1.659l-4.796 5.48a1 1 0 0 1-1.506 0z'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;        /* N'affiche la flèche qu'une seule fois */
+  background-position: right 12px center; /* Positionne la flèche à droite */
+  padding-right: 36px;                 /* Espace suffisant pour ne pas masquer la flèche */
+}
+
+/* ============================================================
+   BOUTONS CONFIRMER (✓) ET ANNULER (✕) DU FORMULAIRE
+   ============================================================ */
+
+/* Style commun aux deux boutons d'action du formulaire */
+.btn-confirmer,
+.btn-annuler {
+  width: 40px;           /* Largeur fixe : carré */
+  height: 40px;          /* Hauteur = largeur pour un carré parfait */
+  border-radius: 8px;    /* Coins arrondis */
+  display: flex;         /* Flexbox pour centrer l'icône */
+  align-items: center;   /* Centrage vertical de l'icône */
+  justify-content: center; /* Centrage horizontal de l'icône */
+  cursor: pointer;       /* Curseur main au survol */
+  font-size: 1rem;       /* Taille de l'icône */
+  flex-shrink: 0;        /* Empêche le bouton de rétrécir dans le flex */
+  transition:            /* Transitions douces */
+    background-color 0.15s ease,
+    border-color 0.15s ease,
+    color 0.15s ease;
+}
+
+/* Bouton Confirmer : fond vert, icône blanche */
+.btn-confirmer {
+  background-color: #22c55e; /* Fond vert clair */
+  border: none;              /* Pas de bordure visible */
+  color: #ffffff;            /* Icône blanche */
+}
+
+/* Hover du bouton Confirmer */
+.btn-confirmer:hover {
+  background-color: #16a34a; /* Vert plus foncé au survol */
+}
+
+/* Bouton Annuler : fond blanc, bordure grise, icône grise */
+.btn-annuler {
+  background-color: #ffffff;            /* Fond blanc */
+  border: 1.5px solid var(--gris-bordure); /* Bordure grise */
+  color: var(--gris-texte);            /* Icône grise */
+}
+
+/* Hover du bouton Annuler */
+.btn-annuler:hover {
+  background-color: #f1f5f9;   /* Fond gris très clair */
+  border-color: #cbd5e1;       /* Bordure légèrement plus foncée */
+  color: #334155;              /* Icône légèrement plus foncée */
+}
+
+/* ============================================================
+   CRÉNEAUX CONFIRMÉS (tags affichés dans la liste)
+   ============================================================ */
+
+/* Conteneur d'un créneau confirmé */
+.creneau-tag {
+  display: flex;                        /* Flexbox pour aligner infos + bouton supprimer */
+  align-items: center;                  /* Centrage vertical des éléments */
+  justify-content: space-between;       /* Infos à gauche, croix à droite */
+  background-color: var(--bleu-clair);  /* Fond bleu très clair */
+  border: 1.5px solid var(--bleu-bordure); /* Bordure bleu clair */
+  border-radius: 10px;                  /* Coins arrondis */
+  padding: 12px 16px;                   /* Espacement intérieur */
+  margin-bottom: 10px;                  /* Espace vertical entre les créneaux */
+  animation: apparition 0.2s ease;     /* Même animation d'apparition que le formulaire */
+}
+
+/* Zone gauche du tag : icône horloge + texte du créneau */
+.creneau-info {
+  display: flex;       /* Flexbox horizontal */
+  align-items: center; /* Centrage vertical */
+  gap: 10px;           /* Espace entre l'icône et le texte */
+}
+
+/* Icône horloge dans le tag de créneau */
+.creneau-icon {
+  color: var(--bleu); /* Couleur bleue principale */
+  font-size: 1rem;    /* Taille de l'icône */
+}
+
+/* Nom du jour du créneau (ex: "Lundi") */
+.creneau-jour {
+  font-size: 0.9rem;    /* Taille de police */
+  font-weight: 700;     /* Gras */
+  color: #1e40af;       /* Bleu foncé (plus sombre que le bleu principal) */
+}
+
+/* Plage horaire du créneau (ex: "17:00 - 21:00") */
+.creneau-heures {
+  font-size: 0.85rem;   /* Légèrement plus petit que le jour */
+  font-weight: 500;     /* Semi-gras */
+  color: var(--bleu);   /* Bleu principal */
+}
+
+/* Bouton de suppression d'un créneau (icône ✕) */
+.btn-supprimer-creneau {
+  width: 28px;                    /* Petit carré */
+  height: 28px;                   /* Hauteur = largeur */
+  border-radius: 6px;             /* Coins légèrement arrondis */
+  border: none;                   /* Pas de bordure */
+  background-color: transparent;  /* Fond transparent */
+  color: #94a3b8;                 /* Icône gris clair */
+  display: flex;                  /* Flex pour centrer l'icône */
+  align-items: center;            /* Centrage vertical */
+  justify-content: center;        /* Centrage horizontal */
+  cursor: pointer;                /* Curseur main */
+  font-size: 0.75rem;             /* Petite taille de l'icône */
+  flex-shrink: 0;                 /* Ne rétrécit pas dans le flex */
+  transition:                     /* Transitions douces */
+    background-color 0.15s ease,
+    color 0.15s ease;
+}
+
+/* Hover du bouton supprimer : rouge au survol */
+.btn-supprimer-creneau:hover {
+  background-color: #fee2e2; /* Fond rouge très clair */
+  color: #ef4444;            /* Icône rouge */
+}
+
+/* ============================================================
+   BOUTONS DE NAVIGATION BAS DE CARTE
+   ============================================================ */
+
+/* Bouton "← Retour" : contour bleu, fond transparent */
+.btn-retour {
+  border: 2px solid var(--bleu);    /* Bordure bleue épaisse */
+  color: var(--bleu);               /* Texte bleu */
+  background-color: transparent;    /* Fond transparent */
+  border-radius: 10px;              /* Coins arrondis */
+  padding: 0.75rem 1.5rem;         /* Espacement intérieur */
+  font-size: 0.95rem;               /* Taille de police */
+  font-weight: 600;                 /* Semi-gras */
+  transition:                       /* Transitions au survol */
+    background-color 0.2s ease,
+    color 0.2s ease,
+    border-color 0.2s ease;
+}
+
+/* Hover du bouton Retour */
+.btn-retour:hover {
+  background-color: var(--bleu-clair); /* Fond bleu très clair */
+  color: var(--bleu-fonce);            /* Bleu légèrement plus foncé */
+  border-color: var(--bleu-fonce);     /* Bordure bleu foncé */
+}
+
+/* Bouton "Créer mon compte ✓" : fond vert plein */
+.btn-creer-compte {
+  background-color: var(--vert);  /* Fond vert */
+  border: none;                   /* Pas de bordure visible */
+  border-radius: 10px;            /* Coins arrondis */
+  padding: 0.75rem 1.5rem;       /* Même hauteur que btn-retour */
+  font-size: 0.95rem;             /* Taille de police */
+  font-weight: 700;               /* Gras */
+  color: #ffffff;                 /* Texte blanc */
+  transition:                     /* Transitions au survol */
+    background-color 0.2s ease,
+    transform 0.1s ease,
+    box-shadow 0.2s ease;
+}
+
+/* Hover du bouton Créer mon compte */
+.btn-creer-compte:hover {
+  background-color: var(--vert-fonce);                   /* Vert plus foncé */
+  box-shadow: 0 4px 16px rgba(22, 163, 74, 0.35);       /* Ombre verte prononcée */
+  transform: translateY(-1px);                           /* Légère élévation visuelle */
+}
+
+/* Clic sur le bouton Créer mon compte */
+.btn-creer-compte:active {
+  transform: translateY(0); /* Retour à la position normale */
+  box-shadow: none;         /* Supprime l'ombre au clic */
+}
+
+/* ============================================================
+   RESPONSIVE — Adaptations pour petits écrans (< 576px)
+   ============================================================ */
+
+@media (max-width: 576px) {
+
+  /* Titre de la carte légèrement réduit sur mobile */
+  .carte-titre {
+    font-size: 1rem; /* Réduit de 1.2rem à 1rem */
+  }
+
+  /* Espacement réduit du bouton Ajouter sur mobile */
+  .btn-ajouter-creneau {
+    padding: 12px 16px; /* Moins de padding que sur desktop */
+    font-size: 0.9rem;  /* Police légèrement réduite */
+  }
+
+  /* Boutons confirmer/annuler plus larges sur mobile */
+  .btn-confirmer,
+  .btn-annuler {
+    width: 100%;   /* Pleine largeur sur mobile */
+    height: 40px;  /* Hauteur légèrement augmentée pour faciliter le tap */
+  }
+
+  /* Tags créneaux avec padding réduit sur mobile */
+  .creneau-tag {
+    padding: 10px 12px; /* Moins d'espacement intérieur */
+  }
+}
