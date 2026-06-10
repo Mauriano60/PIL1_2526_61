@@ -26,13 +26,8 @@ def matching():
         role_actuel = 'mentee'
         
     try:
-        # --- A. RECOMMANDATIONS ALGORITHMIQUES ---
-        toutes_suggestions = obtenir_suggestions_matching(utilisateur_id, role=role_actuel)
-        toutes_suggestions.sort(key=lambda x: x['score_compatibilite'], reverse=True)
-        
-        # --- B. FILTRAGE SÉCURISÉ DES STATUS (Historique Catalogue) ---
-        # On récupère les demandes actives de l'utilisateur (initiées ou reçues)
-        # SÉCURITÉ : WHERE c.statut_correspondance != 2 permet de faire disparaître les matchs refusés
+        # On récupère les correspondances actives de l'utilisateur
+        # statut=0 : en attente, statut=1 : accepté (statut=2 exclu = refusé)
         matchs_physiques = fetch_all("""
             SELECT c.id, c.score_compatibilite, c.statut_correspondance, c.initiateur_id,
                    u.id AS partenaire_id, u.prenom, u.nom, u.avatar_url, f.nom as filiere, n.nom as niveau
@@ -48,16 +43,8 @@ def matching():
             ORDER BY c.id DESC
         """, (utilisateur_id, utilisateur_id, utilisateur_id))
         
-        # Pour éviter qu'un profil apparaisse dans le Top 4 Recommandations alors qu'il a déjà 
-        # fait l'objet d'une interaction physique (en attente ou accepté), on extrait les IDs connectés
-        ids_interagis = {m['partenaire_id'] for m in matchs_physiques}
-        
-        # Filtrage : On ne garde dans le Top 4 que les profils purement "neufs" pour l'utilisateur
-        suggestions_propres = [s for s in toutes_suggestions if s['id'] not in ids_interagis]
-        suggestions_top_4 = suggestions_propres[:4]
-        
-        # Enrichir les matchs historiques avec les détails de compatibilité depuis les suggestions
-        suggestions_map = {s['id']: s for s in toutes_suggestions}
+        # Enrichir les matchs avec les détails de compatibilité
+        suggestions_map = {s['id']: s for s in obtenir_suggestions_matching(utilisateur_id, role=role_actuel)}
         for m in matchs_physiques:
             m['score_compatibilite'] = float(m['score_compatibilite'])
             sugg = suggestions_map.get(m['partenaire_id'])
@@ -75,13 +62,13 @@ def matching():
                 m['commun_matieres'] = []
                 m['commun_dispos'] = []
         
-        # Séparation des correspondances physiques pour le rendu Jinja
+        # Séparation des correspondances pour le rendu
         matchs_en_attente = [m for m in matchs_physiques if m['statut_correspondance'] == 0]
         matchs_acceptes = [m for m in matchs_physiques if m['statut_correspondance'] == 1]
         
         context = get_user_context()
         context.update({
-            'mentors': suggestions_top_4,
+            'mentors': [],
             'role_actuel': role_actuel,
             'matchs_en_attente': matchs_en_attente,
             'matchs_acceptes': matchs_acceptes

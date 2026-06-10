@@ -839,6 +839,10 @@ body {
 /* ============================================================
    OFFER / REQUEST / MATCH CARDS
    ============================================================ */
+.offer-card-wrapper,
+.request-card-wrapper {
+  display: flex;
+}
 .offer-card, .request-card {
   background: white;
   border-radius: 12px;
@@ -846,6 +850,7 @@ body {
   box-shadow: var(--card-shadow);
   border: 1px solid var(--slate-200);
   transition: all .3s;
+  width: 100%;
 }
 .offer-card:hover, .request-card:hover {
   box-shadow: var(--card-shadow-hover);
