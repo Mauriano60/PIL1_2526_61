@@ -17,6 +17,8 @@ def offres():
     connecte_id = session['user_id']
     match_result = None
     confirmer_done = False
+    page = request.args.get('page', 1, type=int)
+    per_page = 12
 
     try:
         if request.method == 'POST':
@@ -67,6 +69,14 @@ def offres():
                         else:
                             flash("Une demande est déjà en cours avec cette personne.", "info")
 
+        total = fetch_one("""
+            SELECT COUNT(*) as count FROM offre_mentorat o
+            WHERE o.statut_offre = 1 AND o.utilisateur_id != %s
+        """, (connecte_id,))
+        total_pages = max(1, (total['count'] + per_page - 1) // per_page)
+        page = min(page, total_pages)
+        offset = (page - 1) * per_page
+
         offres_liste = fetch_all("""
             SELECT o.*, m.nom as matiere, u.prenom, u.nom as nom_user, u.avatar_url,
                    f.nom as filiere, n.nom as niveau,
@@ -83,7 +93,8 @@ def offres():
             WHERE o.statut_offre = 1
               AND o.utilisateur_id != %s
             ORDER BY o.cree_le DESC
-        """, (connecte_id, connecte_id, connecte_id))
+            LIMIT %s OFFSET %s
+        """, (connecte_id, connecte_id, connecte_id, per_page, offset))
 
         scores_profil = obtenir_suggestions_matching(connecte_id)
         scores_map = {s['id']: s['score_compatibilite'] for s in scores_profil}
@@ -106,6 +117,8 @@ def offres():
         context = get_user_context()
         context['offres'] = offres_liste
         context['match_result'] = match_result
+        context['page'] = page
+        context['total_pages'] = total_pages
         return render_template('mentorat/offres.html', **context)
 
     except Exception as e:

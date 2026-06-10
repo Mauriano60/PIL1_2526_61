@@ -160,6 +160,18 @@
           {% endfor %}
         </div>
         <p id="noResults" style="display:none;text-align:center;color:var(--slate-500);padding:48px 0">Aucune demande ne correspond &agrave; vos crit&egrave;res.</p>
+
+        {% if total_pages > 1 %}
+        <nav class="mt-4 d-flex justify-content-center">
+          <ul class="pagination pagination-sm">
+            {% if page > 1 %}<li class="page-item"><a class="page-link" href="?page={{ page-1 }}" style="color:var(--blue-600)">Pr&eacute;c&eacute;dent</a></li>{% endif %}
+            {% for p in range(1, total_pages+1) %}
+            <li class="page-item {% if p == page %}active{% endif %}"><a class="page-link" href="?page={{ p }}" style="{% if p == page %}background:var(--blue-600);border-color:var(--blue-600);color:white{% else %}color:var(--blue-600){% endif %}">{{ p }}</a></li>
+            {% endfor %}
+            {% if page < total_pages %}<li class="page-item"><a class="page-link" href="?page={{ page+1 }}" style="color:var(--blue-600)">Suivant</a></li>{% endif %}
+          </ul>
+        </nav>
+        {% endif %}
       </div>
     </div>
 
