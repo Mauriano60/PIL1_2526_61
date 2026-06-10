@@ -3,11 +3,13 @@ from db.database import fetch_all, fetch_one, execute
 from services.matching_service import obtenir_suggestions_matching
 from services.notification_service import creer_notification
 from utils.responses import get_user_context
+from utils.csrf import csrf_required
 
 offres_bp = Blueprint('offres', __name__)
 
 
 @offres_bp.route('/offres', methods=['GET', 'POST'])
+@csrf_required
 def offres():
     if 'user_id' not in session:
         return redirect(url_for('auth.login'))
@@ -111,6 +113,7 @@ def offres():
 
 
 @offres_bp.route('/offres/creer', methods=['GET', 'POST'])
+@csrf_required
 def creer_offre():
     if 'user_id' not in session:
         return redirect(url_for('auth.login'))

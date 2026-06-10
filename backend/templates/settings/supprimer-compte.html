@@ -74,6 +74,7 @@
               Cette action est irr&eacute;versible. La suppression de votre compte entra&icirc;nera la perte de toutes vos donn&eacute;es (offres, demandes, correspondances, messages).
             </div>
             <form method="POST" onsubmit="return confirm('&Ecirc;tes-vous s&ucirc;r de vouloir supprimer votre compte ? Cette action est irr&eacute;versible.');">
+              <input type="hidden" name="csrf_token" value="{{ csrf_token() }}" />
               <div style="text-align:right">
                 <button type="submit" class="btn" style="background:#dc2626;color:white;padding:10px 32px;border-radius:8px"><i class="bi bi-trash me-1"></i> Supprimer mon compte</button>
               </div>

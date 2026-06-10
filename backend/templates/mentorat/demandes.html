@@ -101,6 +101,7 @@
 
               <div class="d-flex gap-2 mt-2">
                 <form method="POST" action="{{ url_for('demandes.demandes') }}" style="flex:1">
+                  <input type="hidden" name="csrf_token" value="{{ csrf_token() }}" />
                   <input type="hidden" name="annonce_id" value="{{ demande.id }}" />
                   <input type="hidden" name="action" value="confirmer" />
                   <input type="hidden" name="score" value="{{ match_result.score_compatibilite }}" />
@@ -146,6 +147,7 @@
               </div>
               {% endif %}
               <form method="POST" action="{{ url_for('demandes.demandes') }}">
+                <input type="hidden" name="csrf_token" value="{{ csrf_token() }}" />
                 <input type="hidden" name="annonce_id" value="{{ demande.id }}" />
                 <input type="hidden" name="action" value="calculer" />
                 <button type="submit" class="btn w-100" style="background:var(--blue-600);color:white;border:none;padding:8px;font-size:.85rem;font-weight:600;border-radius:8px">Faire le match</button>

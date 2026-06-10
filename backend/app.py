@@ -20,6 +20,12 @@ def create_app():
 
     limiter.init_app(app)
 
+    from utils.csrf import generer_token_csrf
+
+    @app.context_processor
+    def inject_csrf():
+        return dict(csrf_token=generer_token_csrf)
+
     from routes.auth import auth_bp
     from routes.users import users_bp
     from routes.matching import matching_bp

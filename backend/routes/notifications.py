@@ -1,6 +1,7 @@
 from flask import Blueprint, render_template, request, session, redirect, url_for, flash
 from db.database import fetch_all, fetch_one, execute
 from utils.responses import get_user_context
+from utils.csrf import csrf_required
 
 notifications_bp = Blueprint('notifications', __name__)
 
@@ -48,6 +49,7 @@ def notifications():
 
 
 @notifications_bp.route('/notifications/repondre/<int:notif_id>/<string:action>', methods=['POST'])
+@csrf_required
 def repondre_notification(notif_id, action):
     """
     Route de traitement de l'action reçue depuis l'interface des notifications.

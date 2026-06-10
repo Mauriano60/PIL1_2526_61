@@ -71,6 +71,7 @@
           <div class="settings-content">
             <h3>Pr&eacute;f&eacute;rences de notification</h3>
             <form method="POST">
+              <input type="hidden" name="csrf_token" value="{{ csrf_token() }}" />
               <div class="mb-3">
                 <div class="form-check form-switch mb-3">
                   <input class="form-check-input" type="checkbox" name="email_notification" id="emailNotif" {% if params and params.email_notification %}checked{% endif %} style="cursor:pointer">

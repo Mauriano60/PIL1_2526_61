@@ -3,6 +3,7 @@ from services.matching_service import obtenir_suggestions_matching
 from services.notification_service import creer_notification
 from db.database import fetch_one, fetch_all, execute
 from utils.responses import get_user_context
+from utils.csrf import csrf_required
 
 matching_bp = Blueprint('matching', __name__)
 
@@ -76,6 +77,7 @@ def matching():
 # 2. PARCOURS CATALOGUE : CLIC SUR UNE OFFRE / DEMANDE
 # =====================================================================
 @matching_bp.route('/faire_match/<string:type_annonce>/<int:annonce_id>', methods=['POST'])
+@csrf_required
 def faire_match(type_annonce, annonce_id):
     """
     Intercepte le clic sur le catalogue, calcule l'affinité, 
@@ -160,6 +162,7 @@ def faire_match(type_annonce, annonce_id):
 # 3. TRAITEMENT DE LA DÉCISION (Boutons Accepter / Refuser)
 # =====================================================================
 @matching_bp.route('/traiter_match/<string:action>/<int:correspondance_id>', methods=['POST'])
+@csrf_required
 def traiter_match(action, correspondance_id):
     """
     Route synchrone de décision : Modifie le statut en BDD (1=Accepté, 2=Refusé).
@@ -194,6 +197,7 @@ def traiter_match(action, correspondance_id):
 
 
 @matching_bp.route('/envoyer_demande', methods=['POST'])
+@csrf_required
 def envoyer_demande():
     if 'user_id' not in session:
         return redirect(url_for('auth.login'))

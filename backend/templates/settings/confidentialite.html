@@ -71,6 +71,7 @@
           <div class="settings-content">
             <h3>Confidentialit&eacute;</h3>
             <form method="POST">
+              <input type="hidden" name="csrf_token" value="{{ csrf_token() }}" />
               <div class="mb-4">
                 <label class="form-label-custom mb-2">Visibilit&eacute; du profil</label>
                 <select name="visibilite_profil" class="form-select input-custom" style="max-width:300px">

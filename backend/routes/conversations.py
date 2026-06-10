@@ -1,6 +1,7 @@
 from flask import Blueprint, render_template, request, session, redirect, url_for
 from db.database import fetch_all, fetch_one, execute
 from utils.responses import get_user_context
+from utils.csrf import csrf_required
 
 conversations_bp = Blueprint('conversations', __name__)
 
@@ -30,6 +31,7 @@ def conversations():
 
 
 @conversations_bp.route('/conversations/<int:conv_id>', methods=['GET', 'POST'])
+@csrf_required
 def conversation(conv_id):
     if 'user_id' not in session:
         return redirect(url_for('auth.login'))

@@ -3,6 +3,7 @@ from flask import Blueprint, render_template, request, redirect, url_for, sessio
 from db.database import fetch_all, fetch_one, execute
 from utils.validators import valider_competences_et_lacunes, valider_email, valider_telephone
 from utils.responses import get_user_context
+from utils.csrf import csrf_required
 from werkzeug.utils import secure_filename
 
 settings_bp = Blueprint('settings', __name__)
@@ -11,6 +12,7 @@ settings_bp = Blueprint('settings', __name__)
 # 1. NOUVELLE ROUTE : MODIFICATION DES COMPÉTENCES ET LACUNES
 # =====================================================================
 @settings_bp.route('/settings/profil', methods=['GET', 'POST'])
+@csrf_required
 def modifier_profil_matieres():
     if 'user_id' not in session:
         return redirect(url_for('auth.login'))
@@ -130,6 +132,7 @@ def modifier_profil_matieres():
 # 2. VOS ROUTES EXISTANTES (CONSERVÉES À 100% SANS ALTERATION)
 # =====================================================================
 @settings_bp.route('/settings/preferences', methods=['GET', 'POST'])
+@csrf_required
 def preferences():
     if 'user_id' not in session:
         return redirect(url_for('auth.login'))
@@ -167,6 +170,7 @@ def preferences():
 
 
 @settings_bp.route('/settings/confidentialite', methods=['GET', 'POST'])
+@csrf_required
 def confidentialite():
     if 'user_id' not in session:
         return redirect(url_for('auth.login'))
@@ -197,6 +201,7 @@ def confidentialite():
 
 
 @settings_bp.route('/settings/supprimer-compte', methods=['GET', 'POST'])
+@csrf_required
 def supprimer_compte():
     if 'user_id' not in session:
         return redirect(url_for('auth.login'))

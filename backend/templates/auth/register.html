@@ -48,6 +48,7 @@
           </div>
         {% endif %}
         <form method="POST" action="{{ url_for('auth.register') }}" id="registerForm">
+          <input type="hidden" name="csrf_token" value="{{ csrf_token() }}" />
           <input type="hidden" name="step" id="currentStep" value="{{ current_step | default('1') }}" />
           <div id="step1" class="animate-fade-in"{% if current_step | default('1') != '1' %} style="display:none"{% endif %}>
             <div class="row g-3 mb-3">

@@ -3,11 +3,13 @@ from db.database import fetch_all, fetch_one, execute
 from services.matching_service import obtenir_suggestions_matching
 from services.notification_service import creer_notification
 from utils.responses import get_user_context
+from utils.csrf import csrf_required
 
 demandes_bp = Blueprint('demandes', __name__)
 
 
 @demandes_bp.route('/demandes', methods=['GET', 'POST'])
+@csrf_required
 def demandes():
     if 'user_id' not in session:
         return redirect(url_for('auth.login'))
@@ -113,6 +115,7 @@ def demandes():
 
 
 @demandes_bp.route('/demandes/creer', methods=['GET', 'POST'])
+@csrf_required
 def creer_demande():
     if 'user_id' not in session:
         return redirect(url_for('auth.login'))

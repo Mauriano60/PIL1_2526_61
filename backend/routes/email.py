@@ -1,12 +1,14 @@
 from flask import Blueprint, current_app, flash, redirect, render_template, request, url_for
 from db.database import fetch_one, execute
 from services.mail_service import send_reset_email, generate_token, verify_token
+from utils.csrf import csrf_required
 import bcrypt
 
 email_bp = Blueprint('email_bp', __name__)
 
 
 @email_bp.route('/mot-de-passe-oublie', methods=['GET', 'POST'])
+@csrf_required
 def forgot_password():
     if request.method == 'POST':
         email = request.form.get('email', '').strip()
@@ -28,6 +30,7 @@ def forgot_password():
 
 
 @email_bp.route('/reinitialiser-mot-de-passe/<token>', methods=['GET', 'POST'])
+@csrf_required
 def reset_password(token):
     email = verify_token(token, salt_type='password-reset', expiration=3600)
     if not email:

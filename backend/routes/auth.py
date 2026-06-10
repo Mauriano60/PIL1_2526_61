@@ -1,6 +1,7 @@
 from flask import Blueprint, current_app, render_template, request, redirect, url_for, session, flash
 from db.database import fetch_one, fetch_all, execute
 from utils.validators import valider_inscription, valider_competences_et_lacunes
+from utils.csrf import csrf_required
 from extensions import limiter
 from services.mail_service import envoyer_email_confirmation, verify_token
 import bcrypt
@@ -12,6 +13,7 @@ def index():
     return render_template('landing.html')
 
 @auth_bp.route('/login', methods=['GET', 'POST'])
+@csrf_required
 @limiter.limit("5 per minute")
 def login():
     error = None
@@ -39,6 +41,7 @@ def login():
     return render_template('auth/login.html', error=error)
 
 @auth_bp.route('/register', methods=['GET', 'POST'])
+@csrf_required
 def register():
     error = None
     

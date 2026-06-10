@@ -92,6 +92,7 @@
                   </div>
                   {% endif %}
                   <form method="POST" action="{{ url_for('matching.envoyer_demande') }}" style="margin-top:auto">
+                    <input type="hidden" name="csrf_token" value="{{ csrf_token() }}" />
                     <input type="hidden" name="mentor_id" value="{{ user.id }}" />
                     <input type="hidden" name="mentee_id" value="{{ m.id }}" />
                     <input type="hidden" name="score" value="{{ m.score_compatibilite }}" />
@@ -107,6 +108,7 @@
           <div class="card-custom p-4">
             <h5 class="fw-semibold mb-3" style="font-family:'Poppins',sans-serif;color:var(--slate-900)">Nouvelle offre de mentorat</h5>
             <form method="POST">
+              <input type="hidden" name="csrf_token" value="{{ csrf_token() }}" />
               <div class="mb-3">
                 <label class="form-label-custom">Mati&egrave;re</label>
                 <select name="matiere_id" class="form-select input-custom" required>
