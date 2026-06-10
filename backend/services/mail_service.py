@@ -19,7 +19,7 @@ def verify_token(token, salt_type='email-confirmation', expiration=3600):
         return None
 
 def envoyer_email_confirmation(email, prenom):
-    """Envoie un email de confirmation à l'utilisateur"""
+    """Envoie un email de confirmation à l'utilisateur, retourne le lien de confirmation"""
     token = generate_token(email, salt_type='email-confirmation')
     lien = url_for('auth.confirmer_email', token=token, _external=True)
 
@@ -41,6 +41,7 @@ Si vous n'avez pas créé de compte, ignorez cet email.
 
 L'équipe IFRI_MentorLink"""
     mail.send(msg)
+    return lien
 
 # ==========================================
 #  AJOUT : FONCTION POUR LE MOT DE PASSE OUBLIÉ

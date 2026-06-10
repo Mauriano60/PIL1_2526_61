@@ -2,321 +2,201 @@
 <html lang="fr">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>IFRI_MentorLink</title>
-
-  <!-- Bootstrap 5 CSS -->
-  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
-
-  <!-- Google Fonts : DM Sans -->
-  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-
-  <!-- CSS custom -->
-  <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>IFRI_MentorLink - Plateforme de mentorat</title>
+  <link href="{{ url_for('static', filename='css/bootstrap.min.css') }}" rel="stylesheet" />
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/bootstrap-icons.min.css') }}" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Poppins:wght@600;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}" />
 </head>
-<body>
-
-  <!-- ════════════════════════════════
-       NAVBAR
-  ════════════════════════════════ -->
-  <nav class="navbar navbar-expand-lg" id="mainNav">
-
-    <div class="container-xl px-4">
-
-      <a class="navbar-brand logo-brand" href="/">
-
-        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-book" viewBox="0 0 16 16">
-          <path d="M1 2.828c.885-.37 2.154-.769 3.388-.893 1.33-.134 2.458.063 3.112.752v9.746c-.935-.53-2.12-.603-3.213-.493-1.18.12-2.37.461-3.287.811zm7.5-.141c.654-.689 1.782-.886 3.112-.752 1.234.124 2.503.523 3.388.893v9.923c-.918-.35-2.107-.692-3.287-.81-1.094-.111-2.278-.039-3.213.492zM8 1.783C7.015.936 5.587.81 4.287.94c-1.514.153-3.042.672-3.994 1.105A.5.5 0 0 0 0 2.5v11a.5.5 0 0 0 .707.455c.882-.4 2.303-.881 3.68-1.02 1.409-.142 2.59.087 3.223.877a.5.5 0 0 0 .78 0c.633-.79 1.814-1.019 3.222-.877 1.378.139 2.8.62 3.681 1.02A.5.5 0 0 0 16 13.5v-11a.5.5 0 0 0-.293-.455c-.952-.433-2.48-.952-3.994-1.105C10.413.809 8.985.936 8 1.783"/>
-        </svg>
-
-        IFRI_MentorLink
-      </a>
-
-      <button class="navbar-toggler" type="button"
-              data-bs-toggle="collapse" data-bs-target="#navMenu">
-        <span class="navbar-toggler-icon"></span>
-      </button>
-
-      <div class="collapse navbar-collapse" id="navMenu">
-
-        <ul class="navbar-nav mx-auto gap-4">
-
-          <li class="nav-item">
-            <a class="nav-link nav-custom" href="/">Accueil</a>
-          </li>
-
-          <li class="nav-item">
-            <a class="nav-link nav-custom" href="#">Comment ça marche</a>
-          </li>
-
-          <li class="nav-item">
-            <a class="nav-link nav-custom" href="#">À propos</a>
-          </li>
-
-        </ul>
-
-        <div class="d-flex gap-2 align-items-center">
-
-          <a href="{{ url_for('auth.login') }}" class="btn btn-connexion">Connexion</a>
-
-          <a href="{{ url_for('auth.register') }}" class="btn btn-inscription">Inscription</a>
-
-        </div>
-      </div>
-    </div>
-  </nav>
-
-
-  <!-- ════════════════════════════════
-       SECTION HERO
-  ════════════════════════════════ -->
-  <section class="hero-section">
-
-    <div class="container-xl px-4">
-
-      <div class="row align-items-center hero-row">
-
-        <div class="col-lg-6 hero-left">
-
-          <div class="hero-badge">
-            <svg width="11" height="11" viewBox="0 0 24 24" fill="currentColor">
-              <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/>
-            </svg>
-            Plateforme de mentorat IFRI
-          </div>
-
-          <h1 class="hero-title">
-            Trouver un mentor ou accompagner un étudiant
-          </h1>
-
-          <p class="hero-sub">
-            Connectez-vous avec des étudiants partageant vos objectifs académiques et
-            professionnels. Progressez ensemble, matière par matière.
-          </p>
-
-          <div class="d-flex gap-3 flex-wrap">
-
-            <a href="{{ url_for('auth.register') }}" class="btn btn-cta-primary">Trouver un mentor →</a>
-
-            <a href="{{ url_for('auth.register') }}" class="btn btn-cta-secondary">Devenir mentor</a>
-
-          </div>
-
-          <div class="hero-stats d-flex align-items-center">
-
-            <span class="stat-item"><strong>200+</strong> Étudiants</span>
-
-            <span class="stat-dot">•</span>
-
-            <span class="stat-item"><strong>50+</strong> Mentors</span>
-
-            <span class="stat-dot">•</span>
-
-            <span class="stat-item"><strong>95%</strong> Satisfaction</span>
-
-          </div>
-        </div>
-
-        <div class="col-lg-6 d-flex justify-content-center align-items-center">
-
-          <div class="network-card">
-
-            <svg width="280" height="280" viewBox="0 0 280 280" xmlns="http://www.w3.org/2000/svg">
-
-              <defs>
-                <radialGradient id="bgGrad" cx="50%" cy="50%" r="50%">
-                  <stop offset="0%" stop-color="#e2eaf5" stop-opacity="0.7"/>
-                  <stop offset="100%" stop-color="#f0f4f8" stop-opacity="0"/>
-                </radialGradient>
-              </defs>
-
-              <circle cx="140" cy="140" r="120" fill="url(#bgGrad)"/>
-
-              <circle cx="140" cy="140" r="110" fill="none" stroke="#d5e0ee" stroke-width="1" stroke-dasharray="5 5"/>
-
-              <circle cx="140" cy="140" r="65" fill="none" stroke="#d5e0ee" stroke-width="1" stroke-dasharray="3 6"/>
-
-              <line x1="105" y1="125" x2="178" y2="98" stroke="#c0cfe8" stroke-width="1.5"/>
-              <line x1="105" y1="125" x2="112" y2="185" stroke="#c0cfe8" stroke-width="1.5"/>
-              <line x1="178" y1="98"  x2="155" y2="168" stroke="#c0cfe8" stroke-width="1.5"/>
-              <line x1="112" y1="185" x2="155" y2="168" stroke="#c0cfe8" stroke-width="1.5"/>
-
-              <circle cx="105" cy="125" r="30" fill="#2563eb"/>
-
-              <circle cx="178" cy="98"  r="38" fill="#10b981"/>
-
-              <circle cx="112" cy="185" r="17" fill="#10b981" opacity="0.7"/>
-
-              <circle cx="155" cy="168" r="23" fill="#3b82f6" opacity="0.85"/>
-
-            </svg>
-          </div>
-        </div>
-      </div>
-    </div>
-  </section>
-
-
-  <!-- ════════════════════════════════
-       SECTION FEATURES
-  ════════════════════════════════ -->
-  <section class="features-section">
-
-    <div class="container-xl px-4">
-
-      <div class="text-center mb-5">
-        <h2 class="features-title">Tout ce dont vous avez besoin pour progresser</h2>
-        <p class="features-sub">Une plateforme conçue pour les étudiants IFRI, par des étudiants IFRI</p>
-      </div>
-
-      <div class="row g-4">
-
-        <div class="col-lg-3 col-md-6">
-          <div class="feature-card">
-
-            <div class="feature-icon icon-blue">
-              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="#1a56db" class="bi bi-person-circle" viewBox="0 0 16 16">
-                <path d="M11 6a3 3 0 1 1-6 0 3 3 0 0 1 6 0"/>
-                <path fill-rule="evenodd" d="M0 8a8 8 0 1 1 16 0A8 8 0 0 1 0 8m8-7a7 7 0 0 0-5.468 11.37C3.242 11.226 4.805 10 8 10s4.757 1.225 5.468 2.37A7 7 0 0 0 8 1"/>
-              </svg>
-            </div>
-
-            <h3 class="feature-title">Création de profil</h3>
-            <p class="feature-desc">Créez votre profil académique complet avec vos compétences, lacunes et disponibilités.</p>
-
-          </div>
-        </div>
-
-        <div class="col-lg-3 col-md-6">
-          <div class="feature-card">
-
-            <div class="feature-icon icon-green">
-              <svg width="20" height="20" viewBox="0 0 24 24" fill="none"
-                   stroke="#10b981" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
-                <polyline points="14 2 14 8 20 8"/>
-                <line x1="16" y1="13" x2="8" y2="13"/>
-                <line x1="16" y1="17" x2="8" y2="17"/>
-              </svg>
-            </div>
-
-            <h3 class="feature-title">Publication d'offres</h3>
-            <p class="feature-desc">Publiez des offres de mentorat ou des demandes d'aide dans vos matières.</p>
-
-          </div>
-        </div>
-
-        <div class="col-lg-3 col-md-6">
-          <div class="feature-card">
-
-            <div class="feature-icon icon-teal">
-              <svg width="20" height="20" viewBox="0 0 24 24" fill="none"
-                   stroke="#0ea5e9" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                <polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/>
-              </svg>
-            </div>
-
-            <h3 class="feature-title">Matching intelligent</h3>
-            <p class="feature-desc">Notre algorithme calcule un score de compatibilité basé sur vos matières et disponibilités.</p>
-
-          </div>
-        </div>
-
-        <div class="col-lg-3 col-md-6">
-          <div class="feature-card">
-
-            <div class="feature-icon icon-indigo">
-              <svg width="20" height="20" viewBox="0 0 24 24" fill="none"
-                   stroke="#6366f1" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/>
-              </svg>
-            </div>
-
-            <h3 class="feature-title">Messagerie intégrée</h3>
-            <p class="feature-desc">Communiquez directement avec vos matchs sans quitter la plateforme.</p>
-
-          </div>
-        </div>
-
-      </div>
-    </div>
-  </section>
-
-
-  <!-- ════════════════════════════════
-       SECTION STATS FONCÉE
-  ════════════════════════════════ -->
-  <section class="dark-stats-section">
-
-    <div class="container-xl px-4">
-
-      <div class="row text-center">
-
-        <div class="col-md-4 stat-col">
-          <div class="big-stat-number" data-target="200">0</div>
-          <div class="big-stat-label">ÉTUDIANTS INSCRITS</div>
-        </div>
-
-        <div class="col-md-4 stat-col stat-col-bordered">
-          <div class="big-stat-number" data-target="50">0</div>
-          <div class="big-stat-label">MENTORS ACTIFS</div>
-        </div>
-
-        <div class="col-md-4 stat-col">
-          <div class="big-stat-number" data-target="300">0</div>
-          <div class="big-stat-label">SESSIONS RÉALISÉES</div>
-        </div>
-
-      </div>
-    </div>
-  </section>
-
-
-  <!-- ════════════════════════════════
-       FOOTER
-  ════════════════════════════════ -->
-  <footer class="site-footer">
-
+<body class="d-flex flex-column min-vh-100">
+  <header class="public-header">
     <div class="container">
+      <a href="{{ url_for('auth.index') }}" class="d-flex align-items-center gap-2 text-decoration-none">
+        <i class="bi bi-book" style="color:var(--blue-600);font-size:1.5rem"></i>
+        <span class="fw-bold" style="font-family:'Poppins',sans-serif;color:var(--blue-600)">IFRI</span>
+      </a>
+      <nav class="d-none d-md-flex align-items-center gap-4">
+        <a href="{{ url_for('auth.index') }}" class="text-decoration-none" style="color:var(--slate-600);font-size:.9rem;font-weight:500">Accueil</a>
+        <a href="#how-it-works" class="text-decoration-none" style="color:var(--slate-600);font-size:.9rem;font-weight:500">Comment ça marche</a>
+        <a href="#about" class="text-decoration-none" style="color:var(--slate-600);font-size:.9rem;font-weight:500">À propos</a>
+      </nav>
+      <div class="d-flex align-items-center gap-2">
+        <a href="{{ url_for('auth.login') }}" class="btn btn-outline-custom btn-sm px-3" style="height:38px;font-size:.85rem">Connexion</a>
+        <a href="{{ url_for('auth.register') }}" class="btn btn-primary-custom btn-sm px-3" style="height:38px;font-size:.85rem">Inscription</a>
+      </div>
+    </div>
+  </header>
 
-      <div class="row align-items-center">
-
-        <div class="col-md-3">
-          <a class="footer-logo" href="/">
-
-            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-book" viewBox="0 0 16 16">
-              <path d="M1 2.828c.885-.37 2.154-.769 3.388-.893 1.33-.134 2.458.063 3.112.752v9.746c-.935-.53-2.12-.603-3.213-.493-1.18.12-2.37.461-3.287.811zm7.5-.141c.654-.689 1.782-.886 3.112-.752 1.234.124 2.503.523 3.388.893v9.923c-.918-.35-2.107-.692-3.287-.81-1.094-.111-2.278-.039-3.213.492zM8 1.783C7.015.936 5.587.81 4.287.94c-1.514.153-3.042.672-3.994 1.105A.5.5 0 0 0 0 2.5v11a.5.5 0 0 0 .707.455c.882-.4 2.303-.881 3.68-1.02 1.409-.142 2.59.087 3.223.877a.5.5 0 0 0 .78 0c.633-.79 1.814-1.019 3.222-.877 1.378.139 2.8.62 3.681 1.02A.5.5 0 0 0 16 13.5v-11a.5.5 0 0 0-.293-.455c-.952-.433-2.48-.952-3.994-1.105C10.413.809 8.985.936 8 1.783"/>
-            </svg>
-            IFRI_MentorLink
-          </a>
+  <main class="flex-1 d-flex flex-column">
+    <section class="hero-section flex-1">
+      <div class="container">
+        <div class="row align-items-center g-5">
+          <div class="col-lg-7">
+            <div class="d-inline-flex align-items-center rounded-pill px-3 py-1 mb-4" style="background:var(--blue-50);color:var(--blue-600);font-size:.85rem;font-weight:500">
+              <i class="bi bi-star-fill me-1" style="font-size:.7rem"></i> Plateforme de mentorat IFRI
+            </div>
+            <h1 class="display-4 fw-bold mb-3" style="font-family:'Poppins',sans-serif;color:var(--slate-900);line-height:1.15">
+              Trouver un mentor ou<br /> accompagner un étudiant
+            </h1>
+            <p class="lead mb-4" style="color:var(--slate-600);max-width:560px">
+              Connectez-vous avec des étudiants partageant vos objectifs académiques et professionnels. Progressez ensemble, matière par matière.
+            </p>
+            <div class="d-flex flex-wrap gap-3 mb-4">
+              <a href="{{ url_for('auth.register') }}" class="btn btn-primary-custom px-4 py-3">Trouver un mentor &rarr;</a>
+              <a href="{{ url_for('auth.register') }}" class="btn btn-outline-custom px-4 py-3">Devenir mentor</a>
+            </div>
+            <div class="d-flex align-items-center gap-4" style="color:var(--slate-500);font-size:.85rem;font-weight:500">
+              <span><i class="bi bi-people me-1"></i> 200+ Étudiants</span>
+              <span class="d-none d-sm-inline"><i class="bi bi-person-check me-1"></i> 50+ Mentors</span>
+            </div>
+          </div>
+          <div class="col-lg-5">
+            <div class="position-relative" style="max-width:400px;margin:auto">
+              <div class="position-absolute" style="inset:0;background:var(--blue-100);border-radius:50%;filter:blur(60px);opacity:.5"></div>
+              <div class="position-relative p-4" style="background:rgba(255,255,255,.5);backdrop-filter:blur(12px);border-radius:var(--card-radius);border:1px solid rgba(255,255,255,.2);box-shadow:0 8px 32px rgba(0,0,0,.08)">
+                <svg width="100%" height="auto" viewBox="0 0 400 400" fill="none" xmlns="http://www.w3.org/2000/svg" style="max-height:300px">
+                  <circle cx="200" cy="200" r="150" stroke="#E2E8F0" stroke-width="2" stroke-dasharray="8 8"/>
+                  <circle cx="120" cy="180" r="30" fill="#2563EB" opacity=".9"/>
+                  <circle cx="280" cy="160" r="40" fill="#14B8A6" opacity=".9"/>
+                  <circle cx="220" cy="280" r="25" fill="#3B82F6" opacity=".8"/>
+                  <circle cx="150" cy="260" r="20" fill="#2DD4BF" opacity=".8"/>
+                  <path d="M145 195 L250 170" stroke="#94A3B8" stroke-width="2"/>
+                  <path d="M130 205 L145 245" stroke="#94A3B8" stroke-width="2"/>
+                  <path d="M270 195 L230 265" stroke="#94A3B8" stroke-width="2"/>
+                  <path d="M165 265 L205 275" stroke="#94A3B8" stroke-width="2"/>
+                </svg>
+              </div>
+            </div>
+          </div>
         </div>
+      </div>
+    </section>
 
-        <div class="col-md-4 d-flex gap-4 justify-content-center">
-
-          <a href="/" class="footer-link">Accueil</a>
-
-          <a href="{{ url_for('auth.login') }}" class="footer-link">Se connecter</a>
-
-          <a href="{{ url_for('auth.register') }}" class="footer-link">S'inscrire</a>
-
+    <section class="py-5 bg-white" id="how-it-works">
+      <div class="container py-4">
+        <div class="text-center mb-5" style="max-width:600px;margin:auto">
+          <h2 class="fw-bold mb-2" style="font-family:'Poppins',sans-serif;color:var(--slate-900)">Tout ce dont vous avez besoin pour progresser</h2>
+          <p style="color:var(--slate-600)">Une plateforme conçue pour les étudiants IFRI, par des étudiants IFRI</p>
         </div>
-
-        <div class="col-md-5">
-          <span class="footer-copy">
-            &copy; 2026 IFRI_MentorLink &mdash; Institut de Formation et de Recherche en Informatique
-          </span>
+        <div class="row g-4">
+          <div class="col-md-6 col-lg-3">
+            <div class="feature-card h-100 d-flex flex-column">
+              <div class="feature-icon" style="background:var(--blue-50)"><i class="bi bi-person-circle" style="color:var(--blue-600);font-size:1.5rem"></i></div>
+              <h5 class="fw-semibold mb-2" style="font-family:'Poppins',sans-serif">Création de profil</h5>
+              <p class="mt-auto" style="color:var(--slate-600);font-size:.9rem">Créez votre profil académique complet avec vos compétences, lacunes et disponibilités.</p>
+            </div>
+          </div>
+          <div class="col-md-6 col-lg-3">
+            <div class="feature-card h-100 d-flex flex-column">
+              <div class="feature-icon" style="background:var(--green-50)"><i class="bi bi-file-text" style="color:var(--green-600);font-size:1.5rem"></i></div>
+              <h5 class="fw-semibold mb-2" style="font-family:'Poppins',sans-serif">Publication d'offres</h5>
+              <p class="mt-auto" style="color:var(--slate-600);font-size:.9rem">Publiez des offres de mentorat ou des demandes d'aide dans vos matières.</p>
+            </div>
+          </div>
+          <div class="col-md-6 col-lg-3">
+            <div class="feature-card h-100 d-flex flex-column">
+              <div class="feature-icon" style="background:var(--teal-50)"><i class="bi bi-lightning-charge" style="color:var(--teal-600);font-size:1.5rem"></i></div>
+              <h5 class="fw-semibold mb-2" style="font-family:'Poppins',sans-serif">Matching intelligent</h5>
+              <p class="mt-auto" style="color:var(--slate-600);font-size:.9rem">Notre algorithme calcule un score de compatibilité basé sur vos matières et disponibilités.</p>
+            </div>
+          </div>
+          <div class="col-md-6 col-lg-3">
+            <div class="feature-card h-100 d-flex flex-column">
+              <div class="feature-icon" style="background:var(--blue-50)"><i class="bi bi-chat-dots" style="color:var(--blue-600);font-size:1.5rem"></i></div>
+              <h5 class="fw-semibold mb-2" style="font-family:'Poppins',sans-serif">Messagerie intégrée</h5>
+              <p class="mt-auto" style="color:var(--slate-600);font-size:.9rem">Communiquez directement avec vos matchs sans quitter la plateforme.</p>
+            </div>
+          </div>
         </div>
+      </div>
+    </section>
 
+    <section class="stats-section">
+      <div class="container">
+        <div class="row text-center g-4">
+          <div class="col-md-4 border-end-md" style="border-color:var(--slate-700)">
+            <div class="stat-number">200+</div>
+            <div style="color:var(--slate-400);font-size:.8rem;text-transform:uppercase;letter-spacing:1px;font-weight:500">Étudiants inscrits</div>
+          </div>
+          <div class="col-md-6">
+            <div class="stat-number">50+</div>
+            <div style="color:var(--slate-400);font-size:.8rem;text-transform:uppercase;letter-spacing:1px;font-weight:500">Mentors actifs</div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="py-5 bg-white" id="about">
+      <div class="container py-4">
+        <div class="row align-items-center g-5">
+          <div class="col-lg-6">
+            <div class="d-inline-flex align-items-center rounded-pill px-3 py-1 mb-3" style="background:var(--blue-50);color:var(--blue-600);font-size:.85rem;font-weight:500">
+              <i class="bi bi-info-circle me-1"></i> &Agrave; propos
+            </div>
+            <h2 class="fw-bold mb-3" style="font-family:'Poppins',sans-serif;color:var(--slate-900)">Une plateforme pour les &eacute;tudiants IFRI</h2>
+            <p style="color:var(--slate-600);font-size:.95rem;line-height:1.7">
+              IFRI_MentorLink est une plateforme de mentorat con&ccedil;ue sp&eacute;cifiquement pour les &eacute;tudiants 
+              de l&rsquo;Institut de Formation et de Recherche en Informatique. Elle permet aux &eacute;tudiants 
+              de se connecter, d&rsquo;offrir leur expertise dans les mati&egrave;res qu&rsquo;ils ma&icirc;trisent 
+              et de demander de l&rsquo;aide dans celles o&ugrave; ils rencontrent des difficult&eacute;s.
+            </p>
+          </div>
+          <div class="col-lg-6">
+            <div class="row g-3">
+              <div class="col-6">
+                <div class="p-4 text-center" style="background:var(--slate-50);border-radius:12px">
+                  <div class="fw-bold" style="font-size:1.5rem;font-family:'Poppins',sans-serif;color:var(--blue-600)">100%</div>
+                  <div style="color:var(--slate-500);font-size:.85rem">Gratuit</div>
+                </div>
+              </div>
+              <div class="col-6">
+                <div class="p-4 text-center" style="background:var(--slate-50);border-radius:12px">
+                  <div class="fw-bold" style="font-size:1.5rem;font-family:'Poppins',sans-serif;color:var(--teal-600)">15+</div>
+                  <div style="color:var(--slate-500);font-size:.85rem">Mati&egrave;res</div>
+                </div>
+              </div>
+              <div class="col-6">
+                <div class="p-4 text-center" style="background:var(--slate-50);border-radius:12px">
+                  <div class="fw-bold" style="font-size:1.5rem;font-family:'Poppins',sans-serif;color:var(--green-600)">3</div>
+                  <div style="color:var(--slate-500);font-size:.85rem">Niveaux</div>
+                </div>
+              </div>
+              <div class="col-6">
+                <div class="p-4 text-center" style="background:var(--slate-50);border-radius:12px">
+                  <div class="fw-bold" style="font-size:1.5rem;font-family:'Poppins',sans-serif;color:var(--amber-600)">5</div>
+                  <div style="color:var(--slate-500);font-size:.85rem">Fili&egrave;res</div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="public-footer">
+    <div class="container">
+      <div class="row align-items-center g-4">
+        <div class="col-md-6 d-flex align-items-center gap-2">
+          <i class="bi bi-book" style="color:white;font-size:1.5rem"></i>
+          <span class="fw-bold text-white" style="font-family:'Poppins',sans-serif;font-size:1.1rem">IFRI_MentorLink</span>
+        </div>
+        <div class="col-md-6">
+          <div class="d-flex gap-4 justify-content-md-end">
+            <a href="{{ url_for('auth.index') }}" class="text-decoration-none" style="color:var(--slate-400)">Accueil</a>
+            <a href="{{ url_for('auth.login') }}" class="text-decoration-none" style="color:var(--slate-400)">Se connecter</a>
+            <a href="{{ url_for('auth.register') }}" class="text-decoration-none" style="color:var(--slate-400)">S'inscrire</a>
+          </div>
+        </div>
+        <div class="col-12 text-center" style="color:var(--slate-400);font-size:.85rem">
+          &copy; 2026 IFRI_MentorLink &mdash; Institut de Formation et de Recherche en Informatique
+        </div>
       </div>
     </div>
   </footer>
 
-
-  <!-- Bootstrap 5 JS CDN -->
-  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
-
-  <!-- Script custom -->
-  <script src="{{ url_for('static', filename='js/script_home.js') }}"></script>
-
+  <script src="{{ url_for('static', filename='js/bootstrap.bundle.min.js') }}"></script>
 </body>
 </html>

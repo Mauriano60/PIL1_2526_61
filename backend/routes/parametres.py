@@ -1,6 +1,9 @@
-from flask import Blueprint, render_template, request, redirect, url_for, session
+import os
+from flask import Blueprint, render_template, request, redirect, url_for, session, current_app
 from db.database import fetch_all, fetch_one, execute
-from utils.validators import valider_competences_et_lacunes
+from utils.validators import valider_competences_et_lacunes, valider_email, valider_telephone
+from utils.responses import get_user_context
+from werkzeug.utils import secure_filename
 
 settings_bp = Blueprint('settings', __name__)
 
@@ -16,62 +19,111 @@ def modifier_profil_matieres():
     error = None
     success = None
     
+    ALLOWED_EXTENSIONS = {'png', 'jpg', 'jpeg', 'webp'}
+
     try:
         if request.method == 'POST':
-            # Récupération des listes d'IDs envoyées par le formulaire
+            prenom = request.form.get('prenom', '').strip()
+            nom = request.form.get('nom', '').strip()
+            biographie = request.form.get('biographie', '').strip()
+            id_filiere = request.form.get('id_filiere')
+            id_niveau = request.form.get('id_niveau')
+            
+            if not prenom or not nom:
+                error = "Prénom et nom obligatoires"
+            else:
+                avatar_url = None
+                avatar_file = request.files.get('avatar')
+                if avatar_file and avatar_file.filename:
+                    ext = avatar_file.filename.rsplit('.', 1)[-1].lower() if '.' in avatar_file.filename else ''
+                    if ext not in ALLOWED_EXTENSIONS:
+                        error = "Format d'image non autorisé (PNG, JPG, WEBP)"
+                    elif avatar_file.content_length and avatar_file.content_length > 2 * 1024 * 1024:
+                        error = "L'image ne doit pas dépasser 2 Mo"
+                    else:
+                        upload_dir = os.path.join(current_app.root_path, 'static', 'uploads', 'avatars')
+                        os.makedirs(upload_dir, exist_ok=True)
+                        filename = f"user_{user_id}_{secure_filename(avatar_file.filename)}"
+                        avatar_file.save(os.path.join(upload_dir, filename))
+                        avatar_url = f"uploads/avatars/{filename}"
+
+                if not error:
+                    if avatar_url:
+                        execute("""
+                            UPDATE utilisateurs SET prenom=%s, nom=%s, avatar_url=%s, biographie=%s,
+                                                    id_filiere=%s, id_niveau=%s
+                            WHERE id=%s
+                        """, (prenom, nom, avatar_url, biographie, id_filiere, id_niveau, user_id))
+                    else:
+                        execute("""
+                            UPDATE utilisateurs SET prenom=%s, nom=%s, biographie=%s,
+                                                    id_filiere=%s, id_niveau=%s
+                            WHERE id=%s
+                        """, (prenom, nom, biographie, id_filiere, id_niveau, user_id))
+                    session['prenom'] = prenom
+                    session['nom'] = nom
+                    success = "Informations mises à jour avec succès."
+
             competences = request.form.getlist('competences')
             lacunes = request.form.getlist('lacunes')
             
-            # SÉCURITÉ : Validation des contraintes métiers (Max 4 et Pas de doublons)
-            est_valide, message_erreur = valider_competences_et_lacunes(competences, lacunes)
-            if not est_valide:
-                error = message_erreur
-            else:
-                # 1. Nettoyage des anciens choix en base de données
-                execute("DELETE FROM competences_utilisateur WHERE utilisateur_id = %s", (user_id,))
-                execute("DELETE FROM difficultes_utilisateur WHERE utilisateur_id = %s", (user_id,))
-                
-                # 2. Insertion des nouvelles compétences
-                for comp_id in competences:
-                    execute("""
-                        INSERT INTO competences_utilisateur (utilisateur_id, matiere_id) 
-                        VALUES (%s, %s)
-                    """, (user_id, comp_id))
-                    
-                # 3. Insertion des nouvelles lacunes
-                for lacune_id in lacunes:
-                    execute("""
-                        INSERT INTO difficultes_utilisateur (utilisateur_id, matiere_id) 
-                        VALUES (%s, %s)
-                    """, (user_id, lacune_id))
-                    
-                success = "Vos compétences et lacunes ont été mises à jour avec succès."
+            if competences or lacunes:
+                est_valide, message_erreur = valider_competences_et_lacunes(competences, lacunes)
+                if not est_valide:
+                    error = message_erreur
+                else:
+                    execute("DELETE FROM competences_utilisateur WHERE utilisateur_id = %s", (user_id,))
+                    execute("DELETE FROM difficultes_utilisateur WHERE utilisateur_id = %s", (user_id,))
+                    for comp_id in competences:
+                        execute("INSERT INTO competences_utilisateur (utilisateur_id, matiere_id) VALUES (%s, %s)", (user_id, comp_id))
+                    for lacune_id in lacunes:
+                        execute("INSERT INTO difficultes_utilisateur (utilisateur_id, matiere_id) VALUES (%s, %s)", (user_id, lacune_id))
+                    if not error:
+                        success = "Compétences et lacunes mises à jour."
 
-        # A. Charger toutes les matières disponibles dans l'application
+            # Sauvegarde des disponibilités
+            jours = request.form.getlist('jour[]')
+            heures_debut = request.form.getlist('heure_debut[]')
+            heures_fin = request.form.getlist('heure_fin[]')
+            if jours and heures_debut and heures_fin:
+                execute("DELETE FROM disponibilites WHERE utilisateur_id = %s", (user_id,))
+                for i, jour in enumerate(jours):
+                    if jour and i < len(heures_debut) and i < len(heures_fin) and heures_debut[i] and heures_fin[i]:
+                        execute("""
+                            INSERT INTO disponibilites (utilisateur_id, jour_semaine, heure_debut, heure_fin)
+                            VALUES (%s, %s, %s, %s)
+                        """, (user_id, jour, heures_debut[i], heures_fin[i]))
+
         toutes_matieres = fetch_all("SELECT * FROM matieres ORDER BY nom ASC")
-        
-        # B. Récupérer uniquement les IDs des compétences actuelles de l'utilisateur
+        filieres = fetch_all("SELECT * FROM filieres_etudes ORDER BY nom")
+        niveaux = fetch_all("SELECT * FROM niveaux_etudes ORDER BY nom")
         res_comp = fetch_all("SELECT matiere_id FROM competences_utilisateur WHERE utilisateur_id = %s", (user_id,))
         ids_competences_actuelles = [rc['matiere_id'] for rc in res_comp]
-        
-        # C. Récupérer uniquement les IDs des lacunes actuelles de l'utilisateur
         res_lac = fetch_all("SELECT matiere_id FROM difficultes_utilisateur WHERE utilisateur_id = %s", (user_id,))
         ids_lacunes_actuelles = [rl['matiere_id'] for rl in res_lac]
+        disponibilites = fetch_all("""
+            SELECT jour_semaine, heure_debut, heure_fin FROM disponibilites
+            WHERE utilisateur_id = %s
+            ORDER BY FIELD(jour_semaine, 'Lundi', 'Mardi', 'Mercredi', 'Jeudi', 'Vendredi', 'Samedi', 'Dimanche')
+        """, (user_id,))
 
     except Exception as e:
-        toutes_matieres = []
-        ids_competences_actuelles = []
-        ids_lacunes_actuelles = []
-        error = f"Erreur lors du traitement des données : {str(e)}"
+        toutes_matieres = []; filieres = []; niveaux = []
+        ids_competences_actuelles = []; ids_lacunes_actuelles = []; disponibilites = []
+        error = f"Erreur : {str(e)}"
         
-    return render_template(
-        'settings/profil_matieres.html',
-        matieres=toutes_matieres,
-        mes_competences=ids_competences_actuelles,
-        mes_lacunes=ids_lacunes_actuelles,
-        error=error,
-        success=success
-    )
+    ctx = get_user_context()
+    ctx.update({
+        'matieres': toutes_matieres,
+        'filieres': filieres,
+        'niveaux': niveaux,
+        'mes_competences': ids_competences_actuelles,
+        'mes_lacunes': ids_lacunes_actuelles,
+        'disponibilites': disponibilites,
+        'error': error,
+        'success': success
+    })
+    return render_template('settings/profil_matieres.html', **ctx)
 
 
 # =====================================================================
@@ -109,7 +161,9 @@ def preferences():
         params = None
         error = f"Erreur lors du cachement des préférences: {str(e)}"
         
-    return render_template('settings/preferences.html', params=params, error=error, success=success)
+    ctx = get_user_context()
+    ctx.update({'params': params, 'error': error, 'success': success})
+    return render_template('settings/preferences.html', **ctx)
 
 
 @settings_bp.route('/settings/confidentialite', methods=['GET', 'POST'])
@@ -123,16 +177,11 @@ def confidentialite():
     try:
         if request.method == 'POST':
             visibilite = request.form['visibilite_profil']
-            email_notif = 1 if 'email_notification' in request.form else 0
-            push_notif = 1 if 'push_notification' in request.form else 0
-            match_alerts = 1 if 'new_match_alerts' in request.form else 0
-            weekly = 1 if 'weekly_summary' in request.form else 0
             
             execute("""
-                UPDATE parametres SET visibilite_profil=%s, email_notification=%s,
-                                      push_notification=%s, new_match_alerts=%s, weekly_summary=%s
+                UPDATE parametres SET visibilite_profil=%s
                 WHERE utilisateur_id=%s
-            """, (visibilite, email_notif, push_notif, match_alerts, weekly, session['user_id']))
+            """, (visibilite, session['user_id']))
             
             success = "Paramètres de confidentialité mis à jour"
             
@@ -142,7 +191,9 @@ def confidentialite():
         params = None
         error = f"Erreur lors de la mise à jour des paramètres: {str(e)}"
         
-    return render_template('settings/confidentialite.html', params=params, error=error, success=success)
+    ctx = get_user_context()
+    ctx.update({'params': params, 'error': error, 'success': success})
+    return render_template('settings/confidentialite.html', **ctx)
 
 
 @settings_bp.route('/settings/supprimer-compte', methods=['GET', 'POST'])
@@ -160,4 +211,6 @@ def supprimer_compte():
         except Exception as e:
             error = f"Erreur lors du traitement : {str(e)}"
 
-    return render_template('settings/supprimer-compte.html', error=error)
+    ctx = get_user_context()
+    ctx['error'] = error
+    return render_template('settings/supprimer-compte.html', **ctx)

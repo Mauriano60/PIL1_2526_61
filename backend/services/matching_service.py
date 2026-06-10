@@ -186,14 +186,44 @@ def obtenir_suggestions_matching(utilisateur_id, role='mentee'):
             """, (utilisateur_id, cible['id'], cible['id'], utilisateur_id))
 
             if not deja_valide:
+                avatar = fetch_one("SELECT avatar_url FROM utilisateurs WHERE id = %s", (cible['id'],))
+                avatar_url = avatar['avatar_url'] if avatar else None
+
+                commun_matieres = []
+                if mes_matieres:
+                    placeholders = ','.join(['%s'] * len(mes_matieres))
+                    if role == 'mentee':
+                        rows = fetch_all(f"""
+                            SELECT DISTINCT m.nom FROM offre_mentorat o
+                            JOIN matieres m ON m.id = o.matiere_id
+                            WHERE o.utilisateur_id = %s AND o.statut_offre = 1 AND o.matiere_id IN ({placeholders})
+                        """, (cible['id'], *mes_matieres))
+                    else:
+                        rows = fetch_all(f"""
+                            SELECT DISTINCT m.nom FROM demande_mentorat d
+                            JOIN matieres m ON m.id = d.matiere_id
+                            WHERE d.utilisateur_id = %s AND d.statut_demande = 1 AND d.matiere_id IN ({placeholders})
+                        """, (cible['id'], *mes_matieres))
+                    commun_matieres = [r['nom'] for r in rows]
+
+                commun_dispos = []
+                for d_user in dispos_user:
+                    for d_cible in dispos_libres_cible:
+                        if d_user['jour_semaine'] == d_cible['jour_semaine'] and (d_user['heure_debut'] < d_cible['heure_fin'] and d_user['heure_fin'] > d_cible['heure_debut']):
+                            commun_dispos.append({'jour_semaine': d_cible['jour_semaine'], 'heure_debut': d_cible['heure_debut'], 'heure_fin': d_cible['heure_fin']})
+                            break
+
                 suggestions.append({
                     'id': cible['id'],
                     'prenom': cible['prenom'],
                     'nom': cible['nom'],
                     'biographie': cible['biographie'],
+                    'avatar_url': avatar_url,
                     'filiere': cible['filiere'],
                     'niveau': cible['niveau'],
-                    'score_compatibilite': score_total
+                    'score_compatibilite': score_total,
+                    'commun_matieres': commun_matieres,
+                    'commun_dispos': commun_dispos
                 })
 
         print(f"Moteur de matching exécuté avec succès [Rôle: {role}] pour l'utilisateur {utilisateur_id}")

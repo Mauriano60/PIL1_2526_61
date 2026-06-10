@@ -2,6 +2,7 @@ from flask import Blueprint, render_template, session, redirect, url_for, reques
 from services.matching_service import obtenir_suggestions_matching
 from services.notification_service import creer_notification
 from db.database import fetch_one, fetch_all, execute
+from utils.responses import get_user_context
 
 matching_bp = Blueprint('matching', __name__)
 
@@ -58,13 +59,14 @@ def matching():
         matchs_en_attente = [m for m in matchs_physiques if m['statut_correspondance'] == 0]
         matchs_acceptes = [m for m in matchs_physiques if m['statut_correspondance'] == 1]
         
-        return render_template(
-            'matching/index.html', 
-            mentors=suggestions_top_4, 
-            role_actuel=role_actuel,
-            matchs_en_attente=matchs_en_attente,
-            matchs_acceptes=matchs_acceptes
-        )
+        context = get_user_context()
+        context.update({
+            'mentors': suggestions_top_4,
+            'role_actuel': role_actuel,
+            'matchs_en_attente': matchs_en_attente,
+            'matchs_acceptes': matchs_acceptes
+        })
+        return render_template('matching/index.html', **context)
         
     except Exception as e:
         return f"Erreur lors du chargement des correspondances: {str(e)}", 500
@@ -189,6 +191,78 @@ def traiter_match(action, correspondance_id):
         
     except Exception as e:
         return f"Erreur lors du traitement du match : {str(e)}", 500
+
+
+@matching_bp.route('/envoyer_demande', methods=['POST'])
+def envoyer_demande():
+    if 'user_id' not in session:
+        return redirect(url_for('auth.login'))
+
+    connecte_id = session['user_id']
+    mentor_id = int(request.form.get('mentor_id', 0))
+    mentee_id = int(request.form.get('mentee_id', 0))
+    score = float(request.form.get('score', 0))
+
+    if not mentor_id or not mentee_id:
+        flash("Informations de match invalides.", "warning")
+        return redirect(request.referrer or url_for('matching.matching'))
+
+    # Vérification : pas de correspondance existante (pending ou acceptée)
+    existante = fetch_one("""
+        SELECT id FROM correspondances
+        WHERE ((mentor_id = %s AND mentee_id = %s) OR (mentor_id = %s AND mentee_id = %s))
+          AND statut_correspondance IN (0, 1)
+    """, (mentor_id, mentee_id, mentee_id, mentor_id))
+    if existante:
+        flash("Une demande est déjà en cours avec cette personne.", "info")
+        return redirect(url_for('matching.matching'))
+
+    # Déterminer le rôle : si l'utilisateur est le mentor, il offre son aide (role='mentor')
+    # S'il est le mentee, il demande de l'aide (role='mentee')
+    role = 'mentor' if connecte_id == mentor_id else 'mentee'
+    nom_expediteur = f"{session.get('prenom', 'Un étudiant')} {session.get('nom', '')}"
+    destinataire_id = mentee_id if connecte_id == mentor_id else mentor_id
+
+    try:
+        # Recalcul du score via le service de matching selon le rôle
+        suggestions = obtenir_suggestions_matching(connecte_id, role=role)
+        for sug in suggestions:
+            if role == 'mentor' and sug['id'] == mentee_id:
+                score = sug['score_compatibilite']
+                break
+            elif role == 'mentee' and sug['id'] == mentor_id:
+                score = sug['score_compatibilite']
+                break
+
+        correspondance_id = execute("""
+            INSERT INTO correspondances (mentor_id, mentee_id, score_compatibilite, statut_correspondance, initiateur_id)
+            VALUES (%s, %s, %s, 0, %s)
+        """, (mentor_id, mentee_id, score, connecte_id))
+
+        if not correspondance_id:
+            recup = fetch_one("""
+                SELECT id FROM correspondances
+                WHERE mentor_id = %s AND mentee_id = %s AND initiateur_id = %s
+                ORDER BY id DESC LIMIT 1
+            """, (mentor_id, mentee_id, connecte_id))
+            id_match = recup['id'] if recup else None
+        else:
+            id_match = correspondance_id
+
+        if id_match:
+            message = f"{nom_expediteur} souhaite vous offrir son aide en mentorat !" if role == 'mentor' else f"{nom_expediteur} a besoin de votre aide !"
+            creer_notification(
+                utilisateur_id=destinataire_id,
+                message=message,
+                type_notification="match_demande",
+                correspondance_id=id_match
+            )
+
+        flash("Votre demande de mise en relation a été envoyée !", "success")
+    except Exception as e:
+        flash(f"Erreur lors de l'envoi : {str(e)}", "danger")
+
+    return redirect(url_for('matching.matching'))
 
 
 def not_annonce_valide(annonce, connecte_id):

@@ -1,96 +1,55 @@
-from flask import Blueprint, flash, redirect, render_template, request, url_for
-import secrets
-from datetime import datetime, timedelta
-import smtplib
-from email.message import EmailMessage
-import bcrypt  
-from db.database import fetch_one, execute 
-from config.settings import Config
+from flask import Blueprint, current_app, flash, redirect, render_template, request, url_for
+from db.database import fetch_one, execute
+from services.mail_service import send_reset_email, generate_token, verify_token
+import bcrypt
 
 email_bp = Blueprint('email_bp', __name__)
 
-# SMTP CONFIG
-SMTP_SERVER = Config.MAIL_SERVER
-SMTP_PORT = Config.MAIL_PORT
-SMTP_USER = Config.MAIL_USERNAME      
-SMTP_PASSWORD = Config.MAIL_PASSWORD
 
-
-def send_reset_email(to_email: str, reset_link: str):
-    msg = EmailMessage()
-    msg["Subject"] = "Réinitialisation de votre mot de passe"
-    msg["From"] = SMTP_USER
-    msg["To"] = to_email
-
-    msg.set_content(
-        f"Bonjour,\n\n"
-        f"Cliquez ici pour réinitialiser :\n{reset_link}\n\n"
-        f"Lien valide 1 heure."
-    )
-
-    with smtplib.SMTP(SMTP_SERVER, SMTP_PORT) as server:
-        server.starttls()
-        server.login(SMTP_USER, SMTP_PASSWORD)
-        server.send_message(msg)
-
-
-@email_bp.route("/forgot-password", methods=["GET", "POST"])
+@email_bp.route('/mot-de-passe-oublie', methods=['GET', 'POST'])
 def forgot_password():
-    if request.method == "POST":
-        email = request.form.get("email", "").strip()
+    if request.method == 'POST':
+        email = request.form.get('email', '').strip()
 
-        # Utilisation directe de ta fonction fetch_one
-        user = fetch_one("SELECT id, email FROM utilisateurs WHERE email=%s", (email,))
+        user = fetch_one("SELECT id, email, prenom FROM utilisateurs WHERE email=%s AND est_actif=1", (email,))
 
         if user:
-            token = secrets.token_urlsafe(32)
-            expires = datetime.now() + timedelta(hours=1)
+            token = generate_token(email, salt_type='password-reset')
+            reset_link = url_for('email_bp.reset_password', token=token, _external=True)
+            send_reset_email(email, reset_link)
 
-            # Utilisation directe de ta fonction execute (qui gère le commit)
-            execute(
-                "UPDATE utilisateurs SET reset_token=%s, reset_expire=%s WHERE id=%s",
-                (token, expires, user["id"])
-            )
-
-            reset_link = url_for("email_bp.reset_password", token=token, _external=True)
-            send_reset_email(user["email"], reset_link)
+            if current_app.config.get('MAIL_SUPPRESS_SEND'):
+                return render_template('forgot_password.html', reset_link=reset_link, email_sent=True)
 
         flash("Un email de réinitialisation vous a été envoyé.", "success")
-        return redirect(url_for("auth.login"))
+        return redirect(url_for('auth.login'))
 
-    return render_template("forgot_password.html")
+    return render_template('forgot_password.html')
 
 
-@email_bp.route("/reset-password/<token>", methods=["GET", "POST"])
+@email_bp.route('/reinitialiser-mot-de-passe/<token>', methods=['GET', 'POST'])
 def reset_password(token):
-    
-    user = fetch_one(
-        "SELECT id FROM utilisateurs WHERE reset_token=%s AND reset_expire > NOW()",
-        (token,)
-    )
-
-    if not user:
+    email = verify_token(token, salt_type='password-reset', expiration=3600)
+    if not email:
         flash("Lien invalide ou expiré.", "error")
-        return redirect(url_for("email_bp.forgot_password"))
+        return redirect(url_for('email_bp.forgot_password'))
 
-    if request.method == "POST":
-        password = request.form.get("mot_de_passe", "")
-        confirm = request.form.get("confirm_mot_de_passe", "")
+    if request.method == 'POST':
+        password = request.form.get('mot_de_passe', '')
+        confirm = request.form.get('confirm_mot_de_passe', '')
 
         if password != confirm:
             flash("Mots de passe différents.", "error")
-            return redirect(url_for("email_bp.reset_password", token=token))
+            return redirect(url_for('email_bp.reset_password', token=token))
 
-        # Hachage sécurisé
-        hashed_password = bcrypt.hashpw(password.encode('utf-8'), bcrypt.gensalt())
+        hashed = bcrypt.hashpw(password.encode('utf-8'), bcrypt.gensalt()).decode('utf-8')
 
-        # Mise à jour et nettoyage du token en une seule fois
         execute(
-            "UPDATE utilisateurs SET mot_de_passe=%s, reset_token=NULL, reset_expire=NULL WHERE id=%s",
-            (hashed_password, user["id"])
+            "UPDATE utilisateurs SET mot_de_passe=%s WHERE email=%s AND est_actif=1",
+            (hashed, email)
         )
 
-        flash("Mot de passe mis à jour.", "success")
-        return redirect(url_for("auth.login"))
+        flash("Mot de passe mis à jour avec succès.", "success")
+        return redirect(url_for('auth.login'))
 
-    return render_template("reset_password.html", token=token)
+    return render_template('reset_password.html', token=token)

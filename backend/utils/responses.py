@@ -9,8 +9,13 @@ def get_user_context():
     try:
         with get_db() as conn:
             with conn.cursor() as cursor:
-                # 1. Récupération de l'utilisateur
-                cursor.execute("SELECT * FROM utilisateurs WHERE id = %s", (session['user_id'],))
+                # 1. Récupération de l'utilisateur avec sa filière
+                cursor.execute("""
+                    SELECT u.*, f.nom as filiere_nom
+                    FROM utilisateurs u
+                    LEFT JOIN filieres_etudes f ON f.id = u.id_filiere
+                    WHERE u.id = %s
+                """, (session['user_id'],))
                 user = cursor.fetchone()
                 
                 # 2. Récupération du nombre de notifications non lues

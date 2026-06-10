@@ -74,26 +74,26 @@ def dashboard():
 
         # F. Ses publications (Ses propres offres et demandes combinées avec UNION)
         ses_publications = fetch_all("""
-            SELECT 'offre' as type_pub, o.id, o.description, o.date_creation, m.nom as matiere
+            SELECT 'offre' as type_pub, o.id, o.description, o.cree_le, m.nom as matiere
             FROM offre_mentorat o
             JOIN matieres m ON m.id = o.matiere_id
             WHERE o.utilisateur_id = %s
             
             UNION ALL
             
-            SELECT 'demande' as type_pub, d.id, d.description, d.date_creation, m.nom as matiere
+            SELECT 'demande' as type_pub, d.id, d.description, d.cree_le, m.nom as matiere
             FROM demande_mentorat d
             JOIN matieres m ON m.id = d.matiere_id
             WHERE d.utilisateur_id = %s
             
-            ORDER BY date_creation DESC
+            ORDER BY cree_le DESC
         """, (user_id, user_id))
 
         # G. Activités récentes (Les dernières notifications reçues)
         activites_recentes = fetch_all("""
-            SELECT 'notification' as type_act, type_notification as contenu, date_creation 
+            SELECT 'notification' as type_act, type_notification as contenu, cree_le 
             FROM notifications WHERE utilisateur_id = %s
-            ORDER BY date_creation DESC LIMIT 5
+            ORDER BY cree_le DESC LIMIT 5
         """, (user_id,))
 
 
@@ -124,7 +124,7 @@ def profil(user_id):
     try:
         # 1. Informations générales complètes de l'utilisateur
         profil_user = fetch_one("""
-            SELECT u.id, u.nom, u.prenom, u.email, u.biographie,
+            SELECT u.id, u.nom, u.prenom, u.email, u.biographie, u.avatar_url,
                    f.nom as filiere, n.nom as niveau
             FROM utilisateurs u
             JOIN filieres_etudes f ON f.id = u.id_filiere

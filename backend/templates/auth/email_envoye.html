@@ -59,9 +59,15 @@
 </head>
 <body>
   <div class="card-confirmation">
-    <div class="icon-envelope"><i class="bi bi-envelope-check"></i></div>
+      <div class="icon-envelope"><i class="bi bi-envelope-check"></i></div>
     <h1>Email de confirmation envoyé</h1>
     <p>Veuillez vérifier votre boîte email et cliquer sur le lien de confirmation pour activer votre compte.</p>
+    {% if confirmation_link %}
+    <div style="background:#f1f5f9;border-radius:12px;padding:16px;margin-bottom:20px;text-align:left;word-break:break-all">
+      <strong style="font-size:.8rem;color:var(--slate-500)">Mode local — lien de confirmation :</strong>
+      <br><a href="{{ confirmation_link }}" style="font-size:.85rem;color:#2563eb">{{ confirmation_link }}</a>
+    </div>
+    {% endif %}
     <a href="{{ url_for('auth.login') }}" class="btn-retour">Retour à la connexion</a>
   </div>
 </body>

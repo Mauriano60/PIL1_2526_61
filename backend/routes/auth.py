@@ -1,4 +1,4 @@
-from flask import Blueprint, render_template, request, redirect, url_for, session, flash
+from flask import Blueprint, current_app, render_template, request, redirect, url_for, session, flash
 from db.database import fetch_one, fetch_all, execute
 from utils.validators import valider_inscription, valider_competences_et_lacunes
 from extensions import limiter
@@ -109,8 +109,10 @@ def register():
                     execute("INSERT INTO parametres (utilisateur_id) VALUES (%s)", (user_id,))
 
                     # Envoyer l'email de confirmation
-                    envoyer_email_confirmation(email, prenom)
+                    lien = envoyer_email_confirmation(email, prenom)
 
+                    if current_app.config.get('MAIL_SUPPRESS_SEND'):
+                        return render_template('auth/email_envoye.html', confirmation_link=lien)
                     return redirect(url_for('auth.email_envoye'))
                 else:
                     error = "Une erreur s'est produite lors de la création de votre compte."

@@ -1,5 +1,6 @@
 from flask import Blueprint, render_template, request, session, redirect, url_for
 from db.database import fetch_all, fetch_one, execute
+from utils.responses import get_user_context
 
 conversations_bp = Blueprint('conversations', __name__)
 
@@ -20,7 +21,9 @@ def conversations():
             WHERE pc.utilisateur_id = %s AND pc2.utilisateur_id != %s
         """, (session['user_id'], session['user_id']))
 
-        return render_template('conversations/index.html', conversations=convs)
+        context = get_user_context()
+        context['conversations'] = convs
+        return render_template('conversations/index.html', **context)
 
     except Exception as e:
         return f"Erreur lors du chargement des conversations: {str(e)}", 500
@@ -72,7 +75,6 @@ def conversation(conv_id):
     except Exception as e:
         error = f"Erreur lors du chargement des messages: {str(e)}"
 
-    return render_template('conversations/index.html',
-                           messages=messages,
-                           conv_id=conv_id,
-                           error=error)
+    ctx = get_user_context()
+    ctx.update({'messages': messages, 'conv_id': conv_id, 'error': error})
+    return render_template('conversations/index.html', **ctx)

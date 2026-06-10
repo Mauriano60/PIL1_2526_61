@@ -21,3 +21,7 @@ class Config:
     # Identifiants sensibles récupérés depuis .env
     MAIL_USERNAME = os.getenv("MAIL_USERNAME")
     MAIL_PASSWORD = os.getenv("MAIL_PASSWORD")
+
+    # Mode local — pas d'envoi SMTP, l'email est affiché dans la console
+    MAIL_SUPPRESS_SEND = True
+    MAIL_DEBUG = True

@@ -1,5 +1,6 @@
-from flask import Blueprint, render_template, session, redirect, url_for, flash
+from flask import Blueprint, render_template, request, session, redirect, url_for, flash
 from db.database import fetch_all, fetch_one, execute
+from utils.responses import get_user_context
 
 notifications_bp = Blueprint('notifications', __name__)
 
@@ -8,13 +9,28 @@ def notifications():
     if 'user_id' not in session:
         return redirect(url_for('auth.login'))
         
+    filtre = request.args.get('filtre', 'toutes')
+        
     try:
         # 1. Récupération de l'historique des notifications de l'utilisateur
-        notifs = fetch_all("""
-            SELECT * FROM notifications
-            WHERE utilisateur_id = %s
-            ORDER BY cree_le DESC
-        """, (session['user_id'],))
+        if filtre == 'match_demande':
+            notifs = fetch_all("""
+                SELECT * FROM notifications
+                WHERE utilisateur_id = %s AND type_notification = 'match_demande'
+                ORDER BY cree_le DESC
+            """, (session['user_id'],))
+        elif filtre == 'infos':
+            notifs = fetch_all("""
+                SELECT * FROM notifications
+                WHERE utilisateur_id = %s AND type_notification != 'match_demande'
+                ORDER BY cree_le DESC
+            """, (session['user_id'],))
+        else:
+            notifs = fetch_all("""
+                SELECT * FROM notifications
+                WHERE utilisateur_id = %s
+                ORDER BY cree_le DESC
+            """, (session['user_id'],))
         
         # 2. Passage automatique de toutes ses notifications au statut "lu"
         execute("""
@@ -22,7 +38,10 @@ def notifications():
             WHERE utilisateur_id = %s
         """, (session['user_id'],))
         
-        return render_template('notifications/index.html', notifications=notifs)
+        context = get_user_context()
+        context['notifications'] = notifs
+        context['filtre'] = filtre
+        return render_template('notifications/index.html', **context)
         
     except Exception as e:
         return f"Erreur lors du chargement des notifications: {str(e)}", 500
