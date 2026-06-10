@@ -1,1 +1,262 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Paramètres — Confidentialité</title>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600&family=Sora:wght@400;600;700&display=swap" rel="stylesheet"/>
+  <link rel="stylesheet" href="settings-shared.css"/>
+  <style>
+    /* ── Styles spécifiques à la section Confidentialité ── */
 
+    /* Groupe de champ avec description */
+    .conf-group {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+    .conf-group label {
+      font-size: 0.9rem;
+      font-weight: 500;
+      color: var(--text);
+    }
+
+    /* Ligne toggle avec description */
+    .conf-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 16px 0;
+    }
+    .conf-row-info { display: flex; flex-direction: column; gap: 3px; }
+    .conf-row-label {
+      font-size: 0.95rem;
+      color: var(--text);
+      font-weight: 500;
+    }
+    .conf-row-hint {
+      font-size: 0.8rem;
+      color: var(--muted);
+    }
+
+    /* Select avec style cohérent */
+    .conf-select {
+      height: 48px;
+      padding: 0 36px 0 16px;
+      font-size: 0.95rem;
+      background: #fff;
+      border: 1.5px solid #e4e8f0;
+      border-radius: 10px;
+      outline: none;
+      width: 100%;
+      font-family: inherit;
+      appearance: none;
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%237b8299' stroke-width='2.5'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E");
+      background-repeat: no-repeat;
+      background-position: right 16px center;
+      cursor: pointer;
+      transition: border-color 0.2s, box-shadow 0.2s;
+    }
+    .conf-select:focus {
+      border-color: var(--primary);
+      box-shadow: 0 0 0 3px rgba(59,110,248,0.1);
+    }
+
+    /* Bouton enregistrer */
+    .btn-save-conf {
+      background: var(--primary);
+      color: #fff;
+      border: none;
+      border-radius: 10px;
+      padding: 14px 28px;
+      font-family: inherit;
+      font-size: 0.95rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: background 0.2s;
+    }
+    .btn-save-conf:hover { background: var(--primary-dark); }
+  </style>
+</head>
+<body>
+
+<!-- ── BARRE DE NAVIGATION GAUCHE ── -->
+<nav class="left-nav">
+  <div class="left-nav-logo">
+    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+      <path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/>
+      <path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/>
+    </svg>
+    <span>IFRI MentorLink</span>
+  </div>
+  <div class="left-nav-links">
+    <a class="left-nav-item" href="#">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/></svg>
+      Dashboard
+    </a>
+    <a class="left-nav-item" href="#">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="8" r="4"/><path d="M4 20c0-4 3.6-7 8-7s8 3 8 7"/></svg>
+      Profil
+    </a>
+    <a class="left-nav-item" href="#">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
+      Offres
+    </a>
+    <a class="left-nav-item" href="#">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+      Demandes
+    </a>
+    <a class="left-nav-item" href="#">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>
+      Matching
+      <span class="left-nav-badge badge-green">12</span>
+    </a>
+    <a class="left-nav-item" href="#">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+      Messages
+      <span class="left-nav-badge badge-red">5</span>
+    </a>
+    <a class="left-nav-item" href="#">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg>
+      Notifications
+      <span class="left-nav-badge badge-orange">3</span>
+    </a>
+    <a class="left-nav-item active" href="#">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
+      Paramètres
+    </a>
+  </div>
+  <div class="left-nav-bottom">
+    <div class="left-nav-deconnexion">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>
+      Déconnexion
+    </div>
+    <div class="left-nav-user">
+      <div class="left-nav-user-avatar">U</div>
+      <div class="left-nav-user-info">
+        <div class="name">Utilisateur</div>
+        <div class="role">Étudiant</div>
+      </div>
+    </div>
+  </div>
+</nav>
+
+<!-- ── WRAPPER PAGE ── -->
+<div class="page-wrapper">
+
+  <header class="topbar">
+    <span class="topbar-title">Paramètres</span>
+    <div class="topbar-right">
+      <div class="search-bar">
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#7b8299" stroke-width="2.2"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
+        <input type="text" placeholder="Rechercher un étudiant..." />
+      </div>
+      <button class="btn-icon">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#555" stroke-width="2"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg>
+        <span class="notif-dot"></span>
+      </button>
+      <div class="avatar">U</div>
+    </div>
+  </header>
+
+  <div class="layout">
+
+    <nav class="sidebar">
+      <a class="nav-item" href="settings-compte.html">
+        <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="8" r="4"/><path d="M4 20c0-4 3.6-7 8-7s8 3 8 7"/></svg>
+        Compte
+      </a>
+      <a class="nav-item" href="settings-securite.html">
+        <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+        Sécurité
+      </a>
+      <a class="nav-item" href="settings-preferences.html">
+        <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="4" y1="6" x2="20" y2="6"/><line x1="4" y1="12" x2="14" y2="12"/><line x1="4" y1="18" x2="18" y2="18"/></svg>
+        Préférences
+      </a>
+      <a class="nav-item active" href="settings-confidentialite.html">
+        <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+        Confidentialité
+      </a>
+      <a class="nav-item danger" href="settings-danger.html">
+        <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+        Zone de danger
+      </a>
+    </nav>
+
+    <!-- ── SECTION CONFIDENTIALITÉ ── -->
+    <main class="main-card">
+
+      <div class="card-header" style="margin-bottom:4px;">
+        <h2 class="card-title" style="font-size:1.4rem;">Confidentialité</h2>
+      </div>
+      <hr style="border:none; border-top:1px solid var(--border); margin-bottom:24px;" />
+
+      <div style="display:flex; flex-direction:column; gap:20px;">
+
+        <!-- Visibilité du profil -->
+        <div class="conf-group">
+          <label for="visibilite">Visibilité du profil</label>
+          <select class="conf-select" id="visibilite">
+            <option value="all">Tous les étudiants</option>
+            <option value="matches">Uniquement mes matchs</option>
+            <option value="private">Privé</option>
+          </select>
+          <span style="font-size:0.8rem; color:var(--muted); margin-top:2px;">
+            Définit qui peut consulter votre profil sur la plateforme.
+          </span>
+        </div>
+
+        <!-- Disponibilités publiques -->
+        <div class="conf-row" style="border-top:1px solid var(--border); padding-top:16px;">
+          <div class="conf-row-info">
+            <span class="conf-row-label">Afficher mes disponibilités publiquement</span>
+            <span class="conf-row-hint">Les créneaux que vous avez renseignés seront visibles sur votre profil.</span>
+          </div>
+          <label class="toggle">
+            <input type="checkbox" id="dispoPublique" checked />
+            <span class="slider"></span>
+          </label>
+        </div>
+
+        <!-- Recevoir des demandes de mentorat -->
+        <div class="conf-row" style="border-top:1px solid var(--border); padding-top:16px;">
+          <div class="conf-row-info">
+            <span class="conf-row-label">Autoriser les demandes de mentorat entrantes</span>
+            <span class="conf-row-hint">Si désactivé, vous n'apparaîtrez plus dans les résultats de matching.</span>
+          </div>
+          <label class="toggle">
+            <input type="checkbox" id="accepterDemandes" checked />
+            <span class="slider"></span>
+          </label>
+        </div>
+
+        <!-- Afficher les compétences -->
+        <div class="conf-row" style="border-top:1px solid var(--border); padding-top:16px;">
+          <div class="conf-row-info">
+            <span class="conf-row-label">Afficher mes compétences sur le profil public</span>
+            <span class="conf-row-hint">Masquer vos compétences réduit la précision du matching.</span>
+          </div>
+          <label class="toggle">
+            <input type="checkbox" id="afficherCompetences" checked />
+            <span class="slider"></span>
+          </label>
+        </div>
+
+      </div>
+
+      <!-- Pied de section -->
+      <div class="card-footer">
+        <button class="btn-save-conf" id="btnSaveConf">Enregistrer les paramètres</button>
+      </div>
+
+    </main>
+  </div>
+</div>
+
+<div class="toast" id="toast">✓ Paramètres de confidentialité enregistrés</div>
+<button class="help-btn" title="Aide">?</button>
+
+<script src="settings-confidentialite.js"></script>
+</body>
+</html>
