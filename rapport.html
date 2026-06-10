@@ -1,0 +1,827 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Rapport — IFRI_MentorLink | PIL1_2526_61</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Sora:wght@600;700;800&display=swap" rel="stylesheet"/>
+  <style>
+    :root {
+      --indigo:   #3B5BDB;
+      --indigo-light: #EEF2FF;
+      --teal:     #0F9B8E;
+      --teal-light: #E6F7F6;
+      --dark:     #0F1623;
+      --mid:      #374151;
+      --muted:    #6B7280;
+      --border:   #E5E7EB;
+      --white:    #FFFFFF;
+      --bg:       #F8F9FC;
+    }
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: 'Inter', sans-serif;
+      background: var(--bg);
+      color: var(--mid);
+      font-size: 15px;
+      line-height: 1.7;
+    }
+
+    /* ── HERO ── */
+    .hero {
+      background: linear-gradient(135deg, var(--dark) 0%, #1a2a4a 60%, #0F3460 100%);
+      color: var(--white);
+      padding: 64px 48px 56px;
+      position: relative;
+      overflow: hidden;
+    }
+    .hero::before {
+      content: '';
+      position: absolute;
+      top: -80px; right: -80px;
+      width: 320px; height: 320px;
+      border-radius: 50%;
+      background: radial-gradient(circle, rgba(59,91,219,.35) 0%, transparent 70%);
+    }
+    .hero::after {
+      content: '';
+      position: absolute;
+      bottom: -60px; left: 40px;
+      width: 200px; height: 200px;
+      border-radius: 50%;
+      background: radial-gradient(circle, rgba(15,155,142,.25) 0%, transparent 70%);
+    }
+    .hero-eyebrow {
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: .12em;
+      text-transform: uppercase;
+      color: var(--teal);
+      margin-bottom: 16px;
+    }
+    .hero h1 {
+      font-family: 'Sora', sans-serif;
+      font-size: clamp(28px, 5vw, 48px);
+      font-weight: 800;
+      line-height: 1.15;
+      color: var(--white);
+      margin-bottom: 12px;
+    }
+    .hero h1 span { color: #7DD3FC; }
+    .hero-sub {
+      font-size: 14px;
+      color: rgba(255,255,255,.65);
+      max-width: 560px;
+      margin-bottom: 32px;
+    }
+    .hero-meta {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+    }
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      background: rgba(255,255,255,.08);
+      border: 1px solid rgba(255,255,255,.15);
+      border-radius: 20px;
+      padding: 5px 14px;
+      font-size: 12px;
+      color: rgba(255,255,255,.85);
+    }
+
+    /* ── LAYOUT ── */
+    .container {
+      max-width: 860px;
+      margin: 0 auto;
+      padding: 0 24px;
+    }
+
+    /* ── NAV ── */
+    .toc {
+      background: var(--white);
+      border-bottom: 1px solid var(--border);
+      position: sticky;
+      top: 0;
+      z-index: 100;
+    }
+    .toc-inner {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0;
+      max-width: 860px;
+      margin: 0 auto;
+      padding: 0 24px;
+    }
+    .toc-inner a {
+      display: block;
+      padding: 14px 16px;
+      font-size: 12px;
+      font-weight: 500;
+      color: var(--muted);
+      text-decoration: none;
+      border-bottom: 2px solid transparent;
+      transition: color .2s, border-color .2s;
+      white-space: nowrap;
+    }
+    .toc-inner a:hover { color: var(--indigo); border-bottom-color: var(--indigo); }
+
+    /* ── SECTIONS ── */
+    .section {
+      padding: 56px 0 48px;
+      border-bottom: 1px solid var(--border);
+    }
+    .section:last-of-type { border-bottom: none; }
+
+    .section-label {
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: .1em;
+      text-transform: uppercase;
+      color: var(--teal);
+      margin-bottom: 8px;
+    }
+    .section h2 {
+      font-family: 'Sora', sans-serif;
+      font-size: 22px;
+      font-weight: 700;
+      color: var(--dark);
+      margin-bottom: 24px;
+    }
+    p + p { margin-top: 10px; }
+
+    /* ── CARDS MEMBRES ── */
+    .members-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+      gap: 16px;
+      margin-top: 8px;
+    }
+    .member-card {
+      background: var(--white);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 20px;
+      transition: box-shadow .2s;
+    }
+    .member-card:hover { box-shadow: 0 4px 16px rgba(0,0,0,.07); }
+    .member-avatar {
+      width: 44px; height: 44px;
+      border-radius: 50%;
+      background: var(--indigo-light);
+      color: var(--indigo);
+      font-family: 'Sora', sans-serif;
+      font-weight: 700;
+      font-size: 16px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-bottom: 12px;
+    }
+    .member-name {
+      font-weight: 600;
+      font-size: 14px;
+      color: var(--dark);
+      margin-bottom: 4px;
+    }
+    .member-role {
+      font-size: 12px;
+      color: var(--muted);
+      line-height: 1.5;
+    }
+    .member-card.inactive .member-avatar {
+      background: #F3F4F6;
+      color: #9CA3AF;
+    }
+    .member-card.inactive .member-role { color: #D1D5DB; }
+
+    /* ── CONCEPTION ── */
+    .arch-block {
+      background: var(--white);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 24px;
+      margin-bottom: 20px;
+    }
+    .arch-block h3 {
+      font-size: 14px;
+      font-weight: 600;
+      color: var(--dark);
+      margin-bottom: 12px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .arch-block h3 .dot {
+      width: 8px; height: 8px;
+      border-radius: 50%;
+      background: var(--indigo);
+      flex-shrink: 0;
+    }
+
+    /* ── TABLES SQL ── */
+    .tables-grid {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-top: 8px;
+    }
+    .table-chip {
+      background: var(--indigo-light);
+      color: var(--indigo);
+      border-radius: 6px;
+      padding: 4px 12px;
+      font-size: 12px;
+      font-weight: 500;
+      font-family: 'Courier New', monospace;
+    }
+
+    /* ── MODULES ── */
+    .modules-list {
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      margin-top: 8px;
+    }
+    .modules-list li {
+      display: flex;
+      align-items: flex-start;
+      gap: 12px;
+      background: var(--white);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 14px 16px;
+    }
+    .mod-icon {
+      width: 32px; height: 32px;
+      border-radius: 8px;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 16px;
+      flex-shrink: 0;
+    }
+    .mod-icon.blue  { background: var(--indigo-light); }
+    .mod-icon.green { background: var(--teal-light); }
+    .mod-icon.purple{ background: #F3E8FF; }
+    .mod-title { font-weight: 600; font-size: 13px; color: var(--dark); }
+    .mod-desc  { font-size: 12px; color: var(--muted); margin-top: 2px; }
+
+    /* ── DEPLOY ── */
+    .step-list {
+      counter-reset: steps;
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+    }
+    .step-list li {
+      counter-increment: steps;
+      display: flex;
+      gap: 16px;
+      align-items: flex-start;
+    }
+    .step-list li::before {
+      content: counter(steps);
+      min-width: 28px; height: 28px;
+      border-radius: 50%;
+      background: var(--indigo);
+      color: #fff;
+      font-size: 12px;
+      font-weight: 700;
+      display: flex; align-items: center; justify-content: center;
+      flex-shrink: 0;
+      margin-top: 2px;
+    }
+    .step-title { font-weight: 600; font-size: 13px; color: var(--dark); }
+    .step-desc  { font-size: 13px; color: var(--mid); margin-top: 2px; }
+
+    code {
+      background: #F1F5F9;
+      color: var(--indigo);
+      font-family: 'Courier New', monospace;
+      font-size: 12px;
+      padding: 2px 6px;
+      border-radius: 4px;
+    }
+    pre {
+      background: var(--dark);
+      color: #A5F3FC;
+      font-family: 'Courier New', monospace;
+      font-size: 12px;
+      padding: 16px 20px;
+      border-radius: 10px;
+      overflow-x: auto;
+      margin-top: 12px;
+      line-height: 1.8;
+    }
+
+    /* ── DIFFICULTES ── */
+    .alert {
+      background: #FFF7ED;
+      border-left: 3px solid #F97316;
+      border-radius: 0 8px 8px 0;
+      padding: 14px 16px;
+      font-size: 13px;
+      color: #92400E;
+      margin-top: 12px;
+    }
+
+    /* ── FOOTER ── */
+    .footer {
+      background: var(--dark);
+      color: rgba(255,255,255,.5);
+      text-align: center;
+      padding: 28px 24px;
+      font-size: 12px;
+    }
+    .footer strong { color: rgba(255,255,255,.85); }
+
+    @media (max-width: 600px) {
+      .hero { padding: 40px 20px 36px; }
+      .toc-inner a { padding: 12px 10px; font-size: 11px; }
+      .members-grid { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- ═══════════ HERO ═══════════ -->
+<header class="hero">
+  <div class="container">
+    <p class="hero-eyebrow">Rapport de Projet Intégrateur — 2025-2026</p>
+    <h1>IFRI_<span>MentorLink</span></h1>
+    <p class="hero-sub">
+      Plateforme web de mise en relation mentor–mentoré entre étudiants de l'IFRI,
+      intégrant un algorithme de matching et une messagerie instantanée.
+    </p>
+    <div class="hero-meta">
+      <span class="badge">🏫 IFRI — UAC</span>
+      <span class="badge">📅 Juin 2026</span>
+      <span class="badge">⚙️ Python · HTML/CSS/JS · MySQL</span>
+      <span class="badge">👥 Licence IA/IM/GL/SE&amp;IoT/SI</span>
+    </div>
+  </div>
+</header>
+
+<!-- ═══════════ NAV ═══════════ -->
+<nav class="toc">
+  <div class="toc-inner">
+    <a href="#equipe">Équipe</a>
+    <a href="#fonctionnement">Fonctionnement</a>
+    <a href="#conception">Conception</a>
+    <a href="#deploiement">Déploiement</a>
+    <a href="#manuel">Manuel</a>
+    <a href="#difficultes">Difficultés</a>
+  </div>
+</nav>
+
+<div class="container">
+
+  <!-- ═══════════ 1. EQUIPE ═══════════ -->
+  <section class="section" id="equipe">
+    <p class="section-label">Section 01</p>
+    <h2>Présentation de l'équipe</h2>
+    <p>
+      Le groupe est composé de sept étudiants issus de différentes filières de la Licence à l'IFRI,
+      conformément aux exigences du projet intégrateur 2025-2026.
+    </p>
+
+    <div class="members-grid" style="margin-top:24px;">
+
+      <div class="member-card">
+        <div class="member-avatar">KM</div>
+        <div class="member-name">KOHOUEGNON Mauriano</div>
+        <div class="member-role">Conception &amp; développement des pages : Accueil, Connexion, Inscription, Offres et Demandes (Frontend)</div>
+      </div>
+
+      <div class="member-card">
+        <div class="member-avatar">AA</div>
+        <div class="member-name">AGONVONON Albine</div>
+        <div class="member-role">Conception &amp; développement des pages : Dashboard et Profil utilisateur (Frontend)</div>
+      </div>
+
+      <div class="member-card">
+        <div class="member-avatar">NE</div>
+        <div class="member-name">NGALESSAMI EBA Divin</div>
+        <div class="member-role">Développement de la page Notifications et Mot de passe oublié, aide à la modélisation de la base de données, fonctionnalité « Mot de passe oublié »</div>
+      </div>
+
+      <div class="member-card">
+        <div class="member-avatar">CY</div>
+        <div class="member-name">CHABI AYEDOUN Yoéla</div>
+        <div class="member-role">Développement du Backend (Python/Flask), développement de la page matching, liaison Frontend–Backend, gestion des routes et de l'authentification,</div>
+      </div>
+
+      <div class="member-card">
+        <div class="member-avatar" style="background:#EEF2FF;color:#3B5BDB;">BS</div>
+        <div class="member-name">BADOU Sarah</div>
+        <div class="member-role">Conception &amp; développement des pages : Notifications, Paramètres et Messages ; élaboration du rapport HTML</div>
+      </div>
+
+      <div class="member-card">
+        <div class="member-avatar">MT</div>
+        <div class="member-name">MONGADJI Tayé Alabi Sylvain</div>
+        <div class="member-role">Aide à la conception du Frontend</div>
+      </div>
+
+      <div class="member-card inactive">
+        <div class="member-avatar">KE</div>
+        <div class="member-name">KOGBETO Esther</div>
+        <div class="member-role">Membre du groupe</div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- ═══════════ 2. FONCTIONNEMENT ═══════════ -->
+  <section class="section" id="fonctionnement">
+    <p class="section-label">Section 02</p>
+    <h2>Mode de fonctionnement interne</h2>
+
+    <p>
+      Le groupe a organisé son travail selon une répartition claire des responsabilités,
+      chaque membre se voyant attribuer un ou plusieurs modules de l'application en fonction
+      de ses affinités techniques et de sa filière.
+    </p>
+    <p style="margin-top:12px;">
+      La coordination a été assurée via <strong>Git/GitHub</strong> pour la gestion du code source,
+      avec des commits réguliers de chaque contributeur. Les échanges et le suivi des tâches
+      ont été organisés en dehors des séances encadrées, en s'appuyant sur les sessions de
+      travail prévues au calendrier (01, 03, 04, 08 et 09 juin 2026).
+    </p>
+
+    <div class="arch-block" style="margin-top:24px;">
+      <h3><span class="dot"></span>Démarche suivie</h3>
+      <ul style="padding-left:18px; display:flex; flex-direction:column; gap:8px; font-size:13px;">
+        <li><strong>Phase 1 – Analyse</strong> : lecture du cahier des charges, identification des modules, définition des tables SQL.</li>
+        <li><strong>Phase 2 – Conception</strong> : modélisation de la base de données, maquettage des interfaces.</li>
+        <li><strong>Phase 3 – Développement</strong> : développement Frontend en parallèle du Backend, intégration progressive.</li>
+        <li><strong>Phase 4 – Intégration</strong> : liaison Frontend–Backend, tests des fonctionnalités principales.</li>
+        <li><strong>Phase 5 – Livraison</strong> : rédaction du rapport, finalisation du fichier <code>.sql</code>, dépôt GitHub.</li>
+      </ul>
+    </div>
+  </section>
+
+  <!-- ═══════════ 3. CONCEPTION ═══════════ -->
+  <section class="section" id="conception">
+    <p class="section-label">Section 03</p>
+    <h2>Description de la conception</h2>
+
+    <div class="arch-block">
+      <h3><span class="dot" style="background:var(--teal)"></span>Architecture générale</h3>
+      <p style="font-size:13px;">
+        L'application suit une architecture <strong>client-serveur</strong> :
+        le frontend (HTML/CSS/JavaScript) communique avec le backend Python/Flask
+        via des requêtes HTTP. Le backend gère la logique métier et interagit
+        avec la base de données MySQL.
+      </p>
+      <pre>Navigateur (HTML/CSS/JS)
+       │
+       │  HTTP (fetch / formulaires)
+       ▼
+  Serveur Flask (Python)
+       │
+       │  SQL (PyMySQL / SQLAlchemy)
+       ▼
+  Base de données MySQL</pre>
+    </div>
+
+    <div class="arch-block">
+      <h3><span class="dot"></span>Modules de l'application</h3>
+      <ul class="modules-list">
+        <li>
+          <div class="mod-icon blue">👤</div>
+          <div>
+            <div class="mod-title">Gestion des comptes et profils</div>
+            <div class="mod-desc">Inscription, connexion, réinitialisation du mot de passe, édition du profil (filière, compétences, disponibilités, photo).</div>
+          </div>
+        </li>
+        <li>
+          <div class="mod-icon green">🤝</div>
+          <div>
+            <div class="mod-title">Mise en correspondance (Matching)</div>
+            <div class="mod-desc">Publication d'offres et demandes de mentorat, algorithme de matching basé sur les compétences, filières et disponibilités, affichage du score de compatibilité.</div>
+          </div>
+        </li>
+        <li>
+          <div class="mod-icon purple">💬</div>
+          <div>
+            <div class="mod-title">Messagerie instantanée</div>
+            <div class="mod-desc">Conversations entre utilisateurs, historique des messages, notifications en temps réel à la réception d'un message.</div>
+          </div>
+        </li>
+      </ul>
+    </div>
+
+    <div class="arch-block">
+      <h3><span class="dot" style="background:#8B5CF6"></span>Structure de la base de données</h3>
+      <p style="font-size:13px; margin-bottom:12px;">
+        La base de données MySQL est composée des tables suivantes :
+      </p>
+      <div class="tables-grid">
+        <span class="table-chip">utilisateurs</span>
+        <span class="table-chip">filieres_etudes</span>
+        <span class="table-chip">niveaux_etudes</span>
+        <span class="table-chip">matieres</span>
+        <span class="table-chip">competences_utilisateur</span>
+        <span class="table-chip">difficultes_utilisateur</span>
+        <span class="table-chip">disponibilites</span>
+        <span class="table-chip">offre_mentorat</span>
+        <span class="table-chip">demande_mentorat</span>
+        <span class="table-chip">correspondances</span>
+        <span class="table-chip">conversations</span>
+        <span class="table-chip">messages</span>
+        <span class="table-chip">notifications</span>
+        <span class="table-chip">parametres</span>
+        <span class="table-chip">participants_conversation</span>
+      </div>
+      <p style="font-size:12px; color:var(--muted); margin-top:12px;">
+        Le schéma complet (CREATE TABLE, clés primaires et étrangères, contraintes)
+        est disponible dans le fichier <code>ifri_mentorlink.sql</code> à la racine du dépôt.
+      </p>
+    </div>
+
+    <div class="arch-block">
+      <h3><span class="dot" style="background:#F59E0B"></span>Structure du projet</h3>
+      <pre>PIL1_2526_61/
+├── rapport.html
+├── .gitignore
+├── README.md
+├── backend/
+│   ├── .env
+│   ├── .gitignore
+│   ├── app.py
+│   ├── extensions.py
+│   ├── pytest.ini
+│   ├── requirements.txt
+│   ├── run_tests.py
+│   ├── config/
+│   │   └── settings.py
+│   ├── database/
+│   │   └── ifri_mentorlink.sql
+│   ├── db/
+│   │   ├── _init_.py
+│   │   └── database.py
+│   ├── routes/
+│   │   ├── _init_.py
+│   │   ├── auth.py
+│   │   ├── conversations.py
+│   │   ├── dashboard.py
+│   │   ├── demandes.py
+│   │   ├── email.py
+│   │   ├── matching.py
+│   │   ├── notifications.py
+│   │   ├── offres.py
+│   │   ├── parametres.py
+│   │   ├── references.py
+│   │   └── users.py
+│   ├── services/
+│   │   ├── _init_.py
+│   │   ├── mail_service.py
+│   │   ├── matching_service.py
+│   │   └── notification_service.py
+│   ├── utils/
+│   │   ├── _init_.py
+│   │   ├── csrf.py
+│   │   ├── decorators.py
+│   │   ├── responses.py
+│   │   └── validators.py
+│   ├── templates/
+│   │   ├── landing.html
+│   │   ├── forgot_password.html
+│   │   ├── reset_password.html
+│   │   ├── auth/
+│   │   │   ├── login.html
+│   │   │   ├── register.html
+│   │   │   ├── email_confirme.html
+│   │   │   └── email_envoye.html
+│   │   ├── conversations/index.html
+│   │   ├── dashboard/index.html
+│   │   ├── errors/403.html
+│   │   ├── matching/index.html
+│   │   ├── mentorat/
+│   │   │   ├── offres.html
+│   │   │   ├── demandes.html
+│   │   │   ├── creer-offre.html
+│   │   │   └── creer-demande.html
+│   │   ├── mentore/dashboard.html
+│   │   ├── notifications/index.html
+│   │   ├── profil/public.html
+│   │   ├── references/index.html
+│   │   └── settings/
+│   │       ├── profil_matieres.html
+│   │       ├── preferences.html
+│   │       ├── confidentialite.html
+│   │       └── supprimer-compte.html
+│   ├── static/
+│   │   ├── css/
+│   │   │   ├── style.css
+│   │   │   ├── bootstrap.min.css
+│   │   │   ├── bootstrap-icons.min.css
+│   │   │   ├── login.css
+│   │   │   ├── register1.css
+│   │   │   ├── register2.css
+│   │   │   └── fonts/
+│   │   │       ├── bootstrap-icons.woff
+│   │   │       └── bootstrap-icons.woff2
+│   │   ├── js/
+│   │   │   ├── bootstrap.bundle.min.js
+│   │   │   ├── login.js
+│   │   │   ├── register.js
+│   │   │   ├── register1.js
+│   │   │   ├── register2.js
+│   │   │   └── script_home.js
+│   │   └── uploads/
+│   │       └── avatars/
+│   └── tests/
+│       ├── test_validators.py
+│       └── test_messagerie_notifications.py</pre>
+    </div>
+  </section>
+
+  <!-- ═══════════ 4. DEPLOIEMENT ═══════════ -->
+  <section class="section" id="deploiement">
+    <p class="section-label">Section 04</p>
+    <h2>Instructions de déploiement</h2>
+
+    <p>Prérequis : <strong>Python 3.10+</strong>, <strong>MySQL 8+</strong>, <strong>Git</strong>.</p>
+
+    <ol class="step-list" style="margin-top:24px;">
+      <li>
+        <div>
+          <div class="step-title">Cloner le dépôt</div>
+          <div class="step-desc">
+            <pre>git clone https://github.com/[ORG]/PIL1_2526_61.git
+cd PIL1_2526_61</pre>
+          </div>
+        </div>
+      </li>
+      <li>
+        <div>
+          <div class="step-title">Créer et activer un environnement virtuel Python</div>
+          <div class="step-desc">
+            <pre>python -m venv venv
+# Windows :
+venv\Scripts\activate
+# macOS/Linux :
+source venv/bin/activate</pre>
+          </div>
+        </div>
+      </li>
+      <li>
+        <div>
+          <div class="step-title">Installer les dépendances</div>
+          <div class="step-desc">
+            <pre>cd backend
+pip install -r requirements.txt</pre>
+          </div>
+        </div>
+      </li>
+      <li>
+        <div>
+          <div class="step-title">Créer la base de données et importer la structure</div>
+          <div class="step-desc">
+            Dans MySQL : créer une base <code>mentorlink_db</code>, puis importer :
+            <pre>mysql -u root -p ifri_mentorlink_db &lt; ../database.sql</pre>
+          </div>
+        </div>
+      </li>
+      <li>
+        <div>
+          <div class="step-title">Configurer la connexion à la base de données</div>
+          <div class="step-desc">
+            Modifier les variables dans <code>backend/app.py</code> (ou un fichier <code>.env</code>) :
+            <pre>
+DB_HOST = "localhost"
+DB_USER = "root"
+DB_PASSWORD = "votre_mot_de_passe"
+DB_NAME = "ifri_mentorlink_db"</pre>
+          </div>
+        </div>
+      </li>
+      <li>
+        <div>
+          <div class="step-title">Lancer le serveur Flask</div>
+          <div class="step-desc">
+            <pre>python app.py</pre>
+            Le serveur démarre sur <code>http://localhost:5000</code>.
+          </div>
+        </div>
+      </li>
+      <li>
+        <div>
+          <div class="step-title">Accéder à l'application</div>
+          <div class="step-desc">
+            Ouvrir un navigateur et naviguer vers <code>http://localhost:5000</code>.
+          </div>
+        </div>
+      </li>
+    </ol>
+  </section>
+
+  <!-- ═══════════ 5. MANUEL ═══════════ -->
+  <section class="section" id="manuel">
+    <p class="section-label">Section 05</p>
+    <h2>Manuel d'utilisation</h2>
+
+    <div class="arch-block">
+      <h3><span class="dot"></span>Créer un compte</h3>
+      <p style="font-size:13px;">
+        Accéder à la page <strong>Inscription</strong>. Renseigner : nom, prénom, adresse e-mail,
+        numéro de téléphone, filière, niveau et mot de passe. Choisir ses compétences (points forts)
+        et ses difficultés (points faibles). Valider le formulaire.
+      </p>
+    </div>
+
+    <div class="arch-block">
+      <h3><span class="dot" style="background:var(--teal)"></span>Se connecter</h3>
+      <p style="font-size:13px;">
+        Depuis la page <strong>Connexion</strong>, saisir son adresse e-mail (ou numéro de téléphone)
+        et son mot de passe. En cas d'oubli, utiliser le lien <em>« Mot de passe oublié »</em>
+        pour recevoir un lien de réinitialisation.
+      </p>
+    </div>
+
+    <div class="arch-block">
+      <h3><span class="dot" style="background:#8B5CF6"></span>Publier une offre ou une demande de mentorat</h3>
+      <p style="font-size:13px;">
+        Depuis le <strong>Dashboard</strong>, cliquer sur <em>« Nouvelle offre »</em> ou
+        <em>« Nouvelle demande »</em>. Renseigner les matières concernées, les disponibilités
+        et le format souhaité (présentiel / en ligne). Soumettre pour que l'algorithme de matching
+        propose automatiquement des correspondances.
+      </p>
+    </div>
+
+    <div class="arch-block">
+      <h3><span class="dot" style="background:#F59E0B"></span>Consulter les correspondances</h3>
+      <p style="font-size:13px;">
+        La section <strong>Matching</strong> affiche les profils compatibles avec un score de
+        compatibilité, les matières en commun et les disponibilités partagées. Cliquer sur
+        un profil pour envoyer un message ou une demande de mentorat.
+      </p>
+    </div>
+
+    <div class="arch-block">
+      <h3><span class="dot" style="background:var(--teal)"></span>Messagerie</h3>
+      <p style="font-size:13px;">
+        Accéder à l'onglet <strong>Messages</strong> pour consulter et envoyer des messages
+        textuels. Les nouvelles conversations apparaissent dans la liste à gauche.
+        Les notifications en temps réel signalent l'arrivée de nouveaux messages.
+      </p>
+    </div>
+
+    <div class="arch-block">
+      <h3><span class="dot"></span>Paramètres du compte</h3>
+      <p style="font-size:13px;">
+        Depuis la page <strong>Paramètres</strong>, modifier les informations de profil
+        (photo, bio, disponibilités, compétences, difficultés) et les préférences de
+        notification.
+      </p>
+    </div>
+  </section>
+
+  <!-- ═══════════ 6. DIFFICULTES ═══════════ -->
+  <section class="section" id="difficultes">
+    <p class="section-label">Section 06</p>
+    <h2>Difficultés rencontrées</h2>
+
+    <p>
+      Au cours du développement de IFRI_MentorLink, le groupe a rencontré plusieurs défis
+      techniques et organisationnels.
+    </p>
+
+    <div class="alert" style="margin-top:16px;">
+      <strong>Conception de la base de données :</strong> La modélisation des relations entre
+      les nombreuses entités (utilisateurs, compétences, disponibilités, offres, demandes,
+      correspondances, conversations) a nécessité plusieurs itérations pour garantir la cohérence
+      des données et éviter les redondances. La définition précise des clés étrangères et des
+      contraintes d'intégrité référentielle a été particulièrement exigeante.
+    </div>
+
+    <div class="alert" style="margin-top:12px; background:#EFF6FF; border-color:#3B82F6; color:#1E40AF;">
+      <strong>Liaison Frontend–Backend :</strong> La synchronisation entre les interfaces HTML
+      et les routes Flask, notamment pour la gestion des sessions utilisateur et la transmission
+      sécurisée des données via les formulaires, a demandé un effort d'intégration important.
+    </div>
+
+    <div class="alert" style="margin-top:12px; background:#F0FDF4; border-color:#22C55E; color:#15803D;">
+      <strong>Coordination de l'équipe :</strong> Travailler en parallèle sur plusieurs modules
+      a nécessité une discipline stricte dans l'utilisation de Git pour éviter les conflits de
+      fusion (merge conflicts) et maintenir la cohérence du code entre les branches.
+    </div>
+  </section>
+
+</div><!-- /container -->
+
+<!-- ═══════════ FOOTER ═══════════ -->
+<footer class="footer">
+  <strong>IFRI_MentorLink</strong> — Projet Intégrateur 2025-2026<br>
+  Institut de Formation et de Recherche en Informatique (IFRI) — Université d'Abomey-Calavi<br>
+  <span style="margin-top:4px; display:block;">Supervision : M. Ratheil HOUNDJI &nbsp;|&nbsp; Encadrants : M. Armand ACCROMBESSI &amp; Mme Maryse GAHOU</span>
+</footer>
+
+</body>
+</html>

@@ -190,9 +190,8 @@ Quand un utilisateur publie une offre ou une demande, le système calcule automa
 
 ### Matching manuel (via le catalogue)
 Depuis `/offres` ou `/demandes`, l'utilisateur peut :
-1. Cliquer **"Calculer"** sur une annonce pour voir le score de compatibilité, les matières et les créneaux communs
-2. Cliquer **"Faire le match"** pour envoyer une demande
-3. Le destinataire reçoit une notification avec **Accepter / Refuser**
+1. Cliquer **"Faire le match"** sur une annonce, puis choisir **"Demander de l'aide"** ou **"Offrir de l'aide"**
+2. Le destinataire reçoit une notification avec **Accepter / Refuser**
 
 ### Algorithme de score
 
