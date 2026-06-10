@@ -150,8 +150,13 @@ def creer_demande():
         jours = request.form.getlist('jour[]')
         heures_debut = request.form.getlist('heure_debut[]')
         heures_fin = request.form.getlist('heure_fin[]')
+        formats_autorises = ['en_ligne', 'presentiel', 'les_deux']
         if not matiere_id or not format_:
             error = "Matière et format sont requis"
+        elif format_ not in formats_autorises:
+            error = "Format invalide (en_ligne, présentiel ou les_deux)"
+        elif not description:
+            error = "Description requise"
         elif len(description) > 1000:
             error = "Description trop longue (max 1000 caractères)"
         else:
