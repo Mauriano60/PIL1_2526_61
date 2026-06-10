@@ -1,11 +1,11 @@
 Flask
-Flask-Cors
 Flask-Limiter
-PyJWT
-mysql-connector-python
+Flask-Mail
+Flask-SocketIO
+PyMySQL
 python-dotenv
 Werkzeug
+bcrypt
 pytest
 pytest-cov
 pytest-mock
-requests
