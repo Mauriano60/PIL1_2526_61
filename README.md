@@ -8,12 +8,10 @@ Plateforme de mise en relation entre étudiants pour le mentorat académique. Le
 
 ### Backend
 - **Python 3.13** — langage serveur
-- **Flask 3.x** — framework web
+- **Flask** — framework web
 - **PyMySQL** — connecteur MySQL
-- **Werkzeug** — sécurité (hash mots de passe, uploads)
-- **PyJWT** — tokens d'authentification et reset de mot de passe
+- **Werkzeug** — hash des mots de passe, sécurisation des uploads
 - **Flask-Mail** — envoi d'emails (vérification, mot de passe oublié)
-- **Flask-Cors** — CORS pour le frontend React
 - **Flask-Limiter** — rate limiting
 - **python-dotenv** — variables d'environnement
 - **pytest** — tests unitaires
@@ -24,10 +22,9 @@ Plateforme de mise en relation entre étudiants pour le mentorat académique. Le
 
 ### Frontend
 - **HTML5 / Jinja2** — templates rendus côté serveur
-- **Bootstrap 5.3** + **Bootstrap Icons** — UI framework
+- **Bootstrap 5.3** + **Bootstrap Icons** — UI
 - **CSS personnalisé** — thème bleu `#2563EB` / slate `#0F172A` / teal `#14B8A6`
 - **JavaScript vanilla** — filtres, disponibilités dynamiques, upload avatar
-- *(Dossier `frontend/` contient une maquette React indépendante, non connectée au backend)*
 
 ---
 
