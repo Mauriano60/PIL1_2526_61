@@ -30,6 +30,34 @@ def conversations():
         return f"Erreur lors du chargement des conversations: {str(e)}", 500
 
 
+@conversations_bp.route('/conversations/avec/<int:contact_id>')
+def demarrer_conversation(contact_id):
+    if 'user_id' not in session:
+        return redirect(url_for('auth.login'))
+
+    user_id = session['user_id']
+    if contact_id == user_id:
+        return redirect(url_for('conversations.conversations'))
+
+    try:
+        conv = fetch_one("""
+            SELECT c.id FROM conversations c
+            JOIN participants_conversation p1 ON p1.conversation_id = c.id AND p1.utilisateur_id = %s
+            JOIN participants_conversation p2 ON p2.conversation_id = c.id AND p2.utilisateur_id = %s
+        """, (user_id, contact_id))
+
+        if conv:
+            return redirect(url_for('conversations.conversation', conv_id=conv['id']))
+
+        conv_id = execute("INSERT INTO conversations () VALUES ()")
+        execute("INSERT INTO participants_conversation (conversation_id, utilisateur_id) VALUES (%s, %s)", (conv_id, user_id))
+        execute("INSERT INTO participants_conversation (conversation_id, utilisateur_id) VALUES (%s, %s)", (conv_id, contact_id))
+
+        return redirect(url_for('conversations.conversation', conv_id=conv_id))
+    except Exception as e:
+        return f"Erreur lors de la création de la conversation: {str(e)}", 500
+
+
 @conversations_bp.route('/conversations/<int:conv_id>', methods=['GET', 'POST'])
 @csrf_required
 def conversation(conv_id):

@@ -92,7 +92,7 @@
                 {% endif %}
                 <div class="d-flex flex-wrap gap-2 mt-3 pt-2">
                   <a href="{{ url_for('users.profil', user_id=mentor.id) }}" class="btn btn-outline-custom" style="flex:1;padding:6px 12px;font-size:.8rem">Voir Profil</a>
-                  <a href="{{ url_for('conversations.conversations') }}" class="btn btn-primary-custom" style="flex:1;padding:6px 12px;font-size:.8rem">Envoyer Message</a>
+                  <a href="{{ url_for('conversations.demarrer_conversation', contact_id=mentor.id) }}" class="btn btn-primary-custom" style="flex:1;padding:6px 12px;font-size:.8rem">Envoyer Message</a>
                 </div>
               </div>
             </div>
@@ -215,7 +215,7 @@
                   {% endif %}
                   <div class="d-flex flex-wrap gap-2 mt-3 pt-2">
                     <a href="{{ url_for('users.profil', user_id=m.partenaire_id) }}" class="btn btn-outline-custom" style="flex:1;padding:6px 12px;font-size:.8rem">Voir Profil</a>
-                    <a href="{{ url_for('conversations.conversations') }}" class="btn btn-primary-custom" style="flex:1;padding:6px 12px;font-size:.8rem">Envoyer Message</a>
+                    <a href="{{ url_for('conversations.demarrer_conversation', contact_id=m.partenaire_id) }}" class="btn btn-primary-custom" style="flex:1;padding:6px 12px;font-size:.8rem">Envoyer Message</a>
                   </div>
                 </div>
               </div>
