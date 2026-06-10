@@ -110,7 +110,7 @@
             <form method="POST">
               <input type="hidden" name="csrf_token" value="{{ csrf_token() }}" />
               <div class="mb-3">
-                <label class="form-label-custom">Mati&egrave;re</label>
+                <label class="form-label-custom">Mati&egrave;re <small class="text-muted">(vos lacunes)</small></label>
                 <select name="matiere_id" class="form-select input-custom" required>
                   <option value="">S&eacute;lectionnez une mati&egrave;re</option>
                   {% for m in matieres %}<option value="{{ m.id }}">{{ m.nom }}</option>{% endfor %}
@@ -130,8 +130,23 @@
                 <textarea name="description" class="form-control input-custom" rows="4" placeholder="D&eacute;crivez ce dont vous avez besoin (max 1000 caract&egrave;res)" maxlength="1000"></textarea>
               </div>
               <div class="mb-4">
-                <label class="form-label-custom">Disponibilit&eacute;s</label>
+                <label class="form-label-custom">Disponibilit&eacute;s <small class="text-muted">(depuis votre profil)</small></label>
                 <div id="dispoContainer">
+                  {% if user_dispos %}
+                    {% for d in user_dispos %}
+                    <div class="dispo-row">
+                      <select name="jour[]" class="form-select" style="flex:1;min-width:100px">
+                        <option value="">Jour</option>
+                        {% for j in ['Lundi','Mardi','Mercredi','Jeudi','Vendredi','Samedi'] %}
+                        <option value="{{ j }}"{% if d.jour_semaine == j %} selected{% endif %}>{{ j }}</option>
+                        {% endfor %}
+                      </select>
+                      <input type="time" name="heure_debut[]" class="form-control" style="flex:1;min-width:80px" title="D&eacute;but" value="{{ d.heure_debut }}" />
+                      <input type="time" name="heure_fin[]" class="form-control" style="flex:1;min-width:80px" title="Fin" value="{{ d.heure_fin }}" />
+                      <button type="button" class="btn btn-sm btn-outline-danger" onclick="removeDispo(this)" style="flex-shrink:0" title="Supprimer"><i class="bi bi-x-lg"></i></button>
+                    </div>
+                    {% endfor %}
+                  {% else %}
                   <div class="dispo-row">
                     <select name="jour[]" class="form-select" style="flex:1;min-width:100px">
                       <option value="">Jour</option>
@@ -146,6 +161,7 @@
                     <input type="time" name="heure_fin[]" class="form-control" style="flex:1;min-width:80px" title="Fin" />
                     <button type="button" class="btn btn-sm btn-outline-danger" onclick="removeDispo(this)" style="flex-shrink:0" title="Supprimer"><i class="bi bi-x-lg"></i></button>
                   </div>
+                  {% endif %}
                 </div>
                 <button type="button" class="btn btn-sm btn-outline-primary mt-2" onclick="addDispo()"><i class="bi bi-plus-lg"></i> Ajouter un cr&eacute;neau</button>
               </div>

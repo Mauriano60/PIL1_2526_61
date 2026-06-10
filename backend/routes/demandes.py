@@ -72,7 +72,13 @@ def demandes():
         total = fetch_one("""
             SELECT COUNT(*) as count FROM demande_mentorat d
             WHERE d.statut_demande = 1 AND d.utilisateur_id != %s
-        """, (connecte_id,))
+              AND NOT EXISTS (
+                SELECT 1 FROM correspondances c
+                WHERE ((c.mentor_id = %s AND c.mentee_id = d.utilisateur_id)
+                    OR (c.mentor_id = d.utilisateur_id AND c.mentee_id = %s))
+                  AND c.statut_correspondance IN (0, 1)
+              )
+        """, (connecte_id, connecte_id, connecte_id))
         total_pages = max(1, (total['count'] + per_page - 1) // per_page)
         page = min(page, total_pages)
         offset = (page - 1) * per_page
@@ -92,9 +98,15 @@ def demandes():
             )
             WHERE d.statut_demande = 1
               AND d.utilisateur_id != %s
+              AND NOT EXISTS (
+                SELECT 1 FROM correspondances c2
+                WHERE ((c2.mentor_id = %s AND c2.mentee_id = d.utilisateur_id)
+                    OR (c2.mentor_id = d.utilisateur_id AND c2.mentee_id = %s))
+                  AND c2.statut_correspondance IN (0, 1)
+              )
             ORDER BY d.cree_le DESC
             LIMIT %s OFFSET %s
-        """, (connecte_id, connecte_id, connecte_id, per_page, offset))
+        """, (connecte_id, connecte_id, connecte_id, connecte_id, connecte_id, per_page, offset))
 
         for demande in demandes_liste:
             if demande['statut_correspondance'] is not None:
@@ -116,11 +128,13 @@ def demandes():
         if confirmer_done:
             match_result = None
 
+        matieres = fetch_all("SELECT id, nom FROM matieres ORDER BY nom")
         context = get_user_context()
         context['demandes'] = demandes_liste
         context['match_result'] = match_result
         context['page'] = page
         context['total_pages'] = total_pages
+        context['matieres'] = matieres
         return render_template('mentorat/demandes.html', **context)
 
     except Exception as e:
@@ -138,9 +152,18 @@ def creer_demande():
     matchs_trouves = None
 
     try:
-        matieres = fetch_all("SELECT * FROM matieres")
+        toutes_matieres = fetch_all("SELECT * FROM matieres")
+        res_lac = fetch_all("SELECT matiere_id FROM difficultes_utilisateur WHERE utilisateur_id = %s", (connecte_id,))
+        ids_lac = {r['matiere_id'] for r in res_lac}
+        matieres = [m for m in toutes_matieres if m['id'] in ids_lac]
+        user_dispos = fetch_all("""
+            SELECT jour_semaine, heure_debut, heure_fin FROM disponibilites
+            WHERE utilisateur_id = %s
+            ORDER BY FIELD(jour_semaine, 'Lundi','Mardi','Mercredi','Jeudi','Vendredi','Samedi')
+        """, (connecte_id,))
     except Exception as e:
         matieres = []
+        user_dispos = []
         error = f"Erreur lors du chargement des matières: {str(e)}"
 
     if request.method == 'POST':
@@ -178,11 +201,11 @@ def creer_demande():
 
                 toutes_suggestions = obtenir_suggestions_matching(connecte_id)
                 toutes_suggestions.sort(key=lambda x: x['score_compatibilite'], reverse=True)
-                matchs_trouves = toutes_suggestions[:5]
+                matchs_trouves = [m for m in toutes_suggestions if m['score_compatibilite'] >= 70][:4]
 
             except Exception as e:
                 error = f"Erreur lors de la création de la demande et du matching instantané: {str(e)}"
 
     ctx = get_user_context()
-    ctx.update({'matieres': matieres, 'error': error, 'matchs': matchs_trouves})
+    ctx.update({'matieres': matieres, 'error': error, 'matchs': matchs_trouves, 'user_dispos': user_dispos})
     return render_template('mentorat/creer-demande.html', **ctx)

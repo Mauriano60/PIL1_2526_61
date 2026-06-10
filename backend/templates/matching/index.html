@@ -106,17 +106,63 @@
         {% if matchs_en_attente %}
         <div class="mt-4">
           <h3 class="fw-semibold mb-3" style="font-family:'Poppins',sans-serif;font-size:1.1rem;color:var(--slate-900)">En attente</h3>
-          <div class="d-flex flex-column gap-2">
+          <div class="row g-4">
             {% for m in matchs_en_attente %}
-            <div class="card-custom p-3 d-flex align-items-center justify-content-between">
-              <div class="d-flex align-items-center gap-3">
-                <div class="match-avatar">{{ m.prenom[:1]|upper }}{{ m.nom[:1]|upper }}</div>
-                <div>
-                  <p class="fw-semibold mb-0" style="font-size:.9rem">{{ m.prenom }} {{ m.nom }}</p>
-                  <p style="font-size:.8rem;color:var(--slate-500);margin:0">{{ m.filiere or '' }}</p>
+            {% set dash_array = 2 * 3.14159 * 54 %}
+            {% set dash_offset = dash_array - (dash_array * m.score_compatibilite / 100) %}
+            <div class="col-xl-6">
+              <div class="match-card">
+                <div class="match-score-ring" style="position:relative">
+                  <svg width="120" height="120" viewBox="0 0 120 120" style="transform:rotate(-90deg)">
+                    <circle cx="60" cy="60" r="54" fill="none" stroke="#E2E8F0" stroke-width="8"/>
+                    <circle cx="60" cy="60" r="54" fill="none" stroke="#F59E0B" stroke-width="8" stroke-linecap="round" stroke-dasharray="{{ dash_array }}" stroke-dashoffset="{{ dash_offset }}" style="transition:all 1s ease-out"/>
+                  </svg>
+                  <span class="score-value" style="color:#F59E0B">{{ m.score_compatibilite|int }}%</span>
+                </div>
+                <div class="match-info">
+                  <div class="d-flex align-items-center gap-3 mb-3">
+                    {% if m.avatar_url %}<img src="{{ url_for('static', filename=m.avatar_url.lstrip('static/')) }}" alt="Avatar" style="width:48px;height:48px;border-radius:50%;object-fit:cover;border:2px solid #F59E0B" />{% else %}<div style="width:48px;height:48px;border-radius:50%;background:var(--slate-100);display:flex;align-items:center;justify-content:center;font-weight:700;font-size:1rem;color:var(--slate-700);border:2px solid #F59E0B">{{ m.prenom[:1]|upper }}{{ m.nom[:1]|upper }}</div>{% endif %}
+                    <div><h5 style="font-family:'Poppins',sans-serif;font-weight:600;margin:0;color:var(--slate-900)">{{ m.prenom }} {{ m.nom }}</h5><div style="font-size:.8rem;color:var(--slate-500)">{{ m.niveau or '' }} &middot; {{ m.filiere or '' }}</div></div>
+                  </div>
+                  <div class="d-flex flex-wrap gap-2 mb-3">
+                    <span class="match-tag" style="background:var(--green-50);color:var(--green-700)"><i class="bi bi-check-lg" style="font-size:.7rem"></i> Fili&egrave;re : {{ m.filiere or '' }}</span>
+                  </div>
+                  {% if m.commun_matieres and m.commun_matieres|length > 0 %}
+                  <div class="d-flex flex-wrap gap-2 mb-2">
+                    {% for matiere in m.commun_matieres %}
+                    <span class="match-tag" style="background:var(--blue-50);color:var(--blue-700)"><i class="bi bi-book" style="font-size:.7rem"></i> {{ matiere }}</span>
+                    {% endfor %}
+                  </div>
+                  {% endif %}
+                  {% if m.commun_dispos and m.commun_dispos|length > 0 %}
+                  <div class="d-flex flex-wrap gap-2 mb-2">
+                    {% for d in m.commun_dispos[:3] %}
+                    <span class="match-tag" style="background:var(--amber-50);color:var(--amber-700)"><i class="bi bi-clock" style="font-size:.7rem"></i> {{ d.jour_semaine }} {{ d.heure_debut[:5] }}-{{ d.heure_fin[:5] }}</span>
+                    {% endfor %}
+                    {% if m.commun_dispos|length > 3 %}
+                    <span class="match-tag" style="background:var(--slate-100);color:var(--slate-600)">+{{ m.commun_dispos|length - 3 }}</span>
+                    {% endif %}
+                  </div>
+                  {% endif %}
+                  {% if m.biographie %}
+                  <p style="font-size:.85rem;color:var(--slate-600);margin-bottom:12px">{{ m.biographie[:120] }}{% if m.biographie|length > 120 %}...{% endif %}</p>
+                  {% endif %}
+                  <div class="d-flex flex-wrap gap-2 mt-3 pt-2">
+                    {% if m.initiateur_id != user.id %}
+                    <form method="POST" action="{{ url_for('matching.traiter_match', action='accepter', correspondance_id=m.id) }}" style="flex:1">
+                      <input type="hidden" name="csrf_token" value="{{ csrf_token() }}" />
+                      <button type="submit" class="btn" style="flex:1;width:100%;background:var(--green-600);color:white;border-radius:8px;padding:6px 12px;font-size:.8rem;font-weight:600">Accepter</button>
+                    </form>
+                    <form method="POST" action="{{ url_for('matching.traiter_match', action='refuser', correspondance_id=m.id) }}" style="flex:1">
+                      <input type="hidden" name="csrf_token" value="{{ csrf_token() }}" />
+                      <button type="submit" class="btn" style="flex:1;width:100%;background:var(--red-500);color:white;border-radius:8px;padding:6px 12px;font-size:.8rem;font-weight:600">Refuser</button>
+                    </form>
+                    {% else %}
+                    <span class="badge w-100 text-center py-2" style="background:var(--amber-50);color:var(--amber-700);font-size:.85rem">En attente de r&eacute;ponse</span>
+                    {% endif %}
+                  </div>
                 </div>
               </div>
-              <span class="badge" style="background:var(--amber-50);color:var(--amber-700);padding:4px 12px">En attente</span>
             </div>
             {% endfor %}
           </div>
@@ -126,17 +172,53 @@
         {% if matchs_acceptes %}
         <div class="mt-4">
           <h3 class="fw-semibold mb-3" style="font-family:'Poppins',sans-serif;font-size:1.1rem;color:var(--slate-900)">Accept&eacute;s</h3>
-          <div class="d-flex flex-column gap-2">
+          <div class="row g-4">
             {% for m in matchs_acceptes %}
-            <div class="card-custom p-3 d-flex align-items-center justify-content-between">
-              <div class="d-flex align-items-center gap-3">
-                <div class="match-avatar">{{ m.prenom[:1]|upper }}{{ m.nom[:1]|upper }}</div>
-                <div>
-                  <p class="fw-semibold mb-0" style="font-size:.9rem">{{ m.prenom }} {{ m.nom }}</p>
-                  <p style="font-size:.8rem;color:var(--slate-500);margin:0">{{ m.filiere or '' }}</p>
+            {% set dash_array = 2 * 3.14159 * 54 %}
+            {% set dash_offset = dash_array - (dash_array * m.score_compatibilite / 100) %}
+            <div class="col-xl-6">
+              <div class="match-card">
+                <div class="match-score-ring" style="position:relative">
+                  <svg width="120" height="120" viewBox="0 0 120 120" style="transform:rotate(-90deg)">
+                    <circle cx="60" cy="60" r="54" fill="none" stroke="#E2E8F0" stroke-width="8"/>
+                    <circle cx="60" cy="60" r="54" fill="none" stroke="#14B8A6" stroke-width="8" stroke-linecap="round" stroke-dasharray="{{ dash_array }}" stroke-dashoffset="{{ dash_offset }}" style="transition:all 1s ease-out"/>
+                  </svg>
+                  <span class="score-value" style="color:#14B8A6">{{ m.score_compatibilite|int }}%</span>
+                </div>
+                <div class="match-info">
+                  <div class="d-flex align-items-center gap-3 mb-3">
+                    {% if m.avatar_url %}<img src="{{ url_for('static', filename=m.avatar_url.lstrip('static/')) }}" alt="Avatar" style="width:48px;height:48px;border-radius:50%;object-fit:cover;border:2px solid #14B8A6" />{% else %}<div style="width:48px;height:48px;border-radius:50%;background:var(--slate-100);display:flex;align-items:center;justify-content:center;font-weight:700;font-size:1rem;color:var(--slate-700);border:2px solid #14B8A6">{{ m.prenom[:1]|upper }}{{ m.nom[:1]|upper }}</div>{% endif %}
+                    <div><h5 style="font-family:'Poppins',sans-serif;font-weight:600;margin:0;color:var(--slate-900)">{{ m.prenom }} {{ m.nom }}</h5><div style="font-size:.8rem;color:var(--slate-500)">{{ m.niveau or '' }} &middot; {{ m.filiere or '' }}</div></div>
+                  </div>
+                  <div class="d-flex flex-wrap gap-2 mb-3">
+                    <span class="match-tag" style="background:var(--green-50);color:var(--green-700)"><i class="bi bi-check-lg" style="font-size:.7rem"></i> Fili&egrave;re : {{ m.filiere or '' }}</span>
+                  </div>
+                  {% if m.commun_matieres and m.commun_matieres|length > 0 %}
+                  <div class="d-flex flex-wrap gap-2 mb-2">
+                    {% for matiere in m.commun_matieres %}
+                    <span class="match-tag" style="background:var(--blue-50);color:var(--blue-700)"><i class="bi bi-book" style="font-size:.7rem"></i> {{ matiere }}</span>
+                    {% endfor %}
+                  </div>
+                  {% endif %}
+                  {% if m.commun_dispos and m.commun_dispos|length > 0 %}
+                  <div class="d-flex flex-wrap gap-2 mb-2">
+                    {% for d in m.commun_dispos[:3] %}
+                    <span class="match-tag" style="background:var(--amber-50);color:var(--amber-700)"><i class="bi bi-clock" style="font-size:.7rem"></i> {{ d.jour_semaine }} {{ d.heure_debut[:5] }}-{{ d.heure_fin[:5] }}</span>
+                    {% endfor %}
+                    {% if m.commun_dispos|length > 3 %}
+                    <span class="match-tag" style="background:var(--slate-100);color:var(--slate-600)">+{{ m.commun_dispos|length - 3 }}</span>
+                    {% endif %}
+                  </div>
+                  {% endif %}
+                  {% if m.biographie %}
+                  <p style="font-size:.85rem;color:var(--slate-600);margin-bottom:12px">{{ m.biographie[:120] }}{% if m.biographie|length > 120 %}...{% endif %}</p>
+                  {% endif %}
+                  <div class="d-flex flex-wrap gap-2 mt-3 pt-2">
+                    <a href="{{ url_for('users.profil', user_id=m.partenaire_id) }}" class="btn btn-outline-custom" style="flex:1;padding:6px 12px;font-size:.8rem">Voir Profil</a>
+                    <a href="{{ url_for('conversations.conversations') }}" class="btn btn-primary-custom" style="flex:1;padding:6px 12px;font-size:.8rem">Envoyer Message</a>
+                  </div>
                 </div>
               </div>
-              <span class="badge" style="background:var(--green-50);color:var(--green-700);padding:4px 12px">Accept&eacute;</span>
             </div>
             {% endfor %}
           </div>

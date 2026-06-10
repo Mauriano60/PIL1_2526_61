@@ -68,7 +68,7 @@ def dashboard():
             JOIN utilisateurs u ON u.id = c.mentor_id
             JOIN filieres_etudes f ON f.id = u.id_filiere
             JOIN niveaux_etudes n ON n.id = u.id_niveau
-            WHERE c.mentee_id = %s
+            WHERE c.mentee_id = %s AND c.statut_correspondance != 2
             ORDER BY c.score_compatibilite DESC LIMIT 5
         """, (user_id,))
 
@@ -77,14 +77,14 @@ def dashboard():
             SELECT 'offre' as type_pub, o.id, o.description, o.cree_le, m.nom as matiere
             FROM offre_mentorat o
             JOIN matieres m ON m.id = o.matiere_id
-            WHERE o.utilisateur_id = %s
+            WHERE o.utilisateur_id = %s AND o.statut_offre = 1
             
             UNION ALL
             
             SELECT 'demande' as type_pub, d.id, d.description, d.cree_le, m.nom as matiere
             FROM demande_mentorat d
             JOIN matieres m ON m.id = d.matiere_id
-            WHERE d.utilisateur_id = %s
+            WHERE d.utilisateur_id = %s AND d.statut_demande = 1
             
             ORDER BY cree_le DESC
         """, (user_id, user_id))

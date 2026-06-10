@@ -61,7 +61,7 @@
             <input type="text" id="searchInput" class="form-control input-custom" style="padding-left:36px!important" placeholder="Rechercher une offre, une mati&egrave;re..." oninput="filterCards()" />
           </div>
           <div class="d-flex flex-wrap gap-2">
-            <select id="filterSubject" class="filter-select flex-grow-1" onchange="filterCards()"><option value="">Mati&egrave;re</option>{% for o in offres %}<option>{{ o.matiere }}</option>{% endfor %}</select>
+            <select id="filterSubject" class="filter-select flex-grow-1" onchange="filterCards()"><option value="">Mati&egrave;re</option>{% for m in matieres %}<option>{{ m.nom }}</option>{% endfor %}</select>
             <select id="filterDay" class="filter-select flex-grow-1" onchange="filterCards()"><option value="">Jour</option><option>Lundi</option><option>Mardi</option><option>Mercredi</option><option>Jeudi</option><option>Vendredi</option><option>Samedi</option></select>
             <input type="time" id="filterTimeStart" class="filter-select flex-grow-1" onchange="filterCards()" value="" title="Heure d&eacute;but" />
             <input type="time" id="filterTimeEnd" class="filter-select flex-grow-1" onchange="filterCards()" value="" title="Heure fin" />

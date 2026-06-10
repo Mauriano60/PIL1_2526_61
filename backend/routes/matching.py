@@ -35,7 +35,7 @@ def matching():
         # SÉCURITÉ : WHERE c.statut_correspondance != 2 permet de faire disparaître les matchs refusés
         matchs_physiques = fetch_all("""
             SELECT c.id, c.score_compatibilite, c.statut_correspondance, c.initiateur_id,
-                   u.id AS partenaire_id, u.prenom, u.nom, u.email, f.nom as filiere, n.nom as niveau
+                   u.id AS partenaire_id, u.prenom, u.nom, u.avatar_url, f.nom as filiere, n.nom as niveau
             FROM correspondances c
             JOIN utilisateurs u ON (CASE 
                 WHEN c.mentor_id = %s THEN c.mentee_id 
@@ -55,6 +55,25 @@ def matching():
         # Filtrage : On ne garde dans le Top 4 que les profils purement "neufs" pour l'utilisateur
         suggestions_propres = [s for s in toutes_suggestions if s['id'] not in ids_interagis]
         suggestions_top_4 = suggestions_propres[:4]
+        
+        # Enrichir les matchs historiques avec les détails de compatibilité depuis les suggestions
+        suggestions_map = {s['id']: s for s in toutes_suggestions}
+        for m in matchs_physiques:
+            m['score_compatibilite'] = float(m['score_compatibilite'])
+            sugg = suggestions_map.get(m['partenaire_id'])
+            if sugg:
+                m['commun_matieres'] = sugg.get('commun_matieres', [])
+                dispo_brutes = sugg.get('commun_dispos', [])
+                m['commun_dispos'] = []
+                for d in dispo_brutes:
+                    m['commun_dispos'].append({
+                        'jour_semaine': d['jour_semaine'],
+                        'heure_debut': str(d['heure_debut'])[:5],
+                        'heure_fin': str(d['heure_fin'])[:5],
+                    })
+            else:
+                m['commun_matieres'] = []
+                m['commun_dispos'] = []
         
         # Séparation des correspondances physiques pour le rendu Jinja
         matchs_en_attente = [m for m in matchs_physiques if m['statut_correspondance'] == 0]

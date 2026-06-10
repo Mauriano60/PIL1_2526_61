@@ -194,9 +194,23 @@ body {
   height: 48px;
   border-radius: 10px !important;
   border: 1.5px solid var(--slate-200) !important;
-  padding: .65rem 1rem !important;
+  padding: .65rem 2.8rem .65rem 1rem !important;
   font-size: .92rem !important;
 }
+.password-toggle {
+  position: absolute;
+  right: 12px;
+  top: 50%;
+  transform: translateY(-50%);
+  background: none;
+  border: none;
+  color: var(--slate-400);
+  cursor: pointer;
+  padding: 0;
+  z-index: 2;
+  line-height: 1;
+}
+.password-toggle:hover { color: var(--slate-600); }
 .input-custom:focus {
   border-color: var(--blue-600) !important;
   box-shadow: 0 0 0 3px rgba(37,99,235,0.12) !important;

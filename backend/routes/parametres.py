@@ -1,5 +1,5 @@
 import os
-from flask import Blueprint, render_template, request, redirect, url_for, session, current_app
+from flask import Blueprint, render_template, request, redirect, url_for, session, current_app, flash
 from db.database import fetch_all, fetch_one, execute
 from utils.validators import valider_competences_et_lacunes, valider_email, valider_telephone
 from utils.responses import get_user_context
@@ -210,8 +210,15 @@ def supprimer_compte():
     
     if request.method == 'POST':
         try:
-            execute("UPDATE utilisateurs SET est_actif=0 WHERE id=%s", (session['user_id'],))
-            session.clear()
+            uid = session['user_id']
+            execute("UPDATE correspondances SET statut_correspondance=2 WHERE mentor_id=%s OR mentee_id=%s", (uid, uid))
+            execute("UPDATE offre_mentorat SET statut_offre=0 WHERE utilisateur_id=%s", (uid,))
+            execute("UPDATE demande_mentorat SET statut_demande=0 WHERE utilisateur_id=%s", (uid,))
+            execute("UPDATE utilisateurs SET est_actif=0 WHERE id=%s", (uid,))
+            session.pop('user_id', None)
+            session.pop('prenom', None)
+            session.pop('nom', None)
+            flash("Votre compte a été supprimé avec succès.", "success")
             return redirect(url_for('auth.login'))
         except Exception as e:
             error = f"Erreur lors du traitement : {str(e)}"
