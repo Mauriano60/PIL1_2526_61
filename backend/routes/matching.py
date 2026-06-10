@@ -30,6 +30,7 @@ def matching():
         # statut=0 : en attente, statut=1 : accepté (statut=2 exclu = refusé)
         matchs_physiques = fetch_all("""
             SELECT c.id, c.score_compatibilite, c.statut_correspondance, c.initiateur_id,
+                   c.mentor_id, c.mentee_id,
                    u.id AS partenaire_id, u.prenom, u.nom, u.avatar_url, f.nom as filiere, n.nom as niveau
             FROM correspondances c
             JOIN utilisateurs u ON (CASE 
@@ -43,24 +44,16 @@ def matching():
             ORDER BY c.id DESC
         """, (utilisateur_id, utilisateur_id, utilisateur_id))
         
-        # Enrichir les matchs avec les détails de compatibilité
-        suggestions_map = {s['id']: s for s in obtenir_suggestions_matching(utilisateur_id, role=role_actuel)}
+        # Enrichir les matchs avec les détails de compatibilité (sans recalculer tout le matching)
         for m in matchs_physiques:
             m['score_compatibilite'] = float(m['score_compatibilite'])
-            sugg = suggestions_map.get(m['partenaire_id'])
-            if sugg:
-                m['commun_matieres'] = sugg.get('commun_matieres', [])
-                dispo_brutes = sugg.get('commun_dispos', [])
-                m['commun_dispos'] = []
-                for d in dispo_brutes:
-                    m['commun_dispos'].append({
-                        'jour_semaine': d['jour_semaine'],
-                        'heure_debut': str(d['heure_debut'])[:5],
-                        'heure_fin': str(d['heure_fin'])[:5],
-                    })
-            else:
-                m['commun_matieres'] = []
-                m['commun_dispos'] = []
+            rows = fetch_all("""
+                SELECT DISTINCT mat.nom FROM matieres mat
+                JOIN offre_mentorat o ON o.matiere_id = mat.id AND o.utilisateur_id = %s AND o.statut_offre = 1
+                JOIN demande_mentorat d ON d.matiere_id = mat.id AND d.utilisateur_id = %s AND d.statut_demande = 1
+            """, (m['mentor_id'], m['mentee_id']))
+            m['commun_matieres'] = [r['nom'] for r in rows]
+            m['commun_dispos'] = []
         
         # Séparation des correspondances pour le rendu
         matchs_en_attente = [m for m in matchs_physiques if m['statut_correspondance'] == 0]

@@ -172,6 +172,8 @@ def obtenir_suggestions_matching(utilisateur_id, role='mentee'):
                 score_niveau = 8.00
             elif difference_niveau == 2:
                 score_niveau = 5.00
+            else:
+                score_niveau = 3.00
             
 
             #  5e. CONSOLIDATION DU SCORE FINAL 

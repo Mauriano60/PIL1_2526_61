@@ -72,7 +72,7 @@
         <div class="row g-3" id="offerGrid">
           {% for offre in offres %}
           <div class="col-md-6 col-lg-4 offer-card-wrapper">
-            {% if match_result and match_result.id == offre.utilisateur_id %}
+            {% if match_result and match_result.annonce_id == offre.id %}
             <div class="request-card" style="border:2px solid var(--teal-500)">
               <div class="d-flex align-items-center gap-3 mb-3">
                 {% if offre.avatar_url %}<img src="{{ url_for('static', filename=offre.avatar_url.lstrip('static/')) }}" alt="Avatar" style="width:48px;height:48px;border-radius:50%;object-fit:cover;flex-shrink:0" />{% else %}<div style="width:48px;height:48px;border-radius:50%;background:var(--blue-100);color:var(--blue-600);font-weight:700;font-size:1rem;display:flex;align-items:center;justify-content:center;flex-shrink:0">{{ offre.prenom[:1]|upper }}{{ offre.nom_user[:1]|upper }}</div>{% endif %}
@@ -108,21 +108,6 @@
                   <button type="submit" class="btn w-100" style="background:var(--blue-600);color:white;border:none;padding:6px;font-size:.85rem;font-weight:600;border-radius:8px">Demander de l'aide</button>
                 </form>
               </div>
-            </div>
-
-            {% elif offre.statut_correspondance is not none %}
-            <div class="request-card" style="opacity:.7">
-              <div class="d-flex align-items-center gap-3 mb-3">
-                {% if offre.avatar_url %}<img src="{{ url_for('static', filename=offre.avatar_url.lstrip('static/')) }}" alt="Avatar" style="width:48px;height:48px;border-radius:50%;object-fit:cover;flex-shrink:0" />{% else %}<div style="width:48px;height:48px;border-radius:50%;background:var(--slate-100);color:var(--slate-500);font-weight:700;font-size:1rem;display:flex;align-items:center;justify-content:center;flex-shrink:0">{{ offre.prenom[:1]|upper }}{{ offre.nom_user[:1]|upper }}</div>{% endif %}
-                <div>
-                  <p class="fw-semibold mb-0" style="font-size:.9rem">{{ offre.prenom }} {{ offre.nom_user }}</p>
-                  <p style="font-size:.8rem;color:var(--slate-500);margin:0">{{ offre.filiere or '' }} &middot; {{ offre.niveau or '' }}</p>
-                </div>
-                <span style="margin-left:auto;padding:2px 8px;border-radius:4px;font-size:.7rem;font-weight:600;background:var(--slate-100);color:var(--slate-500)">D&eacute;j&agrave; contact&eacute;</span>
-              </div>
-              <div class="mb-2"><span class="match-tag" style="background:var(--blue-50);color:var(--blue-600)">{{ offre.matiere }}</span></div>
-              <p style="font-size:.85rem;color:var(--slate-600);margin-bottom:12px">{{ offre.description }}</p>
-              {% if offre.format %}<p style="font-size:.8rem;color:var(--slate-500);margin-bottom:8px"><i class="bi bi-globe me-1"></i> {{ offre.format }}</p>{% endif %}
             </div>
 
             {% else %}

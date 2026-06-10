@@ -28,12 +28,13 @@ def demandes():
                 annonce = fetch_one("SELECT * FROM demande_mentorat WHERE id = %s AND statut_demande = 1", (annonce_id,))
                 if annonce and annonce['utilisateur_id'] != connecte_id:
                     if action == 'calculer':
+                        match_result = {'annonce_id': int(annonce_id)}
                         suggestions = obtenir_suggestions_matching(connecte_id, role='mentor')
                         for sug in suggestions:
                             if sug['id'] == annonce['utilisateur_id']:
-                                match_result = sug
+                                match_result.update(sug)
                                 break
-                        if not match_result:
+                        if not match_result.get('id'):
                             flash("Aucune compatibilité calculée pour cette demande.", "info")
                     elif action == 'confirmer':
                         existant = fetch_one("""
@@ -71,7 +72,8 @@ def demandes():
 
         total = fetch_one("""
             SELECT COUNT(*) as count FROM demande_mentorat d
-            WHERE d.statut_demande = 1 AND d.utilisateur_id != %s
+            JOIN utilisateurs u ON u.id = d.utilisateur_id
+            WHERE u.est_actif = 1 AND d.statut_demande = 1 AND d.utilisateur_id != %s
               AND NOT EXISTS (
                 SELECT 1 FROM correspondances c
                 WHERE ((c.mentor_id = %s AND c.mentee_id = d.utilisateur_id)
@@ -96,7 +98,7 @@ def demandes():
                 (c.mentor_id = %s AND c.mentee_id = d.utilisateur_id)
                 OR (c.mentor_id = d.utilisateur_id AND c.mentee_id = %s)
             )
-            WHERE d.statut_demande = 1
+            WHERE u.est_actif = 1 AND d.statut_demande = 1
               AND d.utilisateur_id != %s
               AND NOT EXISTS (
                 SELECT 1 FROM correspondances c2
@@ -201,7 +203,7 @@ def creer_demande():
 
                 toutes_suggestions = obtenir_suggestions_matching(connecte_id)
                 toutes_suggestions.sort(key=lambda x: x['score_compatibilite'], reverse=True)
-                matchs_trouves = [m for m in toutes_suggestions if m['score_compatibilite'] >= 70][:4]
+                matchs_trouves = [m for m in toutes_suggestions if m['score_compatibilite'] >= 50][:4]
 
             except Exception as e:
                 error = f"Erreur lors de la création de la demande et du matching instantané: {str(e)}"

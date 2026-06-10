@@ -87,7 +87,10 @@ def register():
             elif any(not request.form.get(c) for c in champs_etape2):
                 current_step = '2'
             else:
-                current_step = '3'
+                # Tous les champs sont remplis mais validation de contenu échouée
+                # (email invalide, téléphone invalide, mot de passe trop faible)
+                # Toutes ces erreurs concernent l'étape 1
+                current_step = '1'
         else:
             try:
                 prenom = request.form['prenom']

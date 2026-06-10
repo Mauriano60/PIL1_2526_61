@@ -68,7 +68,7 @@ def dashboard():
             JOIN utilisateurs u ON u.id = c.mentor_id
             JOIN filieres_etudes f ON f.id = u.id_filiere
             JOIN niveaux_etudes n ON n.id = u.id_niveau
-            WHERE c.mentee_id = %s AND c.statut_correspondance != 2
+            WHERE c.mentee_id = %s AND c.statut_correspondance != 2 AND u.est_actif = 1
             ORDER BY c.score_compatibilite DESC LIMIT 5
         """, (user_id,))
 
