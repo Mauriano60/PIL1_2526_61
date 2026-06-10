@@ -110,22 +110,30 @@ def demandes():
             LIMIT %s OFFSET %s
         """, (connecte_id, connecte_id, connecte_id, connecte_id, connecte_id, per_page, offset))
 
+        scores_profil = obtenir_suggestions_matching(connecte_id, role='mentor')
+        scores_map = {s['id']: s['score_compatibilite'] for s in scores_profil}
+
+        ids_demandes = [d['utilisateur_id'] for d in demandes_liste]
+        if ids_demandes:
+            placeholders = ','.join(['%s'] * len(ids_demandes))
+            toutes_dispos = fetch_all(f"""
+                SELECT utilisateur_id, jour_semaine, heure_debut, heure_fin
+                FROM disponibilites
+                WHERE utilisateur_id IN ({placeholders})
+                ORDER BY FIELD(jour_semaine, 'Lundi','Mardi','Mercredi','Jeudi','Vendredi','Samedi')
+            """, ids_demandes)
+            dispos_map = {}
+            for d in toutes_dispos:
+                dispos_map.setdefault(d['utilisateur_id'], []).append(d)
+        else:
+            dispos_map = {}
+
         for demande in demandes_liste:
             if demande['statut_correspondance'] is not None:
                 demande['score_affiche'] = demande['score_enregistre']
             else:
-                scores_profil = obtenir_suggestions_matching(demande['utilisateur_id'])
-                demande['score_affiche'] = 0.00
-                for sug in scores_profil:
-                    if sug['id'] == connecte_id:
-                        demande['score_affiche'] = sug['score_compatibilite']
-                        break
-            dispo = fetch_all("""
-                SELECT jour_semaine, heure_debut, heure_fin FROM disponibilites
-                WHERE utilisateur_id = %s
-                ORDER BY FIELD(jour_semaine, 'Lundi','Mardi','Mercredi','Jeudi','Vendredi','Samedi')
-            """, (demande['utilisateur_id'],))
-            demande['disponibilites'] = dispo
+                demande['score_affiche'] = scores_map.get(demande['utilisateur_id'], 0.00)
+            demande['disponibilites'] = dispos_map.get(demande['utilisateur_id'], [])
 
         if confirmer_done:
             match_result = None
@@ -201,9 +209,10 @@ def creer_demande():
 
                 flash("Votre demande d'aide a été partagée avec succès !", "success")
 
+                nom_matiere = fetch_one("SELECT nom FROM matieres WHERE id = %s", (matiere_id,))['nom']
                 toutes_suggestions = obtenir_suggestions_matching(connecte_id)
                 toutes_suggestions.sort(key=lambda x: x['score_compatibilite'], reverse=True)
-                matchs_trouves = [m for m in toutes_suggestions if m['score_compatibilite'] >= 50][:4]
+                matchs_trouves = [m for m in toutes_suggestions if m['score_compatibilite'] >= 50 and nom_matiere in m.get('commun_matieres', [])][:4]
 
             except Exception as e:
                 error = f"Erreur lors de la création de la demande et du matching instantané: {str(e)}"

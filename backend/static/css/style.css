@@ -866,6 +866,7 @@ body {
   flex-direction: column;
   gap: 24px;
   transition: all .3s;
+  overflow-wrap: break-word;
 }
 @media (min-width: 640px) {
   .match-card { flex-direction: row; }
@@ -890,7 +891,7 @@ body {
   font-weight: 700;
   font-family: 'Poppins', sans-serif;
 }
-.match-info { flex: 1; min-width: 0; }
+.match-info { flex: 1; min-width: 0; overflow-wrap: break-word; }
 .match-tag {
   display: inline-flex;
   align-items: center;

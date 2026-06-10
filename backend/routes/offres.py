@@ -113,17 +113,27 @@ def offres():
         scores_profil = obtenir_suggestions_matching(connecte_id)
         scores_map = {s['id']: s['score_compatibilite'] for s in scores_profil}
 
+        ids_offres = [o['utilisateur_id'] for o in offres_liste]
+        if ids_offres:
+            placeholders = ','.join(['%s'] * len(ids_offres))
+            toutes_dispos = fetch_all(f"""
+                SELECT utilisateur_id, jour_semaine, heure_debut, heure_fin
+                FROM disponibilites
+                WHERE utilisateur_id IN ({placeholders})
+                ORDER BY FIELD(jour_semaine, 'Lundi','Mardi','Mercredi','Jeudi','Vendredi','Samedi')
+            """, ids_offres)
+            dispos_map = {}
+            for d in toutes_dispos:
+                dispos_map.setdefault(d['utilisateur_id'], []).append(d)
+        else:
+            dispos_map = {}
+
         for offre in offres_liste:
             if offre['statut_correspondance'] is not None:
                 offre['score_affiche'] = offre['score_enregistre']
             else:
                 offre['score_affiche'] = scores_map.get(offre['utilisateur_id'], 0.00)
-            dispo = fetch_all("""
-                SELECT jour_semaine, heure_debut, heure_fin FROM disponibilites
-                WHERE utilisateur_id = %s
-                ORDER BY FIELD(jour_semaine, 'Lundi','Mardi','Mercredi','Jeudi','Vendredi','Samedi')
-            """, (offre['utilisateur_id'],))
-            offre['disponibilites'] = dispo
+            offre['disponibilites'] = dispos_map.get(offre['utilisateur_id'], [])
 
         if confirmer_done:
             match_result = None
@@ -199,9 +209,10 @@ def creer_offre():
 
                 flash("Votre offre de mentorat a été publiée avec succès !", "success")
 
+                nom_matiere = fetch_one("SELECT nom FROM matieres WHERE id = %s", (matiere_id,))['nom']
                 toutes_suggestions = obtenir_suggestions_matching(connecte_id, role='mentor')
                 toutes_suggestions.sort(key=lambda x: x['score_compatibilite'], reverse=True)
-                matchs_trouves = [m for m in toutes_suggestions if m['score_compatibilite'] >= 50][:4]
+                matchs_trouves = [m for m in toutes_suggestions if m['score_compatibilite'] >= 50 and nom_matiere in m.get('commun_matieres', [])][:4]
 
             except Exception as e:
                 error = f"Erreur lors de la création de l'offre et du matching instantané: {str(e)}"

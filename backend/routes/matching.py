@@ -49,11 +49,25 @@ def matching():
             m['score_compatibilite'] = float(m['score_compatibilite'])
             rows = fetch_all("""
                 SELECT DISTINCT mat.nom FROM matieres mat
-                JOIN offre_mentorat o ON o.matiere_id = mat.id AND o.utilisateur_id = %s AND o.statut_offre = 1
-                JOIN demande_mentorat d ON d.matiere_id = mat.id AND d.utilisateur_id = %s AND d.statut_demande = 1
+                JOIN competences_utilisateur cu ON cu.matiere_id = mat.id AND cu.utilisateur_id = %s
+                JOIN difficultes_utilisateur du ON du.matiere_id = mat.id AND du.utilisateur_id = %s
             """, (m['mentor_id'], m['mentee_id']))
             m['commun_matieres'] = [r['nom'] for r in rows]
+            dispo_rows = fetch_all("""
+                SELECT DISTINCT d1.jour_semaine, d1.heure_debut, d1.heure_fin
+                FROM disponibilites d1
+                JOIN disponibilites d2 ON d1.jour_semaine = d2.jour_semaine
+                    AND d1.heure_debut < d2.heure_fin
+                    AND d1.heure_fin > d2.heure_debut
+                WHERE d1.utilisateur_id = %s AND d2.utilisateur_id = %s
+            """, (m['mentor_id'], m['mentee_id']))
             m['commun_dispos'] = []
+            for d in dispo_rows:
+                m['commun_dispos'].append({
+                    'jour_semaine': d['jour_semaine'],
+                    'heure_debut': str(d['heure_debut'])[:5],
+                    'heure_fin': str(d['heure_fin'])[:5],
+                })
         
         # Séparation des correspondances pour le rendu
         matchs_en_attente = [m for m in matchs_physiques if m['statut_correspondance'] == 0]

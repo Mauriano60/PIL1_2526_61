@@ -14,7 +14,7 @@ def conversations():
     try:
         convs = fetch_all("""
             SELECT c.id, DATE_FORMAT(c.cree_le, '%%Y-%%m-%%d') as cree_le,
-                   u.prenom, u.nom
+                   u.prenom, u.nom, u.avatar_url
             FROM conversations c
             JOIN participants_conversation pc ON pc.conversation_id = c.id
             JOIN participants_conversation pc2 ON pc2.conversation_id = c.id
@@ -96,7 +96,7 @@ def conversation(conv_id):
     # 2. Chargement de l'historique des messages
     try:
         messages = fetch_all("""
-            SELECT m.*, u.prenom, u.nom
+            SELECT m.*, u.prenom, u.nom, u.avatar_url
             FROM messages m
             JOIN utilisateurs u ON u.id = m.expediteur_id
             WHERE m.conversation_id = %s
@@ -105,6 +105,12 @@ def conversation(conv_id):
     except Exception as e:
         error = f"Erreur lors du chargement des messages: {str(e)}"
 
+    contact = fetch_one("""
+        SELECT u.id, u.prenom, u.nom, u.avatar_url FROM participants_conversation pc
+        JOIN utilisateurs u ON u.id = pc.utilisateur_id
+        WHERE pc.conversation_id = %s AND pc.utilisateur_id != %s
+        LIMIT 1
+    """, (conv_id, session['user_id']))
     ctx = get_user_context()
-    ctx.update({'messages': messages, 'conv_id': conv_id, 'error': error})
+    ctx.update({'messages': messages, 'conv_id': conv_id, 'error': error, 'contact': contact})
     return render_template('conversations/index.html', **ctx)
