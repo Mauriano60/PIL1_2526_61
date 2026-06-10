@@ -13,7 +13,7 @@ def conversations():
 
     try:
         convs = fetch_all("""
-            SELECT c.id, c.cree_le,
+            SELECT c.id, DATE_FORMAT(c.cree_le, '%%Y-%%m-%%d') as cree_le,
                    u.prenom, u.nom
             FROM conversations c
             JOIN participants_conversation pc ON pc.conversation_id = c.id
